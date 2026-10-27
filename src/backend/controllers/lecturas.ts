@@ -1,6 +1,7 @@
 import "server-only";
 import { crearClienteServidor } from "@/backend/auth/clienteServidor";
 import type { Entidad } from "@/backend/services/catalogo";
+import * as apartados from "@/backend/services/apartados";
 import * as eliminacion from "@/backend/services/eliminacion";
 import * as inicio from "@/backend/services/inicio";
 import * as libros from "@/backend/services/libros";
@@ -46,6 +47,16 @@ export async function listarRecursos() {
 
 export async function obtenerRecurso(id: string) {
   return recursos.obtenerRecurso(await crearClienteServidor(), id);
+}
+
+// Apartados del proyecto con su contenido, «Sin apartado» y el aviso de eliminación de cada uno.
+export async function organizacionProyecto(proyectoId: string) {
+  const cliente = await crearClienteServidor();
+  const org = await apartados.organizacion(cliente, proyectoId);
+  const avisos = await Promise.all(
+    org.apartados.map(async (a) => apartados.textoAvisoApartado(await apartados.contarContenido(cliente, a.id))),
+  );
+  return { ...org, apartados: org.apartados.map((a, i) => ({ ...a, aviso: avisos[i] })) };
 }
 
 export async function obtenerRelacionados(tipo: Entidad, id: string) {

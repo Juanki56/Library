@@ -1,0 +1,299 @@
+.seccion {
+  margin-top: var(--espacio-6);
+  padding-top: var(--espacio-4);
+  border-top: 3px double var(--color-ornamento);
+}
+
+.titulo {
+  margin: 0 0 var(--espacio-3);
+  font-size: var(--tamano-h2);
+}
+
+.lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-4);
+}
+
+/* Cada apartado: numeración de capítulo y filete fino. */
+.apartado {
+  padding-bottom: var(--espacio-3);
+  border-bottom: 1px solid var(--color-borde);
+}
+
+.cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--espacio-2);
+}
+
+.nombre {
+  margin: 0;
+  font-size: 1.45rem;
+}
+
+.numero {
+  color: var(--color-acento);
+  font-variant-numeric: oldstyle-nums;
+}
+
+.descripcion {
+  margin: var(--espacio-1) 0 0;
+  color: var(--color-texto-suave);
+  font-style: italic;
+}
+
+.acciones {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-2);
+}
+
+.mover {
+  display: flex;
+  gap: var(--espacio-1);
+}
+
+.mover button {
+  min-width: 2.25rem;
+  min-height: 2.25rem;
+  font: inherit;
+  color: var(--color-marron);
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  cursor: pointer;
+}
+
+.mover button:hover:not(:disabled) {
+  color: var(--color-acento);
+  border-color: var(--color-acento);
+}
+
+.mover button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* Contenido del apartado: tipo en versalitas, título y «Quitar». */
+.contenido {
+  list-style: none;
+  margin: var(--espacio-2) 0 0;
+  padding: 0;
+}
+
+.contenido li {
+  display: flex;
+  align-items: baseline;
+  gap: var(--espacio-3);
+  padding: var(--espacio-2) 0;
+  border-bottom: 1px dotted var(--color-borde);
+}
+
+.contenido a {
+  flex: 1;
+  font-family: var(--fuente-titulos);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--color-texto);
+  text-decoration: none;
+}
+
+.contenido a:hover {
+  color: var(--color-acento);
+}
+
+.tipo {
+  flex: none;
+  min-width: 4rem;
+  font-size: var(--tamano-versalitas);
+  font-variant: small-caps;
+  letter-spacing: var(--interletraje-versalitas);
+  color: var(--color-texto-suave);
+}
+
+.quitar button {
+  font: inherit;
+  font-size: var(--tamano-pequeno);
+  font-variant: small-caps;
+  text-transform: lowercase;
+  letter-spacing: 0.06em;
+  color: var(--color-texto-suave);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radio);
+  min-height: 2.25rem;
+  padding: 0 var(--espacio-2);
+  cursor: pointer;
+}
+
+.quitar button:hover {
+  color: var(--color-error);
+  border-color: var(--color-borde);
+}
+
+.herramientas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--espacio-3);
+  margin-top: var(--espacio-2);
+}
+
+.anadir {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-2);
+}
+
+.anadir select,
+.anadir button {
+  font: inherit;
+  font-size: var(--tamano-pequeno);
+  color: var(--color-texto);
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  min-height: 2.25rem;
+  padding: 0 var(--espacio-2);
+}
+
+.anadir button {
+  color: var(--color-acento);
+  border-color: var(--color-acento);
+  font-variant: small-caps;
+  text-transform: lowercase;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+}
+
+.anadir button:hover {
+  color: var(--color-sobre-acento);
+  background: var(--color-acento);
+}
+
+.editar summary {
+  min-height: 2.25rem;
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--tamano-pequeno);
+  font-variant: small-caps;
+  text-transform: lowercase;
+  letter-spacing: 0.06em;
+  color: var(--color-texto-suave);
+  cursor: pointer;
+}
+
+.editar[open] {
+  flex-basis: 100%;
+}
+
+/* Formularios de apartado (editar y nuevo). */
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-2);
+  margin-top: var(--espacio-2);
+}
+
+.nuevo {
+  margin-top: var(--espacio-5);
+  padding: var(--espacio-3) var(--espacio-4) var(--espacio-4);
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra-papel);
+}
+
+.nuevo h3 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-1);
+  font-size: var(--tamano-versalitas);
+  font-variant: small-caps;
+  text-transform: lowercase;
+  letter-spacing: var(--interletraje-versalitas);
+  font-weight: 600;
+  color: var(--color-texto-suave);
+}
+
+.campo input {
+  font: inherit;
+  font-family: var(--fuente-texto);
+  font-size: var(--tamano-texto);
+  font-variant: normal;
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 400;
+  color: var(--color-texto);
+  background: var(--color-fondo);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  padding: var(--espacio-2) var(--espacio-3);
+}
+
+.pie {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+}
+
+.principal {
+  min-height: 2.5rem;
+  padding: 0 var(--espacio-3);
+  font: inherit;
+  font-size: var(--tamano-pequeno);
+  font-variant: small-caps;
+  text-transform: lowercase;
+  letter-spacing: var(--interletraje-versalitas);
+  font-weight: 600;
+  color: var(--color-sobre-acento);
+  background: var(--color-acento);
+  border: none;
+  border-radius: var(--radio);
+  cursor: pointer;
+}
+
+.principal:hover {
+  background: var(--color-acento-hover);
+}
+
+.sinApartado {
+  margin-top: var(--espacio-4);
+}
+
+.sinApartado .nombre {
+  color: var(--color-texto-suave);
+  font-style: italic;
+}
+
+.vacio {
+  margin: var(--espacio-1) 0 0;
+  color: var(--color-texto-suave);
+  font-style: italic;
+  font-size: var(--tamano-pequeno);
+}
+
+.error {
+  color: var(--color-error);
+  font-size: var(--tamano-pequeno);
+}
+
+.oculto {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

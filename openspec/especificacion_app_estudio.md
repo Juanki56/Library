@@ -28,6 +28,26 @@ Los proyectos sirven para organizar el estudio de un tema o área de interés. E
 
 Un proyecto puede relacionarse con notas, libros y fuentes o recursos relevantes.
 
+#### Apartados del proyecto
+
+**Estado: acordado e implementado (2026-10-27).**
+
+Un proyecto conserva su nombre, pero puede **dividirse en apartados** para organizar mejor su contenido.
+
+Ejemplo: el proyecto **Estudiar filosofía** con los apartados:
+1. **Filosofía antigua:** notas de Platón y Aristóteles, libros y recursos relacionados.
+2. **Filosofía moderna:** notas sobre Descartes, Kant y otros autores.
+3. **Ética:** contenido agrupado por esa temática.
+
+**Acordado:**
+
+- Cada apartado tiene un **título** y una **descripción breve opcional**.
+- Hay un solo nivel: un apartado no contiene otros apartados.
+- Los apartados se ordenan **en el orden que elija el usuario** y se numeran (1, 2, 3…).
+- Las notas, libros y recursos del proyecto pueden colocarse en **uno o varios apartados** del mismo proyecto, **sin duplicarse**: siguen siendo el mismo elemento.
+- Lo que no está en ningún apartado aparece en el proyecto como **«Sin apartado»**.
+- **Eliminar un apartado** no quita su contenido del proyecto: las notas, libros y recursos siguen vinculados y, si no están en otro apartado, pasan a «Sin apartado». Se avisa antes de confirmar.
+
 ### 2.2 Notas
 
 Las notas son piezas centrales del archivo de conocimiento. Pueden contener explicaciones, aprendizajes, ideas, preguntas, reflexiones y referencias.
@@ -249,11 +269,26 @@ Las principales áreas de la aplicación tienen **secciones independientes** en 
 - La **estructura y el contenido de la pantalla Inicio**.
 - Dónde se coloca el acceso a la **búsqueda global** (ver §4).
 
-## 7. Dirección visual exploratoria
+## 7. Dirección visual
 
-**Estado: exploración, no aprobación final.**
+**Estado: aprobada el 2026-10-27**, tal como está implementada en la aplicación.
 
-Se están explorando estas referencias:
+### Dirección visual aprobada
+
+- **Concepto:** biblioteca clásica y archivo personal de conocimiento.
+- **Composición:** menú lateral permanente con iconos, las ocho áreas y la sección activa resaltada; cabecera con la búsqueda global; área principal con columna de lectura.
+- **Paleta:** pergamino cálido con luz de papel, marfil y beige tostado, con marrón suave y terracota como acentos. Contraste AA. Hay modo oscuro en tinta y sepia.
+- **Tipografía:** Cormorant Garamond para títulos y EB Garamond para el texto. Versalitas para etiquetas, fechas y referencias.
+- **Ornamentos:** ornamento dibujado, filetes dobles bajo los títulos de página y rombos en los encabezados. Siempre discretos.
+- **Contenido:** listas editoriales con separadores punteados, sin tarjetas; hojas de marfil con sombra para el editor, los formularios y los diálogos.
+- **Inicio:** portada con «Archivo de conocimiento», más las notas recientes, los libros y las citas guardadas.
+- Todos los valores están centralizados en `src/frontend/styles/tokens.css`.
+
+Pendiente: el **orden definitivo del menú** (§6).
+
+### Referencias exploradas (origen de la dirección aprobada)
+
+Se exploraron estas referencias:
 
 - **Estética:** biblioteca clásica.
 - **Personalidad:** archivo de conocimiento.
@@ -279,7 +314,7 @@ La idea provisional incluye:
 - Tonos pergamino y tierra con contraste suficiente.
 - Una composición serena y editorial.
 
-**Importante:** elegir esta opción solo indica qué concepto visual explorar primero. No aprueba la pantalla Inicio, su estructura, su contenido ni el diseño completo de la aplicación.
+*(Esta exploración desembocó en la dirección aprobada el 2026-10-27, descrita al principio de esta sección.)*
 
 ## 8. Reglas para diseño e implementación
 
@@ -326,8 +361,8 @@ Incorporados en §2.5 (etiquetas), §2.6 (glosario), §2.7 (citas) y §4.1 (bús
 - [ ] **Editor:** revisar el editor actual frente a la dirección acordada (§3) y decidir el alcance técnico (§3.2).
 - [ ] Orden y diseño del menú (las áreas ya están acordadas, §6).
 - [ ] Qué aparece en Inicio y cómo se organiza.
-- [ ] Continuar explorando la propuesta visual de portada de libro antiguo.
-- [ ] Estructura de los proyectos.
+- [x] Dirección visual: aprobada el 2026-10-27 (§7).
+- [x] Estructura de los proyectos: apartados (2026-10-27, §2.1).
 - [ ] Campos y tipos de libros.
 - [ ] Tipos de fuentes y recursos y sus datos.
 - [ ] Cómo se muestran los elementos relacionados.
@@ -347,7 +382,7 @@ Actualizar este documento **no** cambia el código ni las specs históricas de O
 | Área | Implementado | Acordado, sin implementar | Exploratorio o pendiente |
 |---|---|---|---|
 | Cuentas | Registro con confirmación, entrada, salida, aislamiento por usuario | — | SMTP propio (aplazado) |
-| Proyectos | Crear, editar, eliminar con aviso, relacionados | — | Estructura detallada |
+| Proyectos | Crear, editar, eliminar con aviso, relacionados, apartados (§2.1) | — | — |
 | Notas | Crear, editar, ordenar por fechas, eliminar con aviso, relacionados | — | — |
 | Libros | Ficha provisional, relacionados, eliminar con aviso | — | Campos y tipos definitivos |
 | Fuentes y recursos | Ficha provisional, relacionados, eliminar con aviso | — | Tipos y datos definitivos |
@@ -358,7 +393,7 @@ Actualizar este documento **no** cambia el código ni las specs históricas de O
 | Etiquetas | — | §2.5, incluido E3 | Etiquetas en citas y glosario (más adelante) |
 | Glosario | — | §2.6, incluidos E4 y E5 | Relaciones opcionales (más adelante) |
 | Búsqueda global | — | §4 y §4.1, incluido E6 | Filtros adicionales (más adelante) |
-| Identidad visual | Tokens provisionales | — | Toda la dirección visual (§7) |
+| Identidad visual | Dirección aprobada aplicada a toda la app (§7) | — | Orden del menú (§6) |
 
 ### 9.6 OpenSpec: documentos que habrá que actualizar en el próximo cambio
 
@@ -393,6 +428,9 @@ El cambio `especificacion-inicial-app-estudio` refleja lo **implementado** y no 
 - **2026-10-27 — Revisión del editor de notas:** el alcance definitivo, el tipo de editor y la organización del contenido vuelven a estar **pendientes**. El editor construido se mantiene sin cambios como provisional. Motivo: aclaración del usuario de que no aprobó limitarse a un editor mínimo ni uno completo por bloques. Ver «Puntos a revisar», 1.
 - **2026-10-27 — Dirección del editor:** experiencia parecida a Word o Notion, con texto con formato, imágenes y vídeos (distinguiendo entre enlazar e incrustar o adjuntar), enlaces externos y referencias a otras notas sin duplicar contenido (§3.1). El editor actual se mantiene como base provisional, sin cambios, hasta revisar qué tiene, qué le falta y qué arquitectura conviene. Motivo: decisión del usuario.
 - **2026-10-27 — Detalles de Citas, Etiquetas, Glosario y Búsqueda (E1–E6 y §9.2):** citas con fuente en texto libre, enlace opcional a un libro o recurso y tipo (cita por defecto); etiquetas que se pueden renombrar y eliminar con advertencia, sin distinguir mayúsculas ni tildes y creables al asignarlas; glosario sin términos duplicados, con término y definición obligatorios; búsqueda también por autores, sin tildes, por prefijo y con cuadro en la cabecera. Se dejan para más adelante los puntos de §9.3. Motivo: confirmación del usuario de las recomendaciones.
+- **2026-10-27 — Dirección visual aprobada:** el diseño implementado (biblioteca clásica, pergamino, menú lateral, Cormorant y EB Garamond, listas editoriales) queda aprobado (§7). Motivo: aprobación del usuario.
+- **2026-10-27 — Apartados en los proyectos:** un proyecto puede dividirse en apartados ordenados por el usuario, con título y descripción opcional. Las notas, libros y recursos del proyecto pueden estar en varios apartados sin duplicarse; lo que no está en ninguno aparece como «Sin apartado»; eliminar un apartado no quita su contenido del proyecto (§2.1). Motivo: decisión del usuario.
+- **2026-10-27 — Apartados implementados:** cambio `apartados-proyectos` archivado; las specs oficiales `proyectos` y `relaciones` incluyen los apartados.
 
 ## 10. Prompt de trabajo para Specs o Claude Code
 

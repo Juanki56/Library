@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useRef } from "react";
+import { useActionState, useId, useRef } from "react";
 import styles from "./ConfirmarEliminacion.module.css";
 
 type Estado = { error?: string };
@@ -9,20 +9,28 @@ type Props = {
   nombre: string;
   aviso: string;
   accion: (estado: Estado, formulario: FormData) => Promise<Estado>;
+  // Nombre accesible del botón cuando hay varios en la misma página (por ejemplo, un apartado).
+  etiquetaBoton?: string;
 };
 
 // Pide confirmación antes de eliminar y muestra cuántos vínculos se perderán (spec relaciones).
-export default function ConfirmarEliminacion({ id, nombre, aviso, accion }: Props) {
+export default function ConfirmarEliminacion({ id, nombre, aviso, accion, etiquetaBoton }: Props) {
   const dialogo = useRef<HTMLDialogElement>(null);
+  const idTitulo = useId();
   const [estado, enviar, enviando] = useActionState(accion, {});
 
   return (
     <>
-      <button type="button" className={styles.abrir} onClick={() => dialogo.current?.showModal()}>
+      <button
+        type="button"
+        className={styles.abrir}
+        aria-label={etiquetaBoton}
+        onClick={() => dialogo.current?.showModal()}
+      >
         Eliminar
       </button>
-      <dialog ref={dialogo} className={styles.dialogo} aria-labelledby="titulo-eliminar">
-        <h2 id="titulo-eliminar" className={styles.titulo}>
+      <dialog ref={dialogo} className={styles.dialogo} aria-labelledby={idTitulo}>
+        <h2 id={idTitulo} className={styles.titulo}>
           ¿Eliminar «{nombre}»?
         </h2>
         <p>{aviso}</p>

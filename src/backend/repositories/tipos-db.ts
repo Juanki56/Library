@@ -39,6 +39,164 @@ export type Database = {
   }
   public: {
     Tables: {
+      apartado_libro: {
+        Row: {
+          apartado_id: string
+          creado_en: string
+          libro_id: string
+          proyecto_id: string
+          usuario_id: string
+        }
+        Insert: {
+          apartado_id: string
+          creado_en?: string
+          libro_id: string
+          proyecto_id: string
+          usuario_id?: string
+        }
+        Update: {
+          apartado_id?: string
+          creado_en?: string
+          libro_id?: string
+          proyecto_id?: string
+          usuario_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "apartado_libro_apartado_id_proyecto_id_usuario_id_fkey"
+            columns: ["apartado_id", "proyecto_id", "usuario_id"]
+            isOneToOne: false
+            referencedRelation: "apartados"
+            referencedColumns: ["id", "proyecto_id", "usuario_id"]
+          },
+          {
+            foreignKeyName: "apartado_libro_libro_id_proyecto_id_fkey"
+            columns: ["libro_id", "proyecto_id"]
+            isOneToOne: false
+            referencedRelation: "libro_proyecto"
+            referencedColumns: ["libro_id", "proyecto_id"]
+          },
+        ]
+      }
+      apartado_nota: {
+        Row: {
+          apartado_id: string
+          creado_en: string
+          nota_id: string
+          proyecto_id: string
+          usuario_id: string
+        }
+        Insert: {
+          apartado_id: string
+          creado_en?: string
+          nota_id: string
+          proyecto_id: string
+          usuario_id?: string
+        }
+        Update: {
+          apartado_id?: string
+          creado_en?: string
+          nota_id?: string
+          proyecto_id?: string
+          usuario_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "apartado_nota_apartado_id_proyecto_id_usuario_id_fkey"
+            columns: ["apartado_id", "proyecto_id", "usuario_id"]
+            isOneToOne: false
+            referencedRelation: "apartados"
+            referencedColumns: ["id", "proyecto_id", "usuario_id"]
+          },
+          {
+            foreignKeyName: "apartado_nota_nota_id_proyecto_id_fkey"
+            columns: ["nota_id", "proyecto_id"]
+            isOneToOne: false
+            referencedRelation: "nota_proyecto"
+            referencedColumns: ["nota_id", "proyecto_id"]
+          },
+        ]
+      }
+      apartado_recurso: {
+        Row: {
+          apartado_id: string
+          creado_en: string
+          proyecto_id: string
+          recurso_id: string
+          usuario_id: string
+        }
+        Insert: {
+          apartado_id: string
+          creado_en?: string
+          proyecto_id: string
+          recurso_id: string
+          usuario_id?: string
+        }
+        Update: {
+          apartado_id?: string
+          creado_en?: string
+          proyecto_id?: string
+          recurso_id?: string
+          usuario_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "apartado_recurso_apartado_id_proyecto_id_usuario_id_fkey"
+            columns: ["apartado_id", "proyecto_id", "usuario_id"]
+            isOneToOne: false
+            referencedRelation: "apartados"
+            referencedColumns: ["id", "proyecto_id", "usuario_id"]
+          },
+          {
+            foreignKeyName: "apartado_recurso_recurso_id_proyecto_id_fkey"
+            columns: ["recurso_id", "proyecto_id"]
+            isOneToOne: false
+            referencedRelation: "recurso_proyecto"
+            referencedColumns: ["recurso_id", "proyecto_id"]
+          },
+        ]
+      }
+      apartados: {
+        Row: {
+          actualizado_en: string
+          creado_en: string
+          descripcion: string | null
+          id: string
+          posicion: number
+          proyecto_id: string
+          titulo: string
+          usuario_id: string
+        }
+        Insert: {
+          actualizado_en?: string
+          creado_en?: string
+          descripcion?: string | null
+          id?: string
+          posicion: number
+          proyecto_id: string
+          titulo: string
+          usuario_id?: string
+        }
+        Update: {
+          actualizado_en?: string
+          creado_en?: string
+          descripcion?: string | null
+          id?: string
+          posicion?: number
+          proyecto_id?: string
+          titulo?: string
+          usuario_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "apartados_proyecto_id_usuario_id_fkey"
+            columns: ["proyecto_id", "usuario_id"]
+            isOneToOne: false
+            referencedRelation: "proyectos"
+            referencedColumns: ["id", "usuario_id"]
+          },
+        ]
+      }
       libro_proyecto: {
         Row: {
           creado_en: string
@@ -386,6 +544,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      mover_apartado: {
+        Args: { apartado: string; direccion: string }
+        Returns: undefined
+      }
       tablas_sin_rls: { Args: never; Returns: string[] }
     }
     Enums: {
