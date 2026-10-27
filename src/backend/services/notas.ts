@@ -63,34 +63,51 @@ export async function crearNota(cliente: Cliente, titulo: string): Promise<Resul
   return { ok: true, valor: data.id };
 }
 
-// Guarda título y contenido. El contenido llega como JSON desde el navegador y se
-// normaliza al alcance aprobado del editor antes de guardarlo.
-export async function guardarNota(
-  cliente: Cliente,
-  id: string,
-  titulo: string,
-  contenidoJson: string,
-): Promise<Resultado> {
-  const invalido = validarTitulo(titulo);
-  if (invalido) return { ok: false, error: invalido };
-  if (contenidoJson.length > TAMANO_MAXIMO) return { ok: false, error: "La nota es demasiado larga." };
+type Cambios = { titulo: string; contenido: Json; contenido_texto: string };
 
+// Valida el título y normaliza el contenido (JSON del navegador) al alcance aprobado del editor.
+function prepararCambios(titulo: string, contenidoJson: string): { cambios: Cambios } | { error: string } {
+  const invalido = validarTitulo(titulo);
+  if (invalido) return { error: invalido };
+  if (contenidoJson.length > TAMANO_MAXIMO) return { error: "La nota es demasiado larga." };
   let entrada: unknown;
   try {
     entrada = JSON.parse(contenidoJson);
   } catch {
-    return { ok: false, error: ERROR_CONTENIDO };
+    return { error: ERROR_CONTENIDO };
   }
   const contenido = normalizarContenido(entrada);
-  if (!contenido) return { ok: false, error: ERROR_CONTENIDO };
+  if (!contenido) return { error: ERROR_CONTENIDO };
+  return {
+    cambios: { titulo: titulo.trim(), contenido: contenido as unknown as Json, contenido_texto: textoPlano(contenido) },
+  };
+}
 
-  const { data, error } = await repo.actualizarNota(cliente, id, {
-    titulo: titulo.trim(),
-    contenido: contenido as unknown as Json,
-    contenido_texto: textoPlano(contenido),
-  });
-  if (error?.code === "22P02") return { ok: false, error: ERROR_NO_EXISTE };
-  if (error) return { ok: false, error: ERROR_GENERICO };
-  if (!data.length) return { ok: false, error: ERROR_NO_EXISTE };
-  return { ok: true, valor: undefined };
+// Resultado del guardado automático (design D5 y D7): la versión es la fecha de modificación
+// tal como la devuelve la base de datos. «validacion»: error que no se arregla reintentando.
+export type ResultadoGuardado =
+  | { tipo: "ok"; version: string }
+  | { tipo: "conflicto"; version: string }
+  | { tipo: "error"; error: string; validacion: boolean };
+
+// Guarda solo si la nota sigue en la versión base; si cambió en otro sitio, no la sobrescribe.
+export async function guardarConVersion(
+  cliente: Cliente,
+  id: string,
+  titulo: string,
+  contenidoJson: string,
+  versionBase: string,
+): Promise<ResultadoGuardado> {
+  const preparado = prepararCambios(titulo, contenidoJson);
+  if ("error" in preparado) return { tipo: "error", error: preparado.error, validacion: true };
+
+  const { data, error } = await repo.actualizarNotaSiVersion(cliente, id, preparado.cambios, versionBase);
+  if (error?.code === "22P02") return { tipo: "error", error: ERROR_NO_EXISTE, validacion: true };
+  if (error) return { tipo: "error", error: ERROR_GENERICO, validacion: false };
+  if (data.length) return { tipo: "ok", version: data[0].actualizado_en };
+
+  const actual = await repo.versionDeNota(cliente, id);
+  if (actual.error) return { tipo: "error", error: ERROR_GENERICO, validacion: false };
+  if (!actual.data) return { tipo: "error", error: ERROR_NO_EXISTE, validacion: true };
+  return { tipo: "conflicto", version: actual.data.actualizado_en };
 }

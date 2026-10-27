@@ -57,8 +57,8 @@ test("el formato se conserva al reabrir la nota (spec editor-notas)", async ({ p
   await page.getByRole("button", { name: "Cita en bloque" }).click();
   await page.keyboard.type("La historia de toda sociedad");
 
-  await page.getByRole("button", { name: "Guardar" }).click();
-  await expect(page.getByRole("status")).toHaveText("Guardado.");
+  // Guardado automático (editor-fase1-escritura): ya no hay botón «Guardar».
+  await expect(page.getByRole("status", { name: "Estado del guardado" })).toHaveText("Guardado");
 
   await page.reload();
   await expect(editor.locator("h2")).toHaveText("Ideas clave");
@@ -75,15 +75,12 @@ test("un enlace que no es web no se añade (spec editor-notas)", async ({ page }
   await page.keyboard.type("peligro");
   await page.keyboard.press("Shift+Home");
 
-  const mensajes: string[] = [];
-  page.on("dialog", async (dialogo) => {
-    mensajes.push(dialogo.type());
-    if (dialogo.type() === "prompt") await dialogo.accept("javascript:alert(1)");
-    else await dialogo.accept();
-  });
-  await page.getByRole("button", { name: "Enlace" }).click();
-
-  await expect.poll(() => mensajes).toEqual(["prompt", "alert"]);
+  await page.getByRole("toolbar", { name: "Formato", exact: true }).getByRole("button", { name: "Enlace" }).click();
+  const cuadro = page.getByRole("dialog", { name: "Añadir enlace" });
+  await cuadro.getByLabel("Dirección web").fill("javascript:alert(1)");
+  await cuadro.getByRole("button", { name: "Aplicar" }).click();
+  await expect(cuadro.getByRole("alert")).toBeVisible();
+  await cuadro.getByRole("button", { name: "Cancelar" }).click();
   await expect(editor.locator("a")).toHaveCount(0);
 });
 

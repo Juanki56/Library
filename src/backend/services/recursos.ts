@@ -1,7 +1,7 @@
 import "server-only";
 import type { Cliente } from "@/backend/repositories/clienteLibre";
 import * as repo from "@/backend/repositories/recursos";
-import { esEnlaceWeb } from "./contenidoNota";
+import { esEnlaceWeb } from "./enlaces";
 
 // Fuente o recurso: campos provisionales y sin tipos (spec fuentes-recursos).
 export type Recurso = repo.DatosRecurso & { id: string };

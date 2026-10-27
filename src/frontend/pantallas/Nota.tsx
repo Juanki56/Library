@@ -38,6 +38,7 @@ export default async function Nota({ id }: { id: string }) {
       <FormularioNota
         id={nota.id}
         titulo={nota.titulo}
+        version={nota.actualizadoEn}
         contenido={nota.contenido as JSONContent}
       />
       <EtiquetasElemento tipo="nota" id={nota.id} propias={etiquetas.propias} todas={etiquetas.todas} />

@@ -178,17 +178,38 @@ Se distinguen como capacidades diferentes:
 | **Imagen** | Un enlace a una imagen que está en otro sitio. | La imagen se ve **dentro** de la nota: insertada desde una dirección web o **adjuntada** (subida a la aplicación). |
 | **Otra nota** | — | Una **referencia** a la nota existente: muestra su título actual y lleva a ella; **no copia** su contenido. |
 
-### 3.2 Pendiente de concretar (alcance técnico)
+### 3.2 Alcance técnico acordado (2026-10-27)
 
-- Qué fuentes de vídeo se pueden incrustar (por ejemplo, YouTube y Vimeo) y si se podrán **subir vídeos propios**.
-- Si las imágenes se pueden **adjuntar** (subir) además de insertarse desde una dirección web, y con qué límites de tamaño.
-- Cómo se ve una referencia a otra nota y qué ocurre si la nota referenciada se elimina.
-- Qué se entiende por «bien organizado»: mover bloques, separadores, plegar secciones, índice…
-- Si las referencias se amplían a libros, proyectos, recursos, citas o términos del glosario.
+**Evaluación:** el editor actual (Tiptap 3 sobre ProseMirror, contenido en JSON y filtrado en el servidor) es una base adecuada. **Se amplía, no se reconstruye**, y las notas existentes siguen siendo válidas.
+
+**Decisiones:**
+
+1. **Imágenes:** se pueden **subir** (máximo 5 MB por imagen) y también **insertar desde una URL**.
+   - Se almacenan de forma **privada por usuario** y siguen apareciendo al volver a abrir la nota.
+   - Si falla la subida o el guardado, el usuario recibe un aviso y el contenido **no se da por guardado**.
+2. **Vídeos:** solo **enlaces** e **incrustaciones de YouTube y Vimeo**. Subir vídeos propios queda fuera por ahora.
+3. **Referencias:**
+   - Por ahora, a **otras notas**.
+   - La referencia guarda el **identificador** y muestra siempre el **título actualizado**, sin duplicar contenido.
+   - El diseño debe permitir ampliarla después a otros tipos de elementos.
+4. **«Notas que la mencionan»:** cada nota muestra qué otras notas hacen referencia a ella.
+5. **Guardado automático:**
+   - Muestra claramente «Guardando…», «Guardado» o un mensaje de error.
+   - Evita perder cambios al navegar, al cerrar la nota o ante problemas de conexión.
+   - **No sobrescribe cambios más recientes.**
+6. **Formato:**
+   - Fase 1: subrayado, resaltado, separadores y listas de tareas.
+   - Fase 4: tablas.
+   - Sin bloques de código por ahora.
+7. **Orden de implementación:**
+   - **Fase 1:** experiencia de escritura (guardado automático, menú al seleccionar, menú «/», cuadro de enlaces y formatos nuevos).
+   - **Fase 2:** referencias a notas y «Notas que la mencionan».
+   - **Fase 3:** imágenes y vídeos.
+   - **Fase 4:** mover bloques, índice de la nota y tablas.
 
 ### 3.3 Estado actual
 
-El editor construido es la **base provisional**. Incluye títulos y subtítulos, negrita, cursiva, listas, citas en bloque y enlaces web, y guarda el contenido en formato estructurado (JSON). **No se amplía, recorta ni reconstruye** hasta que se revise qué tiene, qué le falta y qué arquitectura permite llegar a la dirección acordada sin rehacerlo innecesariamente.
+**Fase 1 implementada (2026-10-27).** El editor tiene títulos y subtítulos, negrita, cursiva, subrayado, resaltado, listas con viñetas, numeradas y de tareas, citas en bloque, separadores y enlaces web con cuadro propio, menú al seleccionar y menú «/». Guarda automáticamente con versión (sin sobrescribir cambios más recientes) y copia local de seguridad. El contenido se guarda en formato estructurado (JSON). Cada fase se prepara como un cambio de OpenSpec antes de implementarla.
 
 ## 4. Búsqueda global
 
@@ -358,7 +379,7 @@ Incorporados en §2.5 (etiquetas), §2.6 (glosario), §2.7 (citas) y §4.1 (bús
 
 ### 9.4 Otros pendientes generales
 
-- [ ] **Editor:** revisar el editor actual frente a la dirección acordada (§3) y decidir el alcance técnico (§3.2).
+- [x] **Editor:** evaluado y con alcance técnico acordado en cuatro fases (2026-10-27, §3.2).
 - [ ] Orden y diseño del menú (las áreas ya están acordadas, §6).
 - [ ] Qué aparece en Inicio y cómo se organiza.
 - [x] Dirección visual: aprobada el 2026-10-27 (§7).
@@ -387,7 +408,7 @@ Actualizar este documento **no** cambia el código ni las specs históricas de O
 | Libros | Ficha provisional, relacionados, eliminar con aviso | — | Campos y tipos definitivos |
 | Fuentes y recursos | Ficha provisional, relacionados, eliminar con aviso | — | Tipos y datos definitivos |
 | Relaciones | Vínculos sin duplicar entre las 4 entidades | Enlace opcional de una cita con un libro o recurso (E1) | Forma visual de los relacionados |
-| Editor de notas | Base provisional (§3.3) | Dirección funcional (§3.1) | Alcance técnico (§3.2) |
+| Editor de notas | Fase 1 (§3.3) | Fases 2 a 4 (§3.2) | — |
 | Menú | Las ocho áreas con su sección | — | Orden definitivo |
 | Citas | Sección completa (§2.7) | — | Filtros propios (más adelante) |
 | Etiquetas | Sección completa (§2.5) | — | Etiquetas en citas y glosario (más adelante) |
@@ -432,6 +453,8 @@ El cambio `especificacion-inicial-app-estudio` refleja lo **implementado** y no 
 - **2026-10-27 — Apartados en los proyectos:** un proyecto puede dividirse en apartados ordenados por el usuario, con título y descripción opcional. Las notas, libros y recursos del proyecto pueden estar en varios apartados sin duplicarse; lo que no está en ninguno aparece como «Sin apartado»; eliminar un apartado no quita su contenido del proyecto (§2.1). Motivo: decisión del usuario.
 - **2026-10-27 — Apartados implementados:** cambio `apartados-proyectos` archivado; las specs oficiales `proyectos` y `relaciones` incluyen los apartados.
 - **2026-10-27 — Citas, Etiquetas, Glosario y Búsqueda implementados:** cambio `secciones-citas-etiquetas-glosario-busqueda` archivado; specs oficiales actualizadas.
+- **2026-10-27 — Alcance técnico del editor:** se amplía el editor actual en cuatro fases. Imágenes subidas (5 MB, privadas) o desde URL; solo vídeos de YouTube y Vimeo; referencias a notas por identificador, ampliables a otros tipos; «Notas que la mencionan»; guardado automático sin sobrescribir cambios más recientes; subrayado, resaltado, separadores y listas de tareas, y tablas en la fase 4 (§3.2). Motivo: decisión del usuario sobre la evaluación propuesta.
+- **2026-10-27 — Fase 1 del editor implementada:** cambio `editor-fase1-escritura` archivado; la spec oficial `editor-notas` incluye guardado automático, formatos nuevos, menús y cuadro de enlaces.
 
 ## 10. Prompt de trabajo para Specs o Claude Code
 

@@ -20,18 +20,18 @@ export async function crearNota(_estado: EstadoNota, formulario: FormData): Prom
   redirect(`/notas/${resultado.valor}`);
 }
 
-export async function guardarNota(_estado: EstadoNota, formulario: FormData): Promise<EstadoNota> {
-  const id = texto(formulario, "id");
-  const resultado = await notas.guardarNota(
-    await crearClienteServidor(),
-    id,
-    texto(formulario, "titulo"),
-    texto(formulario, "contenido"),
-  );
-  if (!resultado.ok) return { error: resultado.error };
-  revalidatePath("/notas");
-  revalidatePath(`/notas/${id}`);
-  return { guardado: true };
+// Guardado automático con versión (design D5 y D7). No refresca la página: las secciones del
+// archivo son dinámicas y leen la versión guardada al volver a abrirlas.
+export async function guardarNotaAutomatico(
+  id: string,
+  titulo: string,
+  contenido: string,
+  versionBase: string,
+): Promise<notas.ResultadoGuardado> {
+  if (typeof id !== "string" || typeof titulo !== "string" || typeof contenido !== "string" || typeof versionBase !== "string") {
+    return { tipo: "error", error: notas.ERROR_CONTENIDO, validacion: true };
+  }
+  return notas.guardarConVersion(await crearClienteServidor(), id, titulo, contenido, versionBase);
 }
 
 export async function eliminarNota(_estado: EstadoNota, formulario: FormData): Promise<EstadoNota> {

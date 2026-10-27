@@ -1,6 +1,9 @@
-// Contenido de las notas: JSON del editor (design D6) limitado al alcance inicial
-// aprobado en la spec editor-notas. El servidor no confía en lo que envía el navegador:
+// Contenido de las notas: JSON del editor (design D6) limitado al alcance aprobado en la
+// spec editor-notas. El servidor no confía en lo que envía el navegador:
 // descarta nodos, marcas y enlaces fuera de ese alcance antes de guardar.
+import { esEnlaceWeb } from "./enlaces";
+
+export { esEnlaceWeb };
 
 export type NodoContenido = {
   type: string;
@@ -24,20 +27,13 @@ const NODOS = new Set([
   "listItem",
   "blockquote",
   "hardBreak",
+  "horizontalRule",
+  "taskList",
+  "taskItem",
 ]);
-const MARCAS = new Set(["bold", "italic", "link"]);
+const MARCAS = new Set(["bold", "italic", "underline", "highlight", "link"]);
 const NIVELES_TITULO = new Set([2, 3]); // el título de la nota ocupa el nivel 1
-const BLOQUES = new Set(["paragraph", "heading", "listItem", "blockquote"]);
-
-export function esEnlaceWeb(href: unknown): href is string {
-  if (typeof href !== "string") return false;
-  try {
-    const url = new URL(href);
-    return url.protocol === "http:" || url.protocol === "https:";
-  } catch {
-    return false;
-  }
-}
+const BLOQUES = new Set(["paragraph", "heading", "listItem", "taskItem", "blockquote"]);
 
 function esObjeto(valor: unknown): valor is Record<string, unknown> {
   return typeof valor === "object" && valor !== null && !Array.isArray(valor);
@@ -73,6 +69,9 @@ function limpiarNodo(valor: unknown): NodoContenido | null {
   }
   if (tipo === "orderedList" && esObjeto(valor.attrs) && typeof valor.attrs.start === "number") {
     nodo.attrs = { start: valor.attrs.start };
+  }
+  if (tipo === "taskItem") {
+    nodo.attrs = { checked: esObjeto(valor.attrs) && valor.attrs.checked === true };
   }
   if (Array.isArray(valor.content)) {
     const hijos = valor.content.map(limpiarNodo).filter((n): n is NodoContenido => n !== null);

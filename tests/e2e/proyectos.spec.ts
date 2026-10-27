@@ -82,8 +82,7 @@ test("ejemplo «Comunismo»: notas y libros relacionados, sin copias (specs proy
   // Un cambio hecho desde un proyecto se ve desde el otro (spec notas).
   await grupo(page, "Notas").getByRole("link", { name: "La lucha de clases" }).click();
   await page.getByRole("textbox", { name: "Título", exact: true }).fill("La lucha de clases (revisada)");
-  await page.getByRole("button", { name: "Guardar" }).click();
-  await expect(page.getByRole("status")).toHaveText("Guardado.");
+  await expect(page.getByRole("status", { name: "Estado del guardado" })).toHaveText("Guardado");
 
   await page.goto(`/proyectos/${historia}`);
   await expect(grupo(page, "Notas").getByRole("link", { name: "La lucha de clases (revisada)" })).toBeVisible();

@@ -103,3 +103,199 @@
     padding: var(--espacio-4) var(--espacio-3) var(--espacio-5);
   }
 }
+
+/* Grupos de la barra, separados por un filete fino. */
+.grupo {
+  display: flex;
+  gap: var(--espacio-1);
+  padding-right: var(--espacio-2);
+  margin-right: var(--espacio-1);
+  border-right: 1px solid var(--color-borde);
+}
+
+.grupo:last-child {
+  border-right: none;
+}
+
+/* Menú junto a la selección. */
+.burbuja {
+  display: flex;
+  gap: 2px;
+  padding: var(--espacio-1);
+  background: var(--color-superficie);
+  border: 1px solid var(--color-ornamento);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra-hoja);
+}
+
+/* Menú «/» para insertar bloques. */
+.menuBarra {
+  position: fixed;
+  z-index: 10;
+  min-width: 15rem;
+  padding: var(--espacio-1);
+  background: var(--color-superficie);
+  border: 1px solid var(--color-ornamento);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra-hoja);
+}
+
+.opcion {
+  display: flex;
+  flex-direction: column;
+  padding: var(--espacio-1) var(--espacio-2);
+  border-radius: var(--radio);
+  cursor: pointer;
+}
+
+.opcion[aria-selected="true"] {
+  background: var(--color-fondo);
+  box-shadow: inset 2px 0 0 var(--color-acento);
+}
+
+.opcionTitulo {
+  font-family: var(--fuente-titulos);
+  font-weight: 600;
+}
+
+.opcionDescripcion {
+  font-size: var(--tamano-versalitas);
+  color: var(--color-texto-suave);
+}
+
+/* Contenido: resaltado, separador y listas de tareas. */
+.contenido mark {
+  color: var(--color-texto);
+  background: var(--color-lateral);
+  border-radius: 2px;
+  padding: 0 2px;
+}
+
+.contenido hr {
+  border: none;
+  border-top: 3px double var(--color-ornamento);
+  margin: var(--espacio-4) 20%;
+}
+
+.contenido ul[data-type="taskList"] {
+  list-style: none;
+  padding-left: 0;
+}
+
+.contenido ul[data-type="taskList"] li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--espacio-2);
+}
+
+.contenido ul[data-type="taskList"] li > label {
+  margin-top: 0.35em;
+}
+
+.contenido ul[data-type="taskList"] li > div {
+  flex: 1;
+}
+
+.contenido ul[data-type="taskList"] input[type="checkbox"] {
+  width: 1.05rem;
+  height: 1.05rem;
+  accent-color: var(--color-acento);
+}
+
+.contenido ul[data-type="taskList"] li[data-checked="true"] > div {
+  color: var(--color-texto-suave);
+  text-decoration: line-through;
+}
+
+/* Cuadro de enlaces. */
+.cuadro {
+  max-width: 28rem;
+  width: 90vw;
+  color: var(--color-texto);
+  background: var(--color-superficie);
+  border: 3px double var(--color-ornamento);
+  border-radius: var(--radio);
+  padding: var(--espacio-4);
+  box-shadow: var(--sombra-hoja);
+}
+
+.cuadro::backdrop {
+  background: var(--color-velo);
+}
+
+.cuadroFormulario {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+}
+
+.cuadroTitulo {
+  margin: 0;
+  font-size: var(--tamano-h2);
+}
+
+.cuadroCampo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-1);
+  font-size: var(--tamano-versalitas);
+  font-variant: small-caps;
+  text-transform: lowercase;
+  letter-spacing: var(--interletraje-versalitas);
+  font-weight: 600;
+  color: var(--color-texto-suave);
+}
+
+.cuadroCampo input {
+  font: inherit;
+  font-family: var(--fuente-texto);
+  font-size: var(--tamano-texto);
+  font-variant: normal;
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 400;
+  color: var(--color-texto);
+  background: var(--color-fondo);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  padding: var(--espacio-2) var(--espacio-3);
+}
+
+.cuadroError {
+  margin: 0;
+  color: var(--color-error);
+  font-size: var(--tamano-pequeno);
+}
+
+.cuadroAcciones {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--espacio-2);
+}
+
+.cuadroPrincipal,
+.cuadroSecundario {
+  min-height: 2.5rem;
+  padding: 0 var(--espacio-3);
+  font: inherit;
+  font-size: var(--tamano-pequeno);
+  font-variant: small-caps;
+  text-transform: lowercase;
+  letter-spacing: 0.06em;
+  border-radius: var(--radio);
+  cursor: pointer;
+}
+
+.cuadroPrincipal {
+  font-weight: 600;
+  color: var(--color-sobre-acento);
+  background: var(--color-acento);
+  border: none;
+}
+
+.cuadroSecundario {
+  color: var(--color-texto);
+  background: transparent;
+  border: 1px solid var(--color-borde);
+}
