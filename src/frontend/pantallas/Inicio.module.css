@@ -1,0 +1,11 @@
+.pagina {
+  max-width: var(--ancho-lectura);
+  margin: 0 auto;
+  padding: var(--espacio-5) var(--espacio-3);
+}
+
+.subtitulo {
+  color: var(--color-texto-suave);
+  border-top: 1px solid var(--color-ornamento);
+  padding-top: var(--espacio-3);
+}

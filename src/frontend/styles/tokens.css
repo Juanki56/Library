@@ -1,0 +1,50 @@
+/*
+ * Tokens de diseño PROVISIONALES (spec identidad-visual: [Exploratorio]).
+ * Dirección en exploración: biblioteca clásica, pergamino y tonos tierra.
+ * Es el único archivo con valores de color, tipografía y espaciado:
+ * el resto de estilos debe usar estas variables.
+ */
+:root {
+  /* Color */
+  --color-fondo: #f6efe0;
+  --color-superficie: #fbf7ee;
+  --color-texto: #2b2118;
+  --color-texto-suave: #5c4a3a;
+  --color-acento: #7a3e1d;
+  --color-acento-hover: #5e2f15;
+  --color-borde: #d8c8a8;
+  --color-ornamento: #a8875a;
+  --color-error: #9b1c1c;
+
+  /* Tipografía */
+  --fuente-texto: var(--fuente-garamond), Georgia, "Times New Roman", serif;
+  --fuente-titulos: var(--fuente-cormorant), Georgia, "Times New Roman", serif;
+  --tamano-texto: 1.125rem;
+  --tamano-pequeno: 0.95rem;
+  --tamano-h1: 2.5rem;
+  --tamano-h2: 1.75rem;
+  --interlineado: 1.65;
+
+  /* Espaciado */
+  --espacio-1: 0.25rem;
+  --espacio-2: 0.5rem;
+  --espacio-3: 1rem;
+  --espacio-4: 1.5rem;
+  --espacio-5: 2.5rem;
+  --ancho-lectura: 42rem;
+  --radio: 4px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-fondo: #1d1813;
+    --color-superficie: #262019;
+    --color-texto: #efe6d4;
+    --color-texto-suave: #c4b49c;
+    --color-acento: #d9a066;
+    --color-acento-hover: #e8b884;
+    --color-borde: #4a3f32;
+    --color-ornamento: #8a7350;
+    --color-error: #f08a8a;
+  }
+}

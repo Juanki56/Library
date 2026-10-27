@@ -1,0 +1,43 @@
+@import "./tokens.css";
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--color-fondo);
+  color: var(--color-texto);
+  font-family: var(--fuente-texto);
+  font-size: var(--tamano-texto);
+  line-height: var(--interlineado);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--fuente-titulos);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: var(--tamano-h1);
+}
+
+h2 {
+  font-size: var(--tamano-h2);
+}
+
+a {
+  color: var(--color-acento);
+}
+
+a:hover {
+  color: var(--color-acento-hover);
+}
