@@ -22,7 +22,7 @@
 .campo {
   width: 100%;
   min-height: 2.75rem;
-  padding: var(--espacio-2) 7.5rem var(--espacio-2) 2.75rem;
+  padding: var(--espacio-2) var(--espacio-3) var(--espacio-2) 2.75rem;
   font: inherit;
   font-size: var(--tamano-pequeno);
   color: var(--color-texto);
@@ -36,17 +36,9 @@
   font-style: italic;
 }
 
-.campo:disabled {
-  cursor: not-allowed;
-}
-
-.estado {
-  position: absolute;
-  right: var(--espacio-3);
-  font-size: 0.75rem;
-  font-variant: small-caps;
-  letter-spacing: var(--interletraje-versalitas);
-  color: var(--color-texto-suave);
+.campo:focus {
+  outline: 2px solid var(--color-acento);
+  outline-offset: 1px;
 }
 
 .oculto {

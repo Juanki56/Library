@@ -101,6 +101,11 @@
   color: var(--color-acento);
 }
 
+/* Citas en una lista: separación amplia, sin separadores (cada cita ya tiene su filete). */
+.elementoCita {
+  padding: var(--espacio-3) 0;
+}
+
 /* Fechas, referencias y datos secundarios: discretos, en versalitas. */
 .metadatos {
   margin: var(--espacio-1) 0 0;
@@ -113,6 +118,43 @@
 .vacio {
   color: var(--color-texto-suave);
   font-style: italic;
+}
+
+/* Elemento de lista con acciones a la derecha (renombrar, eliminar). */
+.filaAcciones {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espacio-2);
+}
+
+.accionesFila {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--espacio-3);
+}
+
+/* Grupo de una etiqueta (notas, libros…): encabezado en versalitas. */
+.grupo {
+  margin-bottom: var(--espacio-4);
+}
+
+.grupo h2 {
+  margin: 0 0 var(--espacio-1);
+  padding-bottom: var(--espacio-1);
+  font-family: var(--fuente-texto);
+  font-size: var(--tamano-versalitas);
+  font-variant: small-caps;
+  text-transform: lowercase;
+  letter-spacing: var(--interletraje-versalitas);
+  color: var(--color-texto-suave);
+  border-bottom: 1px solid var(--color-borde);
+}
+
+.separacion {
+  height: var(--espacio-4);
 }
 
 /* Pie de la ficha (eliminar): separado por un filete. */

@@ -2,7 +2,11 @@ import "server-only";
 import { crearClienteServidor } from "@/backend/auth/clienteServidor";
 import type { Entidad } from "@/backend/services/catalogo";
 import * as apartados from "@/backend/services/apartados";
+import * as busqueda from "@/backend/services/busqueda";
+import * as citas from "@/backend/services/citas";
 import * as eliminacion from "@/backend/services/eliminacion";
+import * as etiquetas from "@/backend/services/etiquetas";
+import * as glosario from "@/backend/services/glosario";
 import * as inicio from "@/backend/services/inicio";
 import * as libros from "@/backend/services/libros";
 import * as notas from "@/backend/services/notas";
@@ -12,6 +16,66 @@ import * as relacionados from "@/backend/services/relacionados";
 
 // Lecturas para las pantallas (Server Components). Las mutaciones están en los
 // controllers con "use server"; estas funciones no se exponen al navegador.
+
+export async function listarCitas(limite?: number) {
+  return citas.listarCitas(await crearClienteServidor(), limite);
+}
+
+export async function obtenerCita(id: string) {
+  return citas.obtenerCita(await crearClienteServidor(), id);
+}
+
+export async function citasDe(tipo: "libro" | "recurso", id: string) {
+  return citas.citasDe(await crearClienteServidor(), tipo, id);
+}
+
+// Libros y recursos del usuario, para el enlace opcional de una cita.
+export async function opcionesEnlaceCita() {
+  const cliente = await crearClienteServidor();
+  const [l, r] = await Promise.all([libros.listarLibros(cliente), recursos.listarRecursos(cliente)]);
+  return {
+    libros: l.map((x) => ({ id: x.id, nombre: x.titulo })),
+    recursos: r.map((x) => ({ id: x.id, nombre: x.titulo })),
+  };
+}
+
+// Etiquetas de un elemento y todas las del usuario (para sugerir al asignar).
+export async function etiquetasElemento(tipo: Entidad, id: string) {
+  const cliente = await crearClienteServidor();
+  const [propias, todas] = await Promise.all([
+    etiquetas.etiquetasDe(cliente, tipo, id),
+    etiquetas.listarEtiquetas(cliente),
+  ]);
+  return { propias, todas };
+}
+
+// Lista de etiquetas con el aviso de eliminación de cada una.
+export async function listarEtiquetasConAviso() {
+  const cliente = await crearClienteServidor();
+  const lista = await etiquetas.listarEtiquetas(cliente);
+  return Promise.all(
+    lista.map(async (e) => ({ ...e, aviso: etiquetas.textoAvisoEtiqueta(await etiquetas.contarUsos(cliente, e.id)) })),
+  );
+}
+
+export async function paginaEtiqueta(id: string, filtro?: Entidad) {
+  const cliente = await crearClienteServidor();
+  const etiqueta = await etiquetas.obtenerEtiqueta(cliente, id);
+  if (!etiqueta) return null;
+  return { etiqueta, grupos: await etiquetas.elementosDe(cliente, id, filtro) };
+}
+
+export async function glosarioPorLetra() {
+  return glosario.listarPorLetra(await crearClienteServidor());
+}
+
+export async function obtenerEntradaGlosario(id: string) {
+  return glosario.obtenerEntrada(await crearClienteServidor(), id);
+}
+
+export async function buscar(consulta: string, filtro?: busqueda.TipoBusqueda) {
+  return busqueda.buscar(await crearClienteServidor(), consulta, filtro);
+}
 
 export async function contenidoInicio() {
   return inicio.contenidoInicio(await crearClienteServidor());

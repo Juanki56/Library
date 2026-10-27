@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { contenidoInicio } from "@/backend/controllers/lecturas";
 import Ornamento from "@/frontend/components/Ornamento";
+import VistaCita from "@/frontend/components/VistaCita";
 import { fecha } from "./fechas";
 import { referencia } from "./ListaLibros";
 import styles from "./Inicio.module.css";
 
-// Inicio: portada y listas editoriales de notas recientes, libros y citas (§6 y §7).
-// Propuesta visual en revisión: no aprobada. Sin métricas, contadores ni tiempos
-// relativos (spec exclusiones-alcance, navegacion).
+// Inicio: portada y listas editoriales de notas recientes, libros y citas (spec navegacion, §7).
+// Sin métricas, contadores ni tiempos relativos (spec exclusiones-alcance).
 
 function Encabezado({ id, numeral, titulo, ruta, enlace }: {
   id: string;
@@ -35,7 +35,7 @@ function Encabezado({ id, numeral, titulo, ruta, enlace }: {
 }
 
 export default async function Inicio() {
-  const { notas, libros } = await contenidoInicio();
+  const { notas, libros, citas } = await contenidoInicio();
 
   return (
     <main className={styles.pagina}>
@@ -93,10 +93,20 @@ export default async function Inicio() {
           </section>
 
           <section aria-labelledby="inicio-citas">
-            <Encabezado id="inicio-citas" numeral="III" titulo="Citas guardadas" />
-            <p className={styles.vacio}>
-              Aquí aparecerán tus citas más recientes cuando la sección de citas esté disponible.
-            </p>
+            <Encabezado id="inicio-citas" numeral="III" titulo="Citas guardadas" ruta="/citas" enlace="Ver todas" />
+            {citas.length === 0 ? (
+              <p className={styles.vacio}>
+                Todavía no has guardado ninguna cita. <Link href="/citas/nueva">Guardar la primera</Link>
+              </p>
+            ) : (
+              <ul className={styles.listaCitas} aria-label="Citas guardadas">
+                {citas.map((c) => (
+                  <li key={c.id}>
+                    <VistaCita cita={c} />
+                  </li>
+                ))}
+              </ul>
+            )}
           </section>
         </div>
       </div>

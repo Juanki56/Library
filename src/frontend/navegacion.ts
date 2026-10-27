@@ -17,9 +17,9 @@ export const SECCIONES: { ruta: string; texto: string; icono: Icono; disponible:
   { ruta: "/libros", texto: "Libros", icono: "libros", disponible: true },
   { ruta: "/notas", texto: "Notas", icono: "notas", disponible: true },
   { ruta: "/recursos", texto: "Fuentes y recursos", icono: "recursos", disponible: true },
-  { ruta: "/etiquetas", texto: "Etiquetas", icono: "etiquetas", disponible: false },
-  { ruta: "/glosario", texto: "Glosario", icono: "glosario", disponible: false },
-  { ruta: "/citas", texto: "Citas", icono: "citas", disponible: false },
+  { ruta: "/etiquetas", texto: "Etiquetas", icono: "etiquetas", disponible: true },
+  { ruta: "/glosario", texto: "Glosario", icono: "glosario", disponible: true },
+  { ruta: "/citas", texto: "Citas", icono: "citas", disponible: true },
 ];
 
 // Los elementos de secciones que aún no existen se muestran sin enlace.

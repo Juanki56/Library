@@ -1,9 +1,17 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { avisoEliminacion, obtenerRecurso, obtenerRelacionados } from "@/backend/controllers/lecturas";
+import {
+  avisoEliminacion,
+  citasDe,
+  etiquetasElemento,
+  obtenerRecurso,
+  obtenerRelacionados,
+} from "@/backend/controllers/lecturas";
 import { eliminarRecurso } from "@/backend/controllers/recursos";
+import CitasEnlazadas from "@/frontend/components/CitasEnlazadas";
 import ConfirmarEliminacion from "@/frontend/components/ConfirmarEliminacion";
 import ElementosRelacionados from "@/frontend/components/ElementosRelacionados";
+import EtiquetasElemento from "@/frontend/components/EtiquetasElemento";
 import FormularioRecurso from "@/frontend/components/FormularioRecurso";
 import styles from "./Seccion.module.css";
 
@@ -11,9 +19,11 @@ import styles from "./Seccion.module.css";
 export default async function Recurso({ id }: { id: string }) {
   const recurso = await obtenerRecurso(id);
   if (!recurso) notFound();
-  const [relacionados, aviso] = await Promise.all([
+  const [relacionados, aviso, citas, etiquetas] = await Promise.all([
     obtenerRelacionados("recurso", id),
     avisoEliminacion("recurso", id),
+    citasDe("recurso", id),
+    etiquetasElemento("recurso", id),
   ]);
 
   return (
@@ -35,7 +45,9 @@ export default async function Recurso({ id }: { id: string }) {
       </div>
 
       <FormularioRecurso recurso={recurso} />
+      <EtiquetasElemento tipo="recurso" id={recurso.id} propias={etiquetas.propias} todas={etiquetas.todas} />
       <ElementosRelacionados tipo="recurso" id={recurso.id} grupos={relacionados} />
+      <CitasEnlazadas citas={citas} />
 
       <div className={styles.acciones}>
         <span />

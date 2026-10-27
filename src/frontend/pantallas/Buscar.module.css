@@ -1,0 +1,66 @@
+.consulta {
+  margin: 0 0 var(--espacio-2);
+  color: var(--color-texto-suave);
+}
+
+.consulta strong {
+  color: var(--color-texto);
+}
+
+.resultados {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.resultado {
+  padding: var(--espacio-3) 0;
+  border-bottom: 1px dotted var(--color-borde);
+}
+
+.tipo {
+  display: block;
+  font-size: var(--tamano-versalitas);
+  font-variant: small-caps;
+  letter-spacing: var(--interletraje-versalitas);
+  color: var(--color-acento);
+}
+
+.titulo {
+  font-family: var(--fuente-titulos);
+  font-size: 1.4rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--color-texto);
+  text-decoration: none;
+}
+
+.titulo:hover {
+  color: var(--color-acento);
+}
+
+.cita {
+  font-style: italic;
+  font-weight: 500;
+}
+
+.fragmento {
+  margin: var(--espacio-1) 0 0;
+  color: var(--color-texto-suave);
+}
+
+/* Coincidencia resaltada como subrayado de lectura, sin color chillón. */
+.fragmento mark {
+  color: var(--color-texto);
+  background: var(--color-lateral);
+  border-radius: 2px;
+  padding: 0 2px;
+}
+
+.relaciones {
+  margin: var(--espacio-1) 0 0;
+  font-size: var(--tamano-versalitas);
+  font-variant: small-caps;
+  letter-spacing: 0.06em;
+  color: var(--color-texto-suave);
+}

@@ -1,20 +1,53 @@
 # citas Specification
 
 ## Purpose
-Recoge la posibilidad de guardar citas, frases de autores y proverbios. Dónde se organizan dentro de la aplicación sigue pendiente; esta spec documenta las opciones sin decidir.
+Sección propia para guardar citas, frases de autor y proverbios, con autor y origen opcionales y un enlace opcional a un libro o recurso, sin duplicar la cita.
 
 ## Requirements
 
-### Requirement: Guardar citas, frases y proverbios
-**[Propuesta para revisión]** Se propone que el usuario SHALL poder guardar citas, frases de autores y proverbios con su texto y, de forma opcional, el autor y la procedencia. Esta capacidad MUST confirmarse antes de implementarse.
+### Requirement: Sección de citas
+**[Acordado]** El sistema SHALL ofrecer una sección propia de citas, accesible desde el menú principal, donde el usuario guarda citas, frases de autores y proverbios directamente, sin tener que asociarlos a un proyecto, libro o nota.
 
-#### Scenario: Guardar una cita de un libro
-- **WHEN** el usuario guarda una cita indicando su texto, autor y libro de procedencia
-- **THEN** la cita queda guardada y se puede consultar desde el libro
+#### Scenario: Guardar una cita sin asociarla
+- **WHEN** el usuario crea una cita escribiendo solo su texto
+- **THEN** la cita queda guardada y aparece en la sección de citas sin pedir ningún vínculo
 
-### Requirement: Ubicación de las citas sin decidir
-**[Propuesta para revisión]** Pendiente: "decidir dónde viven las citas, frases y proverbios". Las opciones son (A) sección propia, (B) integradas en libros y notas o (C) ambas: un elemento canónico visible en su sección y en sus espacios relacionados. Su ubicación en el menú MUST NOT darse por definida.
+### Requirement: Contenido de una cita
+**[Acordado]** Cada cita SHALL tener un texto obligatorio, un tipo (cita, frase de autor o proverbio; por defecto «cita»), un autor opcional y una fuente u origen opcional en texto libre.
 
-#### Scenario: Decisión registrada antes de implementar
-- **WHEN** se vaya a implementar la gestión de citas
-- **THEN** debe existir una decisión explícita sobre la opción A, B o C registrada en el documento de especificación
+#### Scenario: Tipo por defecto
+- **WHEN** el usuario guarda una cita sin elegir tipo
+- **THEN** la cita queda registrada como «cita»
+
+#### Scenario: Texto vacío
+- **WHEN** el usuario intenta guardar una cita sin texto
+- **THEN** el sistema no la guarda e indica que el texto es obligatorio
+
+### Requirement: Autor u origen desconocidos
+**[Acordado]** El sistema SHALL permitir guardar citas sin autor ni origen y MUST mostrar «Sin autor» o «Sin origen» en su lugar, sin inventar ninguno.
+
+#### Scenario: Proverbio popular
+- **WHEN** el usuario guarda el proverbio «Poco a poco se va lejos» sin autor ni origen
+- **THEN** la cita se muestra con «Sin autor» y «Sin origen»
+
+### Requirement: Enlace opcional con un libro o recurso
+**[Acordado]** Una cita SHALL poder enlazarse, de forma opcional, con un único libro o un único recurso ya guardado del mismo usuario, además de su fuente en texto libre. El enlace MUST NOT ser obligatorio.
+
+#### Scenario: Cita enlazada a un libro
+- **WHEN** el usuario guarda una cita y la enlaza al libro «Tesis sobre Feuerbach»
+- **THEN** la cita conserva su propia entrada en la sección de citas y queda enlazada a ese libro
+
+#### Scenario: Libro y recurso a la vez
+- **WHEN** el usuario intenta enlazar una misma cita a un libro y a un recurso a la vez
+- **THEN** el sistema solo permite uno de los dos enlaces
+
+### Requirement: Consulta, edición y eliminación de citas
+**[Acordado]** El sistema SHALL permitir consultar, editar y eliminar citas. La lista de citas SHALL mostrar primero las más recientes.
+
+#### Scenario: Orden de la lista
+- **WHEN** el usuario abre la sección de citas
+- **THEN** la cita guardada más recientemente aparece la primera
+
+#### Scenario: Eliminar una cita enlazada
+- **WHEN** el usuario elimina una cita enlazada a un libro
+- **THEN** la cita desaparece y el libro sigue existiendo

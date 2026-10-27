@@ -115,12 +115,12 @@ describe("eliminar con aviso (tarea 3.4)", () => {
     // Las notas y el libro siguen, y el vínculo entre la nota y el libro también.
     const notas = await clienteA.from("notas").select("id").in("id", [n1.id, n2.id]);
     expect(notas.data).toHaveLength(2);
-    expect(await resumenEliminacion(clienteA, manifiesto)).toEqual({ total: 1, porTipo: { nota: 1 } });
+    expect(await resumenEliminacion(clienteA, manifiesto)).toEqual({ total: 1, porTipo: { nota: 1 }, citas: 0 });
   });
 
   it("un elemento sin vínculos tiene resumen vacío", async () => {
     const solo = await libro(clienteA, "Libro suelto");
-    expect(await resumenEliminacion(clienteA, solo)).toEqual({ total: 0, porTipo: {} });
+    expect(await resumenEliminacion(clienteA, solo)).toEqual({ total: 0, porTipo: {}, citas: 0 });
   });
 
   it("otro usuario no puede ver el resumen ni eliminar el elemento", async () => {

@@ -61,6 +61,12 @@
   color: var(--color-acento);
 }
 
+/* Una cita dentro de la lista: sin la fila flexible de los elementos. */
+.lista li.citaEnlazada {
+  display: block;
+  border-bottom: none;
+}
+
 .vacio {
   color: var(--color-texto-suave);
   font-style: italic;

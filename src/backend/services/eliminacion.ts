@@ -3,11 +3,14 @@ import type { Cliente } from "@/backend/repositories/clienteLibre";
 import { borrarEntidad, existeEntidad } from "@/backend/repositories/entidades";
 import { contarVinculos } from "@/backend/repositories/vinculos";
 import { ENTIDADES, relacionesDe, type Entidad } from "./catalogo";
+import { contarCitasDe } from "./citas";
 import type { Referencia } from "./vinculos";
 
 export type ResumenEliminacion = {
   total: number;
   porTipo: Partial<Record<Entidad, number>>;
+  // Citas enlazadas a un libro o recurso: pierden el enlace pero no se borran (spec relaciones).
+  citas?: number;
 };
 
 export type ResultadoEliminacion = { ok: true } | { ok: false; error: string };
@@ -39,7 +42,11 @@ export async function resumenEliminacion(
 
   const porTipo: Partial<Record<Entidad, number>> = {};
   for (const [otra, n] of conteos) if (n > 0) porTipo[otra] = n;
-  return { total: conteos.reduce((suma, [, n]) => suma + n, 0), porTipo };
+  const total = conteos.reduce((suma, [, n]) => suma + n, 0);
+  if (tipo === "libro" || tipo === "recurso") {
+    return { total, porTipo, citas: await contarCitasDe(cliente, tipo, id) };
+  }
+  return { total, porTipo };
 }
 
 const NOMBRES: Record<Entidad, [string, string]> = {
@@ -51,6 +58,17 @@ const NOMBRES: Record<Entidad, [string, string]> = {
 
 // Texto del aviso que se muestra antes de confirmar la eliminación.
 export function textoAviso(resumen: ResumenEliminacion): string {
+  const citas = resumen.citas ?? 0;
+  const avisoCitas =
+    citas === 0
+      ? ""
+      : citas === 1
+        ? " 1 cita perderá su enlace con él (no se borrará)."
+        : ` ${citas} citas perderán su enlace con él (no se borrarán).`;
+  return textoVinculos(resumen) + avisoCitas;
+}
+
+function textoVinculos(resumen: ResumenEliminacion): string {
   if (resumen.total === 0) return "Este elemento no tiene vínculos con otros elementos.";
   const partes = (Object.entries(resumen.porTipo) as [Entidad, number][]).map(
     ([tipo, n]) => `${n} ${NOMBRES[tipo][n === 1 ? 0 : 1]}`,

@@ -61,6 +61,14 @@
   outline-offset: 1px;
 }
 
+/* Texto de una cita: tipografía de cita, como se mostrará. */
+.textoCita {
+  font-family: var(--fuente-titulos);
+  font-size: 1.3rem;
+  font-style: italic;
+  line-height: 1.45;
+}
+
 .fila {
   display: flex;
   flex-wrap: wrap;

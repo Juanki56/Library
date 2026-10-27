@@ -197,6 +197,267 @@ export type Database = {
           },
         ]
       }
+      citas: {
+        Row: {
+          actualizado_en: string
+          autor: string | null
+          creado_en: string
+          fuente: string | null
+          id: string
+          libro_id: string | null
+          recurso_id: string | null
+          texto: string
+          tipo: string
+          usuario_id: string
+        }
+        Insert: {
+          actualizado_en?: string
+          autor?: string | null
+          creado_en?: string
+          fuente?: string | null
+          id?: string
+          libro_id?: string | null
+          recurso_id?: string | null
+          texto: string
+          tipo?: string
+          usuario_id?: string
+        }
+        Update: {
+          actualizado_en?: string
+          autor?: string | null
+          creado_en?: string
+          fuente?: string | null
+          id?: string
+          libro_id?: string | null
+          recurso_id?: string | null
+          texto?: string
+          tipo?: string
+          usuario_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "citas_libro_id_usuario_id_fkey"
+            columns: ["libro_id", "usuario_id"]
+            isOneToOne: false
+            referencedRelation: "libros"
+            referencedColumns: ["id", "usuario_id"]
+          },
+          {
+            foreignKeyName: "citas_recurso_id_usuario_id_fkey"
+            columns: ["recurso_id", "usuario_id"]
+            isOneToOne: false
+            referencedRelation: "recursos"
+            referencedColumns: ["id", "usuario_id"]
+          },
+        ]
+      }
+      etiqueta_libro: {
+        Row: {
+          creado_en: string
+          etiqueta_id: string
+          libro_id: string
+          usuario_id: string
+        }
+        Insert: {
+          creado_en?: string
+          etiqueta_id: string
+          libro_id: string
+          usuario_id?: string
+        }
+        Update: {
+          creado_en?: string
+          etiqueta_id?: string
+          libro_id?: string
+          usuario_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "etiqueta_libro_etiqueta_id_usuario_id_fkey"
+            columns: ["etiqueta_id", "usuario_id"]
+            isOneToOne: false
+            referencedRelation: "etiquetas"
+            referencedColumns: ["id", "usuario_id"]
+          },
+          {
+            foreignKeyName: "etiqueta_libro_libro_id_usuario_id_fkey"
+            columns: ["libro_id", "usuario_id"]
+            isOneToOne: false
+            referencedRelation: "libros"
+            referencedColumns: ["id", "usuario_id"]
+          },
+        ]
+      }
+      etiqueta_nota: {
+        Row: {
+          creado_en: string
+          etiqueta_id: string
+          nota_id: string
+          usuario_id: string
+        }
+        Insert: {
+          creado_en?: string
+          etiqueta_id: string
+          nota_id: string
+          usuario_id?: string
+        }
+        Update: {
+          creado_en?: string
+          etiqueta_id?: string
+          nota_id?: string
+          usuario_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "etiqueta_nota_etiqueta_id_usuario_id_fkey"
+            columns: ["etiqueta_id", "usuario_id"]
+            isOneToOne: false
+            referencedRelation: "etiquetas"
+            referencedColumns: ["id", "usuario_id"]
+          },
+          {
+            foreignKeyName: "etiqueta_nota_nota_id_usuario_id_fkey"
+            columns: ["nota_id", "usuario_id"]
+            isOneToOne: false
+            referencedRelation: "notas"
+            referencedColumns: ["id", "usuario_id"]
+          },
+        ]
+      }
+      etiqueta_proyecto: {
+        Row: {
+          creado_en: string
+          etiqueta_id: string
+          proyecto_id: string
+          usuario_id: string
+        }
+        Insert: {
+          creado_en?: string
+          etiqueta_id: string
+          proyecto_id: string
+          usuario_id?: string
+        }
+        Update: {
+          creado_en?: string
+          etiqueta_id?: string
+          proyecto_id?: string
+          usuario_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "etiqueta_proyecto_etiqueta_id_usuario_id_fkey"
+            columns: ["etiqueta_id", "usuario_id"]
+            isOneToOne: false
+            referencedRelation: "etiquetas"
+            referencedColumns: ["id", "usuario_id"]
+          },
+          {
+            foreignKeyName: "etiqueta_proyecto_proyecto_id_usuario_id_fkey"
+            columns: ["proyecto_id", "usuario_id"]
+            isOneToOne: false
+            referencedRelation: "proyectos"
+            referencedColumns: ["id", "usuario_id"]
+          },
+        ]
+      }
+      etiqueta_recurso: {
+        Row: {
+          creado_en: string
+          etiqueta_id: string
+          recurso_id: string
+          usuario_id: string
+        }
+        Insert: {
+          creado_en?: string
+          etiqueta_id: string
+          recurso_id: string
+          usuario_id?: string
+        }
+        Update: {
+          creado_en?: string
+          etiqueta_id?: string
+          recurso_id?: string
+          usuario_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "etiqueta_recurso_etiqueta_id_usuario_id_fkey"
+            columns: ["etiqueta_id", "usuario_id"]
+            isOneToOne: false
+            referencedRelation: "etiquetas"
+            referencedColumns: ["id", "usuario_id"]
+          },
+          {
+            foreignKeyName: "etiqueta_recurso_recurso_id_usuario_id_fkey"
+            columns: ["recurso_id", "usuario_id"]
+            isOneToOne: false
+            referencedRelation: "recursos"
+            referencedColumns: ["id", "usuario_id"]
+          },
+        ]
+      }
+      etiquetas: {
+        Row: {
+          actualizado_en: string
+          creado_en: string
+          id: string
+          nombre: string
+          nombre_normalizado: string | null
+          usuario_id: string
+        }
+        Insert: {
+          actualizado_en?: string
+          creado_en?: string
+          id?: string
+          nombre: string
+          nombre_normalizado?: string | null
+          usuario_id?: string
+        }
+        Update: {
+          actualizado_en?: string
+          creado_en?: string
+          id?: string
+          nombre?: string
+          nombre_normalizado?: string | null
+          usuario_id?: string
+        }
+        Relationships: []
+      }
+      glosario: {
+        Row: {
+          actualizado_en: string
+          creado_en: string
+          definicion: string
+          ejemplo: string | null
+          id: string
+          informacion_adicional: string | null
+          termino: string
+          termino_normalizado: string | null
+          usuario_id: string
+        }
+        Insert: {
+          actualizado_en?: string
+          creado_en?: string
+          definicion: string
+          ejemplo?: string | null
+          id?: string
+          informacion_adicional?: string | null
+          termino: string
+          termino_normalizado?: string | null
+          usuario_id?: string
+        }
+        Update: {
+          actualizado_en?: string
+          creado_en?: string
+          definicion?: string
+          ejemplo?: string | null
+          id?: string
+          informacion_adicional?: string | null
+          termino?: string
+          termino_normalizado?: string | null
+          usuario_id?: string
+        }
+        Relationships: []
+      }
       libro_proyecto: {
         Row: {
           creado_en: string
@@ -544,10 +805,21 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      buscar: {
+        Args: { consulta: string; filtro?: string }
+        Returns: {
+          cuerpo: string
+          id: string
+          rango: number
+          tipo: string
+          titulo: string
+        }[]
+      }
       mover_apartado: {
         Args: { apartado: string; direccion: string }
         Returns: undefined
       }
+      normalizar: { Args: { texto: string }; Returns: string }
       tablas_sin_rls: { Args: never; Returns: string[] }
     }
     Enums: {

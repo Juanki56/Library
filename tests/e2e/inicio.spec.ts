@@ -22,8 +22,9 @@ test("con el archivo vacío, cada bloque lo indica con un enlace para empezar", 
   await expect(principal.getByRole("link", { name: "Escribir la primera" })).toHaveAttribute("href", "/notas/nueva");
   await expect(principal.getByText("Todavía no has añadido ningún libro.")).toBeVisible();
   await expect(principal.getByRole("region", { name: "Citas guardadas" })).toContainText(
-    "cuando la sección de citas esté disponible",
+    "Todavía no has guardado ninguna cita.",
   );
+  await expect(principal.getByRole("link", { name: "Guardar la primera" })).toHaveAttribute("href", "/citas/nueva");
 });
 
 test("muestra las notas recientes con extracto, fecha y proyectos, y los libros", async ({ page }) => {
@@ -59,9 +60,12 @@ test("muestra las notas recientes con extracto, fecha y proyectos, y los libros"
   );
 });
 
-test("la búsqueda global está en la cabecera, desactivada hasta que exista (§4)", async ({ page }) => {
+test("la búsqueda global está en la cabecera y lleva a los resultados (spec navegacion)", async ({ page }) => {
   await entrarComo(page, usuario);
   const buscador = page.getByRole("searchbox", { name: "Buscar en todo el archivo" });
-  await expect(buscador).toBeVisible();
-  await expect(buscador).toBeDisabled();
+  await expect(buscador).toBeEnabled();
+  await buscador.fill("lucha");
+  await buscador.press("Enter");
+  await expect(page).toHaveURL(/\/buscar\?q=lucha/);
+  await expect(page.getByRole("heading", { level: 1, name: "Búsqueda" })).toBeVisible();
 });

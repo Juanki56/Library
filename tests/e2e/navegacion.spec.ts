@@ -35,20 +35,22 @@ test("el menú principal lleva a cada sección de contenido (spec navegacion)", 
   }
 });
 
-test("el menú muestra las ocho áreas; las aún no implementadas, sin enlace (§6)", async ({ page }) => {
+test("el menú da acceso a las ocho áreas acordadas (spec navegacion)", async ({ page }) => {
   const menu = page.getByRole("navigation", { name: "Principal" });
-  await expect(menu.getByRole("listitem")).toHaveText([
+  await expect(menu.getByRole("link")).toHaveText([
     "Inicio",
     "Proyectos",
     "Libros",
     "Notas",
     "Fuentes y recursos",
-    /^Etiquetas/,
-    /^Glosario/,
-    /^Citas/,
+    "Etiquetas",
+    "Glosario",
+    "Citas",
   ]);
-  for (const pendiente of ["Etiquetas", "Glosario", "Citas"]) {
-    await expect(menu.getByRole("link", { name: pendiente })).toHaveCount(0);
+  for (const [enlace, titulo] of [["Etiquetas", "Etiquetas"], ["Glosario", "Glosario"], ["Citas", "Citas"]]) {
+    await menu.getByRole("link", { name: enlace, exact: true }).click();
+    await expect(page.getByRole("heading", { level: 1, name: titulo, exact: true })).toBeVisible();
+    await expect(menu.getByRole("link", { name: enlace, exact: true })).toHaveAttribute("aria-current", "page");
   }
 });
 

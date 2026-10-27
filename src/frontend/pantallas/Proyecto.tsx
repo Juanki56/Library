@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   avisoEliminacion,
+  etiquetasElemento,
   obtenerProyecto,
   obtenerRelacionados,
   organizacionProyecto,
@@ -10,6 +11,7 @@ import { eliminarProyecto } from "@/backend/controllers/proyectos";
 import ApartadosProyecto from "@/frontend/components/ApartadosProyecto";
 import ConfirmarEliminacion from "@/frontend/components/ConfirmarEliminacion";
 import ElementosRelacionados from "@/frontend/components/ElementosRelacionados";
+import EtiquetasElemento from "@/frontend/components/EtiquetasElemento";
 import FormularioProyecto from "@/frontend/components/FormularioProyecto";
 import styles from "./Seccion.module.css";
 
@@ -17,10 +19,11 @@ import styles from "./Seccion.module.css";
 export default async function Proyecto({ id }: { id: string }) {
   const proyecto = await obtenerProyecto(id);
   if (!proyecto) notFound();
-  const [organizacion, relacionados, aviso] = await Promise.all([
+  const [organizacion, relacionados, aviso, etiquetas] = await Promise.all([
     organizacionProyecto(id),
     obtenerRelacionados("proyecto", id),
     avisoEliminacion("proyecto", id),
+    etiquetasElemento("proyecto", id),
   ]);
 
   return (
@@ -33,6 +36,7 @@ export default async function Proyecto({ id }: { id: string }) {
       </div>
 
       <FormularioProyecto proyecto={proyecto} />
+      <EtiquetasElemento tipo="proyecto" id={proyecto.id} propias={etiquetas.propias} todas={etiquetas.todas} />
       <ApartadosProyecto proyectoId={proyecto.id} organizacion={organizacion} />
       <ElementosRelacionados tipo="proyecto" id={proyecto.id} grupos={relacionados} />
 

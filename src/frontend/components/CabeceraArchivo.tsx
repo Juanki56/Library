@@ -1,12 +1,11 @@
 import Icono from "./Icono";
 import styles from "./CabeceraArchivo.module.css";
 
-// Cabecera del área principal con el acceso a la búsqueda global (§4). La búsqueda aún
-// no está implementada: el cuadro se muestra desactivado hasta que exista.
+// Cabecera del área principal con la búsqueda global (spec navegacion: «Búsqueda en la cabecera»).
 export default function CabeceraArchivo() {
   return (
     <header className={styles.cabecera}>
-      <form role="search" className={styles.buscador} aria-label="Búsqueda global">
+      <form role="search" action="/buscar" method="get" className={styles.buscador} aria-label="Búsqueda global">
         <Icono nombre="buscar" clase={styles.lupa} />
         <label htmlFor="busqueda-global" className={styles.oculto}>
           Buscar en todo el archivo
@@ -14,14 +13,15 @@ export default function CabeceraArchivo() {
         <input
           id="busqueda-global"
           type="search"
+          name="q"
           placeholder="Buscar en tu archivo…"
-          disabled
-          aria-describedby="busqueda-estado"
+          required
+          maxLength={200}
           className={styles.campo}
         />
-        <span id="busqueda-estado" className={styles.estado}>
-          próximamente
-        </span>
+        <button type="submit" className={styles.oculto}>
+          Buscar
+        </button>
       </form>
     </header>
   );

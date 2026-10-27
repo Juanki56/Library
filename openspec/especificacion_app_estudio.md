@@ -76,7 +76,7 @@ La forma exacta de gestionar los tipos de recurso y los datos bibliográficos qu
 
 ### 2.5 Etiquetas
 
-**Estado: acordada (2026-10-27), incluida su administración. No implementada.**
+**Estado: acordada (2026-10-27), incluida su administración. Implementada (2026-10-27).**
 
 Las etiquetas permiten clasificar contenido de distintas áreas de la aplicación mediante palabras clave compartidas. Tienen su propia sección en el menú (ver §6).
 
@@ -105,7 +105,7 @@ Ejemplo: la etiqueta **«Filosofía»** puede reunir notas, libros, proyectos y 
 
 ### 2.6 Glosario
 
-**Estado: acordada (2026-10-27). No implementada.**
+**Estado: acordada (2026-10-27). Implementada (2026-10-27).**
 
 El glosario es una sección independiente para registrar palabras y conceptos, con su propia entrada en el menú (ver §6). Cumple su función por sí mismo: **no es necesario crear ni vincular una nota** para registrar un término.
 
@@ -127,7 +127,7 @@ El glosario es una sección independiente para registrar palabras y conceptos, c
 
 ### 2.7 Citas, frases y proverbios
 
-**Estado: acordada (2026-10-27). No implementada. Diseño visual pendiente.**
+**Estado: acordada (2026-10-27). Implementada (2026-10-27).**
 
 La aplicación tendrá una **sección independiente** para guardar citas, frases de autores y proverbios, con su propia entrada en el menú (ver §6). Ya no es una posibilidad pendiente.
 
@@ -152,7 +152,7 @@ La aplicación tendrá una **sección independiente** para guardar citas, frases
 
 **Se deja para más adelante:** filtros propios de la sección (por autor o por tipo) y etiquetas en citas.
 
-**Pendiente:** diseño visual de la sección.
+**Diseño visual:** sigue la dirección aprobada (§7).
 
 ## 3. Editor de notas
 
@@ -192,7 +192,7 @@ El editor construido es la **base provisional**. Incluye títulos y subtítulos,
 
 ## 4. Búsqueda global
 
-**Estado: acordada (2026-10-27), incluidos los campos por tipo y el funcionamiento. No implementada.**
+**Estado: acordada e implementada (2026-10-27), incluidos los campos por tipo y el funcionamiento.**
 
 La aplicación tendrá una **búsqueda global** para encontrar contenido en toda la aplicación. La prioridad es una búsqueda útil, bien construida y ampliable. **No** se incorpora desde el principio un panel complejo de búsqueda avanzada.
 
@@ -388,11 +388,11 @@ Actualizar este documento **no** cambia el código ni las specs históricas de O
 | Fuentes y recursos | Ficha provisional, relacionados, eliminar con aviso | — | Tipos y datos definitivos |
 | Relaciones | Vínculos sin duplicar entre las 4 entidades | Enlace opcional de una cita con un libro o recurso (E1) | Forma visual de los relacionados |
 | Editor de notas | Base provisional (§3.3) | Dirección funcional (§3.1) | Alcance técnico (§3.2) |
-| Menú | Inicio, Proyectos, Libros, Notas, Fuentes y recursos | Secciones Etiquetas, Glosario y Citas | Orden, diseño, Inicio |
-| Citas | — | §2.7, incluidos E1 y E2 | Diseño visual; filtros propios (más adelante) |
-| Etiquetas | — | §2.5, incluido E3 | Etiquetas en citas y glosario (más adelante) |
-| Glosario | — | §2.6, incluidos E4 y E5 | Relaciones opcionales (más adelante) |
-| Búsqueda global | — | §4 y §4.1, incluido E6 | Filtros adicionales (más adelante) |
+| Menú | Las ocho áreas con su sección | — | Orden definitivo |
+| Citas | Sección completa (§2.7) | — | Filtros propios (más adelante) |
+| Etiquetas | Sección completa (§2.5) | — | Etiquetas en citas y glosario (más adelante) |
+| Glosario | Sección completa (§2.6) | — | Relaciones opcionales (más adelante) |
+| Búsqueda global | Completa (§4) | — | Filtros adicionales (más adelante) |
 | Identidad visual | Dirección aprobada aplicada a toda la app (§7) | — | Orden del menú (§6) |
 
 ### 9.6 OpenSpec: documentos que habrá que actualizar en el próximo cambio
@@ -431,6 +431,7 @@ El cambio `especificacion-inicial-app-estudio` refleja lo **implementado** y no 
 - **2026-10-27 — Dirección visual aprobada:** el diseño implementado (biblioteca clásica, pergamino, menú lateral, Cormorant y EB Garamond, listas editoriales) queda aprobado (§7). Motivo: aprobación del usuario.
 - **2026-10-27 — Apartados en los proyectos:** un proyecto puede dividirse en apartados ordenados por el usuario, con título y descripción opcional. Las notas, libros y recursos del proyecto pueden estar en varios apartados sin duplicarse; lo que no está en ninguno aparece como «Sin apartado»; eliminar un apartado no quita su contenido del proyecto (§2.1). Motivo: decisión del usuario.
 - **2026-10-27 — Apartados implementados:** cambio `apartados-proyectos` archivado; las specs oficiales `proyectos` y `relaciones` incluyen los apartados.
+- **2026-10-27 — Citas, Etiquetas, Glosario y Búsqueda implementados:** cambio `secciones-citas-etiquetas-glosario-busqueda` archivado; specs oficiales actualizadas.
 
 ## 10. Prompt de trabajo para Specs o Claude Code
 

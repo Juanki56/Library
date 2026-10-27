@@ -85,7 +85,7 @@ En el código, un catálogo `TIPOS_ETIQUETABLES` (entidad → tabla de asignaci�
 **Consulta alfabética:** se ordena por `termino_normalizado` y se agrupa por la primera letra normalizada (A–Z, más «#» para lo que no empieza por letra). Las letras con términos son enlaces a anclas.
 
 ### D5. Búsqueda: una función SQL con `security invoker`
-`public.buscar(consulta text, tipo text default null) returns table(tipo, id, titulo, fragmento, rango)` es `language sql stable security invoker`, así que **se aplica la RLS del usuario**.
+`public.buscar(consulta text, filtro text default null) returns table(tipo, id, titulo, cuerpo, rango)` es `language sql stable security invoker`, así que **se aplica la RLS del usuario**.
 
 - **Consulta:** se normaliza con D1, se parte en palabras y cada palabra se convierte en un prefijo `palabra:*` unido con `&`. Se construye con `to_tsquery('simple', …)`. Los caracteres especiales se eliminan antes en el servicio, con una lista blanca de letras y dígitos.
 - **Documento por tipo:** `to_tsvector('simple', normalizar(concat_ws(' ', campos…)))`, con exactamente los campos de la spec `busqueda`:
@@ -97,7 +97,7 @@ En el código, un catálogo `TIPOS_ETIQUETABLES` (entidad → tabla de asignaci�
   - Término: término, definición, ejemplo e información adicional.
   - Se usa la configuración `simple` (sin raíces del español) para que «materia» coincida por prefijo de forma predecible.
 - **Relevancia:** `ts_rank` con más peso para el título (`setweight` A al título y B al resto).
-- **Fragmento:** `ts_headline` sobre el texto original no normalizado, con `StartSel=«` y `StopSel=»`. El frontend lo muestra como texto plano, sin HTML, así que no hay riesgo de inyección. Las marcas «» se sustituyen por `<mark>` en React partiendo la cadena, nunca con `dangerouslySetInnerHTML`.
+- **Fragmento:** la función devuelve el texto buscable original (`cuerpo`) y el **servicio** construye el fragmento. Localiza la primera palabra que empieza por algún término de la consulta, comparando sin tildes ni mayúsculas carácter a carácter para conservar las posiciones del texto original. Corta unos 70 caracteres a cada lado y devuelve las partes marcadas, que React muestra como `<mark>` sin HTML. *(Revisado durante la implementación: `ts_headline` no marca «Filosofía» al buscar «filosofia», porque trabaja sobre el texto con tildes.)*
 - **Título de las citas:** las citas no tienen título, así que se usa un extracto de 80 caracteres de su texto.
 - **Unicidad:** `union all` de una fila por elemento, así que cada elemento aparece una vez. Se limita a 50 resultados por consulta.
 - **Relaciones en el resultado** (spec existente «Resultados sin duplicados»): las notas encontradas muestran sus proyectos y libros. Se obtienen con una consulta adicional en el servicio para los ids de nota del resultado, reutilizando las tablas de vínculo.

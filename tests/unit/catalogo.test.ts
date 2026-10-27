@@ -44,3 +44,21 @@ describe("aviso antes de eliminar", () => {
     );
   });
 });
+
+describe("aviso con citas enlazadas (libro o recurso)", () => {
+  it("añade cuántas citas perderán su enlace", () => {
+    expect(textoAviso({ total: 1, porTipo: { nota: 1 }, citas: 2 })).toBe(
+      "Se quitará 1 vínculo con 1 nota. Ese elemento no se borrará. 2 citas perderán su enlace con él (no se borrarán).",
+    );
+  });
+
+  it("usa singular con una cita y funciona sin vínculos", () => {
+    expect(textoAviso({ total: 0, porTipo: {}, citas: 1 })).toBe(
+      "Este elemento no tiene vínculos con otros elementos. 1 cita perderá su enlace con él (no se borrará).",
+    );
+  });
+
+  it("no menciona citas cuando no hay", () => {
+    expect(textoAviso({ total: 0, porTipo: {}, citas: 0 })).toBe("Este elemento no tiene vínculos con otros elementos.");
+  });
+});

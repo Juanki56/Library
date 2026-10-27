@@ -159,6 +159,15 @@
   color: var(--color-acento);
 }
 
+.listaCitas {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-2);
+}
+
 .vacio {
   margin: 0;
   color: var(--color-texto-suave);
