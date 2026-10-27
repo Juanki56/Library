@@ -1,0 +1,73 @@
+/* Entrar y registro: portada de la biblioteca y una hoja de marfil con el formulario. */
+.pagina {
+  max-width: 28rem;
+  margin: 0 auto;
+  padding: var(--espacio-6) var(--espacio-3) var(--espacio-5);
+}
+
+.marca {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--espacio-1);
+  margin-bottom: var(--espacio-5);
+  text-align: center;
+}
+
+.ornamento {
+  color: var(--color-ornamento);
+}
+
+.nombre {
+  margin: 0;
+  font-family: var(--fuente-titulos);
+  font-size: var(--tamano-portada);
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.lema {
+  margin: 0;
+  font-size: var(--tamano-versalitas);
+  font-variant: small-caps;
+  text-transform: lowercase;
+  letter-spacing: var(--interletraje-versalitas);
+  color: var(--color-texto-suave);
+}
+
+.hoja {
+  padding: var(--espacio-4) var(--espacio-5) var(--espacio-5);
+  background: var(--color-superficie);
+  border: 3px double var(--color-ornamento);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra-hoja);
+}
+
+.titulo {
+  margin: 0 0 var(--espacio-4);
+  padding-bottom: var(--espacio-2);
+  font-size: var(--tamano-h2);
+  text-align: center;
+  border-bottom: 1px solid var(--color-borde);
+}
+
+.aviso {
+  color: var(--color-error);
+}
+
+.pie {
+  margin-top: var(--espacio-4);
+  text-align: center;
+  color: var(--color-texto-suave);
+  font-size: var(--tamano-pequeno);
+}
+
+@media (max-width: 760px) {
+  .pagina {
+    padding-top: var(--espacio-5);
+  }
+
+  .hoja {
+    padding: var(--espacio-3) var(--espacio-4) var(--espacio-4);
+  }
+}

@@ -13,8 +13,12 @@ Describe cómo se escribe y da formato al contenido de las notas. El editor form
 - **WHEN** el usuario escribe texto en una nota y guarda
 - **THEN** el contenido se conserva tal como lo escribió
 
-### Requirement: Alcance mínimo propuesto del editor
-**[Propuesta para revisión]** Pendiente: "acordar el alcance inicial del editor de notas". Se propone como mínimo para la primera versión: títulos y subtítulos, negrita, cursiva, listas, citas en bloque y enlaces. Este alcance MUST confirmarse antes de implementarse.
+### Requirement: Alcance inicial del editor
+**[Acordado]** El editor de la primera versión SHALL ofrecer títulos y subtítulos, negrita, cursiva, listas (con viñetas y numeradas), citas en bloque y enlaces web (http/https), y nada más (decidido el 2026-10-27).
+
+#### Scenario: Enlace no web rechazado
+- **WHEN** el usuario intenta añadir un enlace que no empieza por http:// o https://
+- **THEN** el enlace no se guarda en la nota
 
 #### Scenario: Formato básico conservado
 - **WHEN** el usuario aplica un subtítulo, una lista y una cita en bloque y guarda la nota

@@ -1,0 +1,136 @@
+.seccion {
+  margin-top: var(--espacio-6);
+  padding-top: var(--espacio-4);
+  border-top: 3px double var(--color-ornamento);
+}
+
+.titulo {
+  margin: 0 0 var(--espacio-3);
+  font-size: var(--tamano-h2);
+}
+
+/* Cada grupo (proyectos, notas, libros, recursos) con encabezado en versalitas. */
+.grupo h3 {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-2);
+  margin: var(--espacio-4) 0 var(--espacio-2);
+  padding-bottom: var(--espacio-1);
+  font-family: var(--fuente-texto);
+  font-size: var(--tamano-versalitas);
+  font-variant: small-caps;
+  text-transform: lowercase;
+  letter-spacing: var(--interletraje-versalitas);
+  color: var(--color-texto-suave);
+  border-bottom: 1px solid var(--color-borde);
+}
+
+.grupo h3::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  background: var(--color-ornamento);
+  transform: rotate(45deg);
+}
+
+.lista {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--espacio-2);
+}
+
+.lista li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--espacio-3);
+  padding: var(--espacio-2) 0;
+  border-bottom: 1px dotted var(--color-borde);
+}
+
+.lista li a,
+.lista li > span {
+  font-family: var(--fuente-titulos);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--color-texto);
+  text-decoration: none;
+}
+
+.lista li a:hover {
+  color: var(--color-acento);
+}
+
+.vacio {
+  color: var(--color-texto-suave);
+  font-style: italic;
+  font-size: var(--tamano-pequeno);
+  margin: 0 0 var(--espacio-2);
+}
+
+.vincular,
+.quitar {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-2);
+}
+
+.vincular {
+  margin-top: var(--espacio-2);
+}
+
+.vincular select,
+.vincular button,
+.quitar button {
+  font: inherit;
+  font-size: var(--tamano-pequeno);
+  color: var(--color-texto);
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  min-height: 2.25rem;
+  padding: 0 var(--espacio-2);
+}
+
+.vincular button,
+.quitar button {
+  cursor: pointer;
+  font-variant: small-caps;
+  text-transform: lowercase;
+  letter-spacing: 0.06em;
+}
+
+.vincular button {
+  color: var(--color-acento);
+  border-color: var(--color-acento);
+}
+
+.vincular button:hover {
+  color: var(--color-sobre-acento);
+  background: var(--color-acento);
+}
+
+.quitar button {
+  color: var(--color-texto-suave);
+  background: transparent;
+  border-color: transparent;
+}
+
+.quitar button:hover {
+  color: var(--color-error);
+  border-color: var(--color-borde);
+}
+
+.error {
+  color: var(--color-error);
+  font-size: var(--tamano-pequeno);
+}
+
+.oculto {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

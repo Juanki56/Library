@@ -39,6 +39,8 @@
 `nota_proyecto`, `nota_libro`, `nota_recurso`, `libro_proyecto`, `recurso_proyecto`, `recurso_libro`.
 Cada tabla de enlace tiene **clave primaria compuesta** (por ejemplo, `nota_id + proyecto_id`), una columna `usuario_id` y **claves foráneas compuestas** `(elemento_id, usuario_id)` hacia cada extremo, con `ON DELETE CASCADE`.
 **Por qué:** la clave compuesta impide vínculos repetidos. Las claves foráneas compuestas hacen que la base de datos rechace vincular elementos de usuarios distintos. El borrado en cascada elimina **solo el vínculo** al borrar un elemento (spec `relaciones`).
+**Procedencia de cada relación:** `nota_proyecto`, `nota_libro` y `nota_recurso` (spec `notas`); `libro_proyecto` (spec `libros`); `recurso_proyecto` y `recurso_libro` (spec `fuentes-recursos`). Cubren los 6 pares posibles entre las 4 entidades. **No se incluyen** nota–nota (enlaces internos, que son [Exploratorio] en `editor-notas`), proyecto–proyecto (no está en las specs) ni etiquetas, glosario o citas (pendientes).
+**Implementado en:** `supabase/migrations/20261027170000_entidades.sql` y `20261027170100_vinculos.sql`. Las tablas de vínculo no tienen política de `UPDATE`: un vínculo se crea o se quita.
 **Alternativa:** una tabla genérica `vinculos(origen_tipo, origen_id, destino_tipo, destino_id)`. Es más flexible, pero pierde las claves foráneas reales. Se reconsiderará si el número de tipos crece mucho.
 
 ### D4. Aislamiento por usuario con Row Level Security (aprobada el 2026-10-27)
@@ -51,8 +53,8 @@ Cada tabla de enlace tiene **clave primaria compuesta** (por ejemplo, `nota_id +
 **Por qué:** se integra de forma natural con RLS (`auth.uid()`). Supabase guarda las contraseñas con hash, así que no hace falta gestionarlas en el código.
 **Alternativa:** Auth.js con proveedor Credentials. Descartada porque obliga a mantener contraseñas propias y a crear un puente manual con RLS.
 
-### D6. Contenido de notas almacenado en formato estructurado
-**Propuesta:** guardar el contenido de la nota como JSON (`jsonb`) de un editor de bloques (por ejemplo, Tiptap/ProseMirror), con una columna de texto plano derivada para búsqueda.
+### D6. Contenido de notas almacenado en formato estructurado (aprobada el 2026-10-27)
+**Decisión:** guardar el contenido de la nota como JSON (`notas.contenido jsonb`, formato de documento de Tiptap/ProseMirror) y una columna de texto plano derivada (`notas.contenido_texto`), preparada para una futura búsqueda. La app la rellena al guardar.
 **Por qué:** permite empezar con el alcance mínimo del editor y añadir funciones exploradas después sin migrar el contenido existente.
 **Alternativa:** Markdown en texto plano, más simple pero más limitado para enlaces internos y movimiento de secciones si se aprueban.
 
@@ -86,7 +88,7 @@ supabase/
 └── migrations/          Esquema, tablas de enlace y políticas RLS en SQL
 ```
 
-**Dependencias permitidas:** `app → frontend → controllers → services → repositories`. El frontend nunca importa `services` ni `repositories`, y solo `repositories` y `auth` usan el cliente de Supabase.
+**Dependencias permitidas:** `app → frontend → controllers → services → repositories`. El frontend nunca importa `services` ni `repositories`, y solo `repositories` y `auth` usan el cliente de Supabase. Única excepción: `services/catalogo.ts` (datos puros: entidades, rutas y relaciones permitidas, sin acceso a datos), que el frontend usa para mostrar los elementos relacionados.
 **Por qué:** orden claro por responsabilidades, como en un backend clásico de controllers/services/routes, sin el coste de una API REST separada (despliegue doble, sesión entre dominios y CORS).
 **Alternativa descartada:** dos aplicaciones (`backend/` con Express o NestJS y `frontend/` con React). Se reconsiderará si se necesita una app móvil u otro cliente.
 

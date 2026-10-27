@@ -1,0 +1,11 @@
+/* Menú lateral + área principal. En pantallas estrechas el menú pasa arriba (flex-wrap). */
+.marco {
+  display: flex;
+  flex-wrap: wrap;
+  min-height: 100vh;
+}
+
+.principal {
+  flex: 999 1 35rem;
+  min-width: 0;
+}

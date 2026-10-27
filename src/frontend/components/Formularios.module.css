@@ -1,0 +1,120 @@
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-4);
+}
+
+/* Etiqueta en versalitas encima de cada campo. */
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-1);
+  font-size: var(--tamano-versalitas);
+  font-variant: small-caps;
+  text-transform: lowercase;
+  letter-spacing: var(--interletraje-versalitas);
+  font-weight: 600;
+  color: var(--color-texto-suave);
+}
+
+/* Título: como el de una portada, sobre una línea, sin caja. */
+.titulo {
+  font-family: var(--fuente-titulos);
+  font-size: var(--tamano-h2);
+  font-weight: 600;
+  font-variant: normal;
+  text-transform: none;
+  letter-spacing: 0.01em;
+  color: var(--color-texto);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--color-borde);
+  border-radius: 0;
+  padding: var(--espacio-1) 0 var(--espacio-2);
+}
+
+.titulo:focus {
+  outline: none;
+  border-bottom-color: var(--color-acento);
+  box-shadow: 0 1px 0 var(--color-acento);
+}
+
+/* Campos de texto: hoja de marfil con borde fino. */
+.texto {
+  font: inherit;
+  font-family: var(--fuente-texto);
+  font-size: var(--tamano-texto);
+  font-variant: normal;
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 400;
+  color: var(--color-texto);
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  padding: var(--espacio-2) var(--espacio-3);
+  resize: vertical;
+}
+
+.texto:focus {
+  outline: 2px solid var(--color-acento);
+  outline-offset: 1px;
+}
+
+.fila {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espacio-3);
+}
+
+.fila > .campo {
+  flex: 1 1 14rem;
+}
+
+.fila > .corto {
+  flex: 0 1 7rem;
+}
+
+.pie {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+}
+
+/* Botón principal: terracota con texto en versalitas. */
+.principal {
+  min-height: 2.75rem;
+  padding: 0 var(--espacio-4);
+  font: inherit;
+  font-size: var(--tamano-pequeno);
+  font-variant: small-caps;
+  text-transform: lowercase;
+  letter-spacing: var(--interletraje-versalitas);
+  font-weight: 600;
+  color: var(--color-sobre-acento);
+  background: var(--color-acento);
+  border: none;
+  border-radius: var(--radio);
+  box-shadow: var(--sombra-papel);
+  cursor: pointer;
+}
+
+.principal:hover {
+  background: var(--color-acento-hover);
+}
+
+.principal:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.error {
+  color: var(--color-error);
+  margin: 0;
+}
+
+.pie [role="status"] {
+  margin: 0;
+  font-style: italic;
+  color: var(--color-texto-suave);
+}

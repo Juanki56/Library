@@ -1,29 +1,53 @@
 /*
- * Tokens de diseño PROVISIONALES (spec identidad-visual: [Exploratorio]).
- * Dirección en exploración: biblioteca clásica, pergamino y tonos tierra.
+ * Tokens de diseño (spec identidad-visual). Dirección visual en revisión:
+ * biblioteca clásica y archivo personal; pergamino, marfil y beige cálido,
+ * con marrón suave y terracota como acentos. Pendiente de aprobación definitiva.
  * Es el único archivo con valores de color, tipografía y espaciado:
  * el resto de estilos debe usar estas variables.
  */
 :root {
-  /* Color */
-  --color-fondo: #f6efe0;
-  --color-superficie: #fbf7ee;
-  --color-texto: #2b2118;
-  --color-texto-suave: #5c4a3a;
-  --color-acento: #7a3e1d;
-  --color-acento-hover: #5e2f15;
-  --color-borde: #d8c8a8;
-  --color-ornamento: #a8875a;
-  --color-error: #9b1c1c;
+  /* Color: fondos */
+  --color-fondo: #ecdfc2; /* pergamino */
+  --color-superficie: #f7eeda; /* marfil */
+  --color-lateral: #e0cda6; /* beige cálido: menú lateral */
+  /* Papel: pergamino con luz suave en el centro y bordes ligeramente tostados */
+  --fondo-papel:
+    radial-gradient(ellipse 80% 60% at 50% 20%, rgb(250 243 226 / 0.75), transparent 70%),
+    radial-gradient(ellipse 120% 100% at 50% 50%, transparent 60%, rgb(160 120 70 / 0.12)),
+    #ecdfc2;
+  --fondo-lateral:
+    linear-gradient(90deg, rgb(120 85 45 / 0.08), transparent 18%, transparent 82%, rgb(120 85 45 / 0.12)),
+    #e0cda6;
+
+  /* Color: texto (contraste AA sobre los tres fondos) */
+  --color-texto: #33261b;
+  --color-texto-suave: #5e4a37;
+  --color-marron: #6e5038; /* marrón suave: iconos y detalles */
+
+  /* Color: acento terracota. Sobre el beige del menú no alcanza AA: úsese sobre pergamino o marfil */
+  --color-acento: #9c4424;
+  --color-acento-hover: #7d3519;
+  --color-sobre-acento: #f7eeda;
+
+  /* Color: líneas y ornamentos (solo decorativos) */
+  --color-borde: #cdb68b;
+  --color-ornamento: #a88a5c;
+  --color-error: #8f2a1c;
+  --sombra-papel: 0 1px 0 rgb(255 250 238 / 0.6), 0 6px 18px -10px rgb(90 60 30 / 0.35);
+  --sombra-hoja: 0 1px 0 rgb(255 250 238 / 0.7), 0 18px 40px -22px rgb(90 60 30 / 0.45);
+  --color-velo: rgb(51 38 27 / 0.45); /* fondo detrás de los diálogos */
 
   /* Tipografía */
   --fuente-texto: var(--fuente-garamond), Georgia, "Times New Roman", serif;
   --fuente-titulos: var(--fuente-cormorant), Georgia, "Times New Roman", serif;
   --tamano-texto: 1.125rem;
   --tamano-pequeno: 0.95rem;
-  --tamano-h1: 2.5rem;
+  --tamano-versalitas: 0.8rem;
+  --tamano-h1: 2.6rem;
   --tamano-h2: 1.75rem;
+  --tamano-portada: 3rem;
   --interlineado: 1.65;
+  --interletraje-versalitas: 0.12em;
 
   /* Espaciado */
   --espacio-1: 0.25rem;
@@ -31,20 +55,33 @@
   --espacio-3: 1rem;
   --espacio-4: 1.5rem;
   --espacio-5: 2.5rem;
-  --ancho-lectura: 42rem;
+  --espacio-6: 4rem;
+  --ancho-lectura: 46rem;
+  --ancho-contenido: 70rem;
+  --ancho-lateral: 17rem;
   --radio: 4px;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-fondo: #1d1813;
-    --color-superficie: #262019;
-    --color-texto: #efe6d4;
-    --color-texto-suave: #c4b49c;
-    --color-acento: #d9a066;
-    --color-acento-hover: #e8b884;
+    --color-fondo: #1f1a15;
+    --color-superficie: #2a221b;
+    --color-lateral: #2e251d;
+    --fondo-papel:
+      radial-gradient(ellipse 80% 60% at 50% 20%, rgb(70 55 40 / 0.35), transparent 70%),
+      #1f1a15;
+    --fondo-lateral: #2e251d;
+    --color-texto: #ede3cf;
+    --color-texto-suave: #b9a88f;
+    --color-marron: #c7ac88;
+    --color-acento: #d98a62;
+    --color-acento-hover: #e8b48f;
+    --color-sobre-acento: #1f1a15;
     --color-borde: #4a3f32;
     --color-ornamento: #8a7350;
     --color-error: #f08a8a;
+    --sombra-papel: 0 6px 18px -10px rgb(0 0 0 / 0.6);
+    --sombra-hoja: 0 18px 40px -22px rgb(0 0 0 / 0.7);
+    --color-velo: rgb(0 0 0 / 0.6);
   }
 }

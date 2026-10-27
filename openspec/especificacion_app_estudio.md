@@ -56,46 +56,159 @@ La forma exacta de gestionar los tipos de recurso y los datos bibliográficos qu
 
 ### 2.5 Etiquetas
 
-Las etiquetas permiten clasificar y relacionar contenido de la aplicación. Su funcionamiento detallado —por ejemplo, qué tipos de elementos admiten etiquetas y cómo se administran— está pendiente de definición.
+**Estado: acordada (2026-10-27), incluida su administración. No implementada.**
+
+Las etiquetas permiten clasificar contenido de distintas áreas de la aplicación mediante palabras clave compartidas. Tienen su propia sección en el menú (ver §6).
+
+**Requisitos acordados:**
+
+- Una misma etiqueta puede utilizarse en **notas, libros, proyectos y fuentes o recursos**.
+- La etiqueta se crea **una sola vez** y se reutiliza; no se duplica para cada tipo de contenido.
+- Al abrir una etiqueta, el usuario puede consultar **todos los elementos que la utilizan**.
+- Los resultados de una etiqueta se pueden **filtrar por tipo de contenido** (solo notas, solo libros, solo proyectos o solo recursos) o mostrarse todos juntos.
+- Se conserva la identidad de cada elemento: etiquetar no copia ni duplica contenido. Un elemento aparece una sola vez en los resultados de una etiqueta.
+
+Ejemplo: la etiqueta **«Filosofía»** puede reunir notas, libros, proyectos y recursos de diferentes áreas. El usuario puede ver todos los resultados o filtrar por una categoría concreta.
+
+**Administración acordada (2026-10-27):**
+
+- Asignar una etiqueta existente a un elemento, o **crear una nueva en ese mismo momento**.
+- Quitar una etiqueta de un elemento (el elemento no se borra).
+- Crear una etiqueta desde la sección Etiquetas.
+- Consultar la lista de etiquetas y abrir cada una.
+- **Renombrar** una etiqueta. El cambio se ve en todos los elementos que la usan.
+- **Eliminar** una etiqueta: se desvincula de todos sus elementos **sin borrarlos**, con una **advertencia antes de confirmar**.
+- «Filosofía», «filosofía» y «Filosofia» son **la misma etiqueta**: no se distinguen mayúsculas, tildes ni espacios sobrantes. Se conserva la forma escrita la primera vez.
+- En la página de una etiqueta, los elementos se **agrupan por tipo** y se ordenan **alfabéticamente**.
+
+**Se deja para más adelante:** etiquetas en **citas** y en **términos del glosario**.
 
 ### 2.6 Glosario
 
-Se contempla una sección propia de glosario para registrar palabras o conceptos nuevos y sus significados.
+**Estado: acordada (2026-10-27). No implementada.**
 
-La estructura de cada entrada y su relación con notas, proyectos y libros todavía deben definirse.
+El glosario es una sección independiente para registrar palabras y conceptos, con su propia entrada en el menú (ver §6). Cumple su función por sí mismo: **no es necesario crear ni vincular una nota** para registrar un término.
+
+**Cada entrada contiene:**
+
+- El **término** o concepto. **Obligatorio.**
+- Su **definición**. **Obligatoria.**
+- Un **ejemplo** que ayude a entenderlo o a ver cómo se utiliza. Opcional.
+- **Información adicional**, cuando resulte útil. Opcional.
+
+**Acordado (2026-10-27):**
+
+- **Sin entradas duplicadas:** cada término existe una sola vez. Las distintas acepciones se recogen en la **misma entrada**. Como en las etiquetas, no se distinguen mayúsculas, tildes ni espacios sobrantes al comparar términos.
+- Las entradas se pueden **editar** y **eliminar**.
+- El glosario se consulta en **orden alfabético**, con **acceso por letra**.
+- Las relaciones con notas, libros o proyectos **no son obligatorias**.
+
+**Se deja para más adelante:** relaciones opcionales con notas, libros o proyectos, y etiquetas en el glosario.
 
 ### 2.7 Citas, frases y proverbios
 
-Se ha contemplado la posibilidad de guardar citas, frases de autores y proverbios. La decisión pendiente es cómo organizarlos dentro de la aplicación y si tendrán una sección propia o estarán integrados en libros, notas u otro espacio.
+**Estado: acordada (2026-10-27). No implementada. Diseño visual pendiente.**
 
-No debe darse por definida su ubicación en el menú.
+La aplicación tendrá una **sección independiente** para guardar citas, frases de autores y proverbios, con su propia entrada en el menú (ver §6). Ya no es una posibilidad pendiente.
 
-## 3. Editor de notas: pendiente de detalle
+**Requisitos acordados:**
 
-El editor forma parte del concepto de la aplicación, pero su alcance exacto no está cerrado.
+- Guardar una cita **directamente**, sin tener que asociarla obligatoriamente a un proyecto, libro o nota. No se añaden pasos de asociación obligatorios que dificulten el guardado.
+- Guardar el **texto** de la cita o frase.
+- Disponer de un campo para el **autor**.
+- Disponer de información sobre la **fuente u origen**, cuando corresponda.
+- Permitir guardar citas cuyo **autor u origen se desconozca**, sin inventar información (por ejemplo, un proverbio popular).
+- Poder **consultar** las citas guardadas.
+- La sección debe ser **práctica y suficientemente completa**, no una implementación excesivamente básica.
 
-Entre las posibilidades que se han explorado están:
+**Acordado (2026-10-27):**
 
-- Formato de texto enriquecido.
-- Títulos y subtítulos.
-- Negrita, cursiva y subrayado.
-- Listas y citas en bloque.
-- Separadores.
-- Imágenes y enlaces.
-- Organización o movimiento de secciones del contenido.
-- Enlaces a notas, proyectos, libros y recursos relacionados.
+- **Tipo:** cada cita es **cita**, **frase de autor** o **proverbio**. Por defecto, «cita».
+- **Fuente u origen:** siempre se puede escribir como **texto libre**. Además, la cita puede **enlazarse opcionalmente** a un **libro** o a un **recurso** ya guardado.
+- Una cita enlazada **sigue existiendo de forma independiente** y **aparece también** en la página del libro o recurso, **sin duplicarse**. Con esto se cumple «un libro puede incluir citas» (§2.3).
+- Las citas se pueden **editar** y **eliminar**.
+- La lista muestra primero las **más recientes**.
+- Si no hay autor u origen, se muestra «Sin autor» o «Sin origen», **sin inventar** ninguno.
 
-Esta lista es una exploración, no una promesa de que todas las funciones estarán en la primera versión. Antes de implementar, hay que acordar el nivel de edición necesario.
+**Se deja para más adelante:** filtros propios de la sección (por autor o por tipo) y etiquetas en citas.
 
-## 4. Búsqueda y navegación
+**Pendiente:** diseño visual de la sección.
 
-Se ha considerado una búsqueda avanzada, pero no está aprobada como requisito definitivo.
+## 3. Editor de notas
 
-Posibles criterios explorados: título y contenido, tipo de elemento, proyecto, etiqueta, autor o libro.
+**Estado: dirección funcional acordada (2026-10-27). Alcance técnico y forma de implementar cada capacidad pendientes.**
 
-Si una nota está vinculada a varios espacios, los resultados deben identificarla como un único elemento y mostrar sus relaciones, en vez de presentar copias duplicadas.
+**Objetivo:** un editor de calidad, ordenado y agradable de usar, con una experiencia parecida a escribir en Word o Notion, y una estructura técnica que permita evolucionar sin reconstrucciones innecesarias.
 
-La navegación exacta y los filtros que estarán disponibles deben definirse más adelante.
+### 3.1 Dirección funcional acordada
+
+El editor debe permitir:
+
+- Escribir texto con **títulos, subtítulos, párrafos y formato**.
+- Usar **negrita, cursiva, listas, citas y enlaces**.
+- Insertar **imágenes y vídeos**, además de **enlaces a materiales externos**.
+- Incorporar **referencias a otras notas** de la aplicación **sin duplicar su contenido**.
+- Mantener el documento **bien organizado** aunque combine distintos tipos de contenido.
+
+Se distinguen como capacidades diferentes:
+
+| Contenido | Enlazar | Incrustar o insertar |
+|---|---|---|
+| **Vídeo** | Un enlace (texto pulsable) que abre el vídeo fuera de la nota. | El vídeo se ve y se reproduce **dentro** de la nota. |
+| **Imagen** | Un enlace a una imagen que está en otro sitio. | La imagen se ve **dentro** de la nota: insertada desde una dirección web o **adjuntada** (subida a la aplicación). |
+| **Otra nota** | — | Una **referencia** a la nota existente: muestra su título actual y lleva a ella; **no copia** su contenido. |
+
+### 3.2 Pendiente de concretar (alcance técnico)
+
+- Qué fuentes de vídeo se pueden incrustar (por ejemplo, YouTube y Vimeo) y si se podrán **subir vídeos propios**.
+- Si las imágenes se pueden **adjuntar** (subir) además de insertarse desde una dirección web, y con qué límites de tamaño.
+- Cómo se ve una referencia a otra nota y qué ocurre si la nota referenciada se elimina.
+- Qué se entiende por «bien organizado»: mover bloques, separadores, plegar secciones, índice…
+- Si las referencias se amplían a libros, proyectos, recursos, citas o términos del glosario.
+
+### 3.3 Estado actual
+
+El editor construido es la **base provisional**. Incluye títulos y subtítulos, negrita, cursiva, listas, citas en bloque y enlaces web, y guarda el contenido en formato estructurado (JSON). **No se amplía, recorta ni reconstruye** hasta que se revise qué tiene, qué le falta y qué arquitectura permite llegar a la dirección acordada sin rehacerlo innecesariamente.
+
+## 4. Búsqueda global
+
+**Estado: acordada (2026-10-27), incluidos los campos por tipo y el funcionamiento. No implementada.**
+
+La aplicación tendrá una **búsqueda global** para encontrar contenido en toda la aplicación. La prioridad es una búsqueda útil, bien construida y ampliable. **No** se incorpora desde el principio un panel complejo de búsqueda avanzada.
+
+**Requisitos acordados:**
+
+- Buscar en **títulos** y en el **contenido textual** de los elementos que lo permitan.
+- Incluir **proyectos, libros, notas, fuentes y recursos, citas y términos del glosario**.
+- **Filtrar** los resultados por tipo de contenido.
+- Mostrar **cada elemento una sola vez** en los resultados, aunque esté relacionado con varios espacios de la aplicación.
+- **Acceder** al elemento encontrado desde los resultados.
+
+**No aprobados como requisitos iniciales:** filtros adicionales por autor, etiquetas, fechas, proyecto o libro.
+
+### 4.1 Campos de búsqueda por tipo de elemento
+
+**Acordado (2026-10-27).** Cada tipo de contenido tiene una estructura distinta, así que no todos se buscan igual. Las columnas indican qué campo se muestra como título del resultado y en qué campos se busca.
+
+| Tipo | Título del resultado | Se busca en | Observaciones |
+|---|---|---|---|
+| Proyecto | Nombre | Nombre y descripción | La descripción es opcional; si está vacía solo se busca en el nombre. |
+| Nota | Título | Título y texto del contenido (versión en texto plano del editor) | El formato (negritas, listas…) no influye en la búsqueda. |
+| Libro | Título | Título, **autores** y notas bibliográficas | Los autores se buscan como texto; no hay filtro por autor. La editorial no se incluye. |
+| Fuente o recurso | Título | Título, **autor** y descripción | La dirección web no se incluye. |
+| Cita | Extracto del texto | Texto, **autor** y **fuente u origen** (texto libre) | Las citas no tienen título propio. |
+| Término del glosario | Término | Término, definición, ejemplo e información adicional | — |
+
+**Funcionamiento acordado (2026-10-27):**
+
+- Ignora **mayúsculas y tildes**: «filosofia» encuentra «Filosofía».
+- Encuentra palabras que **empiezan** por lo escrito: «materia» encuentra «materialismo».
+- Ordena primero por **relevancia**.
+- Cada resultado muestra el **tipo** de elemento y un **fragmento** del texto donde aparece la coincidencia.
+- Se accede desde un **cuadro de búsqueda en la cabecera**, que lleva a una página de resultados con **filtro por tipo**.
+- Las **etiquetas** no aparecen como resultados, porque tienen su propia sección.
+
+**Se deja para más adelante:** filtros por autor, etiqueta, fecha, proyecto o libro.
 
 ## 5. Exclusiones explícitas
 
@@ -112,9 +225,11 @@ La aplicación se centra en estudiar y registrar lo aprendido, no en medir cuán
 
 Un mapa gráfico de conocimiento se dejó como posible idea futura, no como requisito actual. La prioridad es mostrar relaciones mediante enlaces y listas de elementos relacionados.
 
-## 6. Menú: propuesta todavía no aprobada
+## 6. Menú principal
 
-Se exploró esta posible estructura:
+**Estado: áreas acordadas (2026-10-27). Orden, diseño e Inicio pendientes.**
+
+Las principales áreas de la aplicación tienen **secciones independientes** en el menú. Las áreas acordadas son:
 
 - Inicio
 - Proyectos
@@ -123,8 +238,16 @@ Se exploró esta posible estructura:
 - Fuentes y recursos
 - Etiquetas
 - Glosario
+- Citas
 
-Esta lista es una propuesta de trabajo, no una decisión definitiva. La ubicación de las citas, frases y proverbios, así como la estructura final del menú, siguen pendientes.
+**Citas tiene su propia sección en el menú principal.** No es una posibilidad pendiente.
+
+**Pendiente de decisión:**
+
+- El **orden definitivo** de las secciones (la lista anterior no lo fija).
+- El **diseño visual** del menú.
+- La **estructura y el contenido de la pantalla Inicio**.
+- Dónde se coloca el acceso a la **búsqueda global** (ver §4).
 
 ## 7. Dirección visual exploratoria
 
@@ -174,28 +297,102 @@ Quien diseñe o implemente la aplicación debe:
 
 Esta lista se debe actualizar conforme se avance, sin resolver los puntos por suposición.
 
-- [ ] Definir la estructura final del menú.
-- [ ] Definir qué aparece en Inicio y cómo se organiza.
+Las funciones de Citas, Etiquetas, Glosario, Búsqueda global y las ocho áreas del menú **están acordadas**, con sus detalles (§2.5–§2.7, §4, §6).
+
+### 9.1 Decisiones esenciales: confirmadas el 2026-10-27
+
+| # | Decisión acordada | Dónde |
+|---|---|---|
+| E1 | **Citas:** fuente u origen en texto libre más un enlace **opcional** a un libro o recurso. La cita sigue siendo independiente y aparece también en el libro o recurso, sin duplicarse. | §2.7 |
+| E2 | **Citas:** tipo cita, frase de autor o proverbio, con «cita» por defecto. | §2.7 |
+| E3 | **Etiquetas:** se pueden renombrar y eliminar. Al eliminar, se desvinculan de sus elementos sin borrarlos, con advertencia previa. | §2.5 |
+| E4 | **Glosario:** sin entradas duplicadas para el mismo término; las acepciones van en la misma entrada. | §2.6 |
+| E5 | **Glosario:** término y definición obligatorios; ejemplo opcional. | §2.6 |
+| E6 | **Búsqueda:** se busca también en los nombres de autores, sin filtro independiente por autor. | §4.1 |
+
+### 9.2 Comportamientos de detalle: confirmados el 2026-10-27
+
+Incorporados en §2.5 (etiquetas), §2.6 (glosario), §2.7 (citas) y §4.1 (búsqueda).
+
+### 9.3 Se deja para más adelante (confirmado el 2026-10-27)
+
+- Etiquetas en **citas** y **términos del glosario**.
+- Relaciones opcionales del **glosario** con notas, libros o proyectos.
+- Filtros propios dentro de la sección **Citas** (por autor, por tipo).
+- Filtros de búsqueda por autor, etiqueta, fecha, proyecto o libro.
+
+### 9.4 Otros pendientes generales
+
+- [ ] **Editor:** revisar el editor actual frente a la dirección acordada (§3) y decidir el alcance técnico (§3.2).
+- [ ] Orden y diseño del menú (las áreas ya están acordadas, §6).
+- [ ] Qué aparece en Inicio y cómo se organiza.
 - [ ] Continuar explorando la propuesta visual de portada de libro antiguo.
-- [ ] Acordar el alcance inicial del editor de notas.
-- [ ] Definir la estructura de los proyectos.
-- [ ] Definir los campos y tipos de libros.
-- [ ] Definir los tipos de fuentes y recursos y sus datos.
-- [ ] Definir cómo funcionan las etiquetas.
-- [ ] Definir la estructura del glosario.
-- [ ] Decidir dónde viven las citas, frases y proverbios.
-- [ ] Decidir si la búsqueda avanzada forma parte de la primera versión.
-- [ ] Definir cómo se muestran los elementos relacionados.
+- [ ] Estructura de los proyectos.
+- [ ] Campos y tipos de libros.
+- [ ] Tipos de fuentes y recursos y sus datos.
+- [ ] Cómo se muestran los elementos relacionados.
 - [ ] Separar explícitamente los requisitos de primera versión de las ideas futuras.
+
+### Puntos a revisar: contradicciones detectadas el 2026-10-27
+
+1. **Editor de notas. Resuelto el 2026-10-27.** El alcance mínimo registrado durante la implementación no es el definitivo. El usuario fijó la dirección funcional (§3.1) y decidió mantener el editor actual como **base provisional**, sin ampliarlo, recortarlo ni reconstruirlo hasta revisarlo.
+2. **Specs de OpenSpec desactualizadas.** El cambio `especificacion-inicial-app-estudio` (implementado, aún no archivado) contiene specs de `etiquetas`, `glosario`, `citas`, `busqueda` y `navegacion` escritas antes de estas decisiones. Contradicen este documento, por ejemplo: citas con «ubicación sin decidir», búsqueda avanzada «no aprobada», menú sin Citas, glosario con relaciones propuestas y término único. La spec `editor-notas` marca como [Acordado] un alcance que ahora vuelve a estar pendiente. **No se han modificado.** Mientras no se actualicen, **este documento prevalece**.
+3. **Libros y citas (§2.3 y §2.7). Resuelto el 2026-10-27 (E1).** Una cita puede enlazarse opcionalmente a un libro o recurso y aparece en su página sin duplicarse, así que «un libro puede incluir citas» se cumple sin que la asociación sea obligatoria.
+4. **Búsqueda y fechas (§2.2 y §4).** §2.2 permite usar las fechas para «ordenar o consultar notas», y §4 indica que los filtros por fecha no están aprobados para la búsqueda global. No se contradicen: el orden por fechas ya existe en la lista de notas y no forma parte de la búsqueda. Se anota para que no se interprete como filtro aprobado.
+
+### 9.5 Estado por área
+
+Actualizar este documento **no** cambia el código ni las specs históricas de OpenSpec.
+
+| Área | Implementado | Acordado, sin implementar | Exploratorio o pendiente |
+|---|---|---|---|
+| Cuentas | Registro con confirmación, entrada, salida, aislamiento por usuario | — | SMTP propio (aplazado) |
+| Proyectos | Crear, editar, eliminar con aviso, relacionados | — | Estructura detallada |
+| Notas | Crear, editar, ordenar por fechas, eliminar con aviso, relacionados | — | — |
+| Libros | Ficha provisional, relacionados, eliminar con aviso | — | Campos y tipos definitivos |
+| Fuentes y recursos | Ficha provisional, relacionados, eliminar con aviso | — | Tipos y datos definitivos |
+| Relaciones | Vínculos sin duplicar entre las 4 entidades | Enlace opcional de una cita con un libro o recurso (E1) | Forma visual de los relacionados |
+| Editor de notas | Base provisional (§3.3) | Dirección funcional (§3.1) | Alcance técnico (§3.2) |
+| Menú | Inicio, Proyectos, Libros, Notas, Fuentes y recursos | Secciones Etiquetas, Glosario y Citas | Orden, diseño, Inicio |
+| Citas | — | §2.7, incluidos E1 y E2 | Diseño visual; filtros propios (más adelante) |
+| Etiquetas | — | §2.5, incluido E3 | Etiquetas en citas y glosario (más adelante) |
+| Glosario | — | §2.6, incluidos E4 y E5 | Relaciones opcionales (más adelante) |
+| Búsqueda global | — | §4 y §4.1, incluido E6 | Filtros adicionales (más adelante) |
+| Identidad visual | Tokens provisionales | — | Toda la dirección visual (§7) |
+
+### 9.6 OpenSpec: documentos que habrá que actualizar en el próximo cambio
+
+El cambio `especificacion-inicial-app-estudio` refleja lo **implementado** y no se reescribe. Antes de preparar el siguiente cambio habrá que decidir si se **archiva** primero. Al archivarlo, sus specs pasan a `openspec/specs/`, incluidas las de etiquetas, glosario, citas y búsqueda, que están desactualizadas. El cambio siguiente las corregiría con deltas `MODIFIED` o `REMOVED`.
+
+| Spec | Qué necesitará |
+|---|---|
+| `navegacion` | Ocho áreas con sección propia, Citas incluida (§6); acceso a la búsqueda. |
+| `citas` | Sustituir la propuesta «ubicación sin decidir» por los requisitos de §2.7 (incluidos E1 y E2). |
+| `etiquetas` | Sustituir la propuesta por los requisitos de §2.5 (incluido E3). |
+| `glosario` | Sustituir la propuesta por los requisitos de §2.6 (incluidos E4 y E5); quitar las relaciones propuestas, que se dejan para más adelante. |
+| `busqueda` | Sustituir «búsqueda avanzada no aprobada» por la búsqueda global de §4 y §4.1 (incluido E6). |
+| `editor-notas` | Pasar el alcance actual de [Acordado] a base provisional y añadir la dirección de §3.1. Solo cuando se trabaje el editor. |
+| `relaciones` | Añadir el enlace opcional de una cita con un libro o recurso (E1), sin duplicar la cita. |
+| `design.md` (nuevo cambio) | Tablas de citas, etiquetas y glosario; método de búsqueda (texto sin tildes, por prefijo); almacenamiento de imágenes si se aprueba adjuntarlas. |
 
 ### Registro de decisiones
 
 - **2026-10-26 — Plataforma:** la aplicación será web, accesible por internet y con cuenta de usuario; cada persona ve solo su propio contenido. Motivo: elección del usuario al preparar las specs en OpenSpec (cambio `especificacion-inicial-app-estudio`). 
-- **2026-10-26 — Tecnología:** Next.js (TypeScript) + PostgreSQL en Supabase + Prisma + Auth.js. Motivo: propuesta de `design.md` aprobada por el usuario.
+- **2026-10-26 — Tecnología:** Next.js (TypeScript) + PostgreSQL en Supabase + Prisma + Auth.js. Motivo: propuesta de `design.md` aprobada por el usuario. *(Prisma y Auth.js se sustituyeron el 2026-10-27, ver más abajo.)*
 - **2026-10-27 — Estructura:** una sola app con `src/frontend` y `src/backend` (controllers, services, repositories). Motivo: preferencia del usuario por una separación ordenada por capas.
 - **2026-10-27 — Supabase en lugar de Prisma y Auth.js:** la base de datos se consulta directamente con el cliente de Supabase, el inicio de sesión usa Supabase Auth (correo y contraseña) y el aislamiento por usuario lo garantiza Row Level Security. Motivo: decisión del usuario de usar Supabase completo.
+- **2026-10-27 — Contenido de las notas:** se guarda en formato estructurado (JSON del editor) más una copia en texto plano para búsquedas futuras. Motivo: evita convertir las notas si se aprueba un editor más completo. El alcance del editor sigue pendiente.
+- **2026-10-27 — Editor de notas:** la primera versión tendrá títulos y subtítulos, negrita, cursiva, listas, citas en bloque y enlaces web. Siguen fuera, como exploración: subrayado, separadores, imágenes, mover secciones y enlaces internos. *(Revisado más abajo: el alcance definitivo vuelve a estar pendiente.)*
 - **2026-10-26 — Inicio de sesión:** correo electrónico y contraseña.
 - **2026-10-26 — Eliminación con vínculos:** al eliminar un elemento se borran solo sus vínculos, nunca los elementos relacionados, y se avisa antes de cuántos se perderán.
+- **2026-10-27 — Menú principal:** las áreas con sección propia son Inicio, Proyectos, Libros, Notas, Fuentes y recursos, Etiquetas, Glosario y Citas. Siguen pendientes el orden, el diseño y la pantalla Inicio. Motivo: decisión del usuario.
+- **2026-10-27 — Citas:** sección independiente para citas, frases y proverbios, con texto, autor y fuente u origen. Se pueden guardar sin asociarlas a nada y sin autor u origen conocidos. Motivo: decisión del usuario.
+- **2026-10-27 — Etiquetas:** compartidas entre notas, libros, proyectos y recursos, creadas una sola vez, con vista por etiqueta y filtro por tipo. Motivo: decisión del usuario.
+- **2026-10-27 — Glosario:** sección independiente con término, definición, ejemplo e información adicional opcional; no requiere notas ni vínculos. Motivo: decisión del usuario.
+- **2026-10-27 — Búsqueda global:** sobre proyectos, libros, notas, recursos, citas y glosario, en títulos y contenido textual, con filtro por tipo y sin duplicados. Sin panel avanzado ni filtros por autor, etiqueta o fecha al inicio. Motivo: decisión del usuario.
+- **2026-10-27 — Revisión del editor de notas:** el alcance definitivo, el tipo de editor y la organización del contenido vuelven a estar **pendientes**. El editor construido se mantiene sin cambios como provisional. Motivo: aclaración del usuario de que no aprobó limitarse a un editor mínimo ni uno completo por bloques. Ver «Puntos a revisar», 1.
+- **2026-10-27 — Dirección del editor:** experiencia parecida a Word o Notion, con texto con formato, imágenes y vídeos (distinguiendo entre enlazar e incrustar o adjuntar), enlaces externos y referencias a otras notas sin duplicar contenido (§3.1). El editor actual se mantiene como base provisional, sin cambios, hasta revisar qué tiene, qué le falta y qué arquitectura conviene. Motivo: decisión del usuario.
+- **2026-10-27 — Detalles de Citas, Etiquetas, Glosario y Búsqueda (E1–E6 y §9.2):** citas con fuente en texto libre, enlace opcional a un libro o recurso y tipo (cita por defecto); etiquetas que se pueden renombrar y eliminar con advertencia, sin distinguir mayúsculas ni tildes y creables al asignarlas; glosario sin términos duplicados, con término y definición obligatorios; búsqueda también por autores, sin tildes, por prefijo y con cuadro en la cabecera. Se dejan para más adelante los puntos de §9.3. Motivo: confirmación del usuario de las recomendaciones.
 
 ## 10. Prompt de trabajo para Specs o Claude Code
 

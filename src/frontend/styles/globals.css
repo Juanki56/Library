@@ -11,11 +11,15 @@ body {
 }
 
 body {
-  background: var(--color-fondo);
+  min-height: 100vh;
+  background: var(--fondo-papel);
+  background-color: var(--color-fondo);
+  background-attachment: fixed;
   color: var(--color-texto);
   font-family: var(--fuente-texto);
   font-size: var(--tamano-texto);
   line-height: var(--interlineado);
+  -webkit-font-smoothing: antialiased;
 }
 
 h1,
@@ -23,7 +27,8 @@ h2,
 h3 {
   font-family: var(--fuente-titulos);
   font-weight: 600;
-  line-height: 1.2;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
 }
 
 h1 {
@@ -36,8 +41,20 @@ h2 {
 
 a {
   color: var(--color-acento);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
 }
 
 a:hover {
   color: var(--color-acento-hover);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-acento);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--color-lateral);
+  color: var(--color-texto);
 }

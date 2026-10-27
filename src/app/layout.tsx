@@ -24,10 +24,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es">
-      <body className={`${garamond.variable} ${cormorant.variable}`}>
-        {children}
-      </body>
+    // Las variables de las fuentes van en <html>: los tokens (:root) las leen desde ahí.
+    <html lang="es" className={`${garamond.variable} ${cormorant.variable}`}>
+      <body>{children}</body>
     </html>
   );
 }

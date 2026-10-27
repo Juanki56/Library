@@ -1,4 +1,8 @@
+import { loadEnvConfig } from "@next/env";
 import { defineConfig, devices } from "@playwright/test";
+
+// Carga .env.local para que las pruebas usen el mismo proyecto de Supabase.
+loadEnvConfig(process.cwd());
 
 const PORT = 3100;
 

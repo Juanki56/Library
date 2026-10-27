@@ -1,0 +1,75 @@
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-1);
+  font-size: var(--tamano-versalitas);
+  font-variant: small-caps;
+  text-transform: lowercase;
+  letter-spacing: var(--interletraje-versalitas);
+  font-weight: 600;
+  color: var(--color-texto-suave);
+}
+
+.campo input {
+  font: inherit;
+  font-family: var(--fuente-texto);
+  font-size: var(--tamano-texto);
+  font-variant: normal;
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 400;
+  color: var(--color-texto);
+  background: var(--color-fondo);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  padding: var(--espacio-2) var(--espacio-3);
+}
+
+.campo input:focus {
+  outline: 2px solid var(--color-acento);
+  outline-offset: 1px;
+}
+
+.boton {
+  min-height: 2.75rem;
+  margin-top: var(--espacio-2);
+  font: inherit;
+  font-size: var(--tamano-pequeno);
+  font-variant: small-caps;
+  text-transform: lowercase;
+  letter-spacing: var(--interletraje-versalitas);
+  font-weight: 600;
+  color: var(--color-sobre-acento);
+  background: var(--color-acento);
+  border: none;
+  border-radius: var(--radio);
+  box-shadow: var(--sombra-papel);
+  cursor: pointer;
+}
+
+.boton:hover {
+  background: var(--color-acento-hover);
+}
+
+.boton:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.error {
+  color: var(--color-error);
+  margin: 0;
+}
+
+.mensaje {
+  margin: 0;
+  padding-left: var(--espacio-3);
+  border-left: 2px solid var(--color-acento);
+  font-style: italic;
+}

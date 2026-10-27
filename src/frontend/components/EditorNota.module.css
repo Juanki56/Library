@@ -1,0 +1,105 @@
+/* El editor como una hoja de marfil sobre el pergamino. */
+.editor {
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra-hoja);
+}
+
+.barra {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espacio-1);
+  padding: var(--espacio-2) var(--espacio-3);
+  background: var(--color-superficie);
+  border-bottom: 1px solid var(--color-borde);
+  border-radius: var(--radio) var(--radio) 0 0;
+}
+
+.boton {
+  min-width: 2.5rem;
+  min-height: 2.25rem;
+  padding: 0 var(--espacio-2);
+  font: inherit;
+  font-family: var(--fuente-titulos);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-marron);
+  background: none;
+  border: 1px solid transparent;
+  border-radius: var(--radio);
+  cursor: pointer;
+}
+
+.boton:hover {
+  color: var(--color-texto);
+  border-color: var(--color-borde);
+}
+
+.boton[aria-pressed="true"] {
+  color: var(--color-acento);
+  background: var(--color-fondo);
+  border-color: var(--color-acento);
+}
+
+/* Contenido: tipografía de lectura, márgenes de página. */
+.contenido {
+  min-height: 22rem;
+  padding: var(--espacio-5) var(--espacio-5) var(--espacio-6);
+  font-size: 1.15rem;
+  line-height: 1.75;
+  outline: none;
+}
+
+.contenido:focus-visible {
+  outline: 2px solid var(--color-acento);
+  outline-offset: -2px;
+}
+
+.contenido > *:first-child {
+  margin-top: 0;
+}
+
+.contenido h2,
+.contenido h3 {
+  margin: var(--espacio-4) 0 var(--espacio-2);
+}
+
+.contenido h2 {
+  font-size: 1.7rem;
+}
+
+.contenido h3 {
+  font-size: 1.35rem;
+  color: var(--color-marron);
+}
+
+.contenido blockquote {
+  margin: var(--espacio-3) 0;
+  padding: var(--espacio-1) 0 var(--espacio-1) var(--espacio-4);
+  border-left: 2px solid var(--color-acento);
+  color: var(--color-texto-suave);
+  font-style: italic;
+}
+
+.contenido ul,
+.contenido ol {
+  padding-left: var(--espacio-4);
+}
+
+.contenido li::marker {
+  color: var(--color-ornamento);
+}
+
+.contenido a {
+  color: var(--color-acento);
+}
+
+@media (max-width: 760px) {
+  .contenido {
+    padding: var(--espacio-4) var(--espacio-3) var(--espacio-5);
+  }
+}

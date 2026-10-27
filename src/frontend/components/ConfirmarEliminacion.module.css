@@ -1,0 +1,68 @@
+.abrir,
+.cancelar,
+.confirmar {
+  min-height: 2.5rem;
+  padding: 0 var(--espacio-3);
+  font: inherit;
+  font-size: var(--tamano-pequeno);
+  font-variant: small-caps;
+  text-transform: lowercase;
+  letter-spacing: 0.06em;
+  border-radius: var(--radio);
+  cursor: pointer;
+}
+
+.abrir {
+  color: var(--color-error);
+  background: transparent;
+  border: 1px solid var(--color-error);
+}
+
+.abrir:hover {
+  color: var(--color-sobre-acento);
+  background: var(--color-error);
+}
+
+/* Diálogo como una hoja de marfil con doble filete. */
+.dialogo {
+  max-width: 32rem;
+  color: var(--color-texto);
+  background: var(--color-superficie);
+  border: 3px double var(--color-ornamento);
+  border-radius: var(--radio);
+  padding: var(--espacio-4) var(--espacio-5);
+  box-shadow: var(--sombra-hoja);
+}
+
+.dialogo::backdrop {
+  background: var(--color-velo);
+}
+
+.titulo {
+  margin-top: 0;
+  font-size: var(--tamano-h2);
+}
+
+.acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--espacio-2);
+  margin-top: var(--espacio-4);
+}
+
+.cancelar {
+  color: var(--color-texto);
+  background: transparent;
+  border: 1px solid var(--color-borde);
+}
+
+.confirmar {
+  font-weight: 600;
+  color: var(--color-sobre-acento);
+  background: var(--color-error);
+  border: 1px solid var(--color-error);
+}
+
+.error {
+  color: var(--color-error);
+}
