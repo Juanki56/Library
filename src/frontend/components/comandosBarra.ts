@@ -47,6 +47,11 @@ export const COMANDOS: Comando[] = [
     ejecutar: (e, r) => e.chain().focus().deleteRange(r).setHorizontalRule().run(),
   },
   {
+    titulo: "Tabla",
+    descripcion: "Tabla de 3 × 3 con encabezado",
+    ejecutar: (e, r) => e.chain().focus().deleteRange(r).insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run(),
+  },
+  {
     titulo: "Referencia a una nota",
     descripcion: "Enlace a otra nota que muestra su título",
     ejecutar: (e, r) => {

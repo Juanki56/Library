@@ -35,10 +35,25 @@ const NODOS = new Set([
   "referencia",
   "imagen",
   "video",
+  "table",
+  "tableRow",
+  "tableHeader",
+  "tableCell",
 ]);
 const MARCAS = new Set(["bold", "italic", "underline", "highlight", "link"]);
 const NIVELES_TITULO = new Set([2, 3]); // el título de la nota ocupa el nivel 1
-const BLOQUES = new Set(["paragraph", "heading", "listItem", "taskItem", "blockquote"]);
+const BLOQUES = new Set(["paragraph", "heading", "listItem", "taskItem", "blockquote", "tableHeader", "tableCell"]);
+const CELDAS = new Set(["tableHeader", "tableCell"]);
+
+const entero = (valor: unknown, maximo: number) =>
+  Number.isInteger(valor) && (valor as number) >= 1 && (valor as number) <= maximo ? (valor as number) : null;
+
+// Celdas de tabla (editor-fase4-organizacion-tablas, design D3): solo colspan, rowspan y colwidth.
+function atributosCelda(attrs: unknown): Record<string, unknown> {
+  const a = esObjeto(attrs) ? attrs : {};
+  const anchos = Array.isArray(a.colwidth) && a.colwidth.every((w) => entero(w, 2000) !== null) ? a.colwidth : null;
+  return { colspan: entero(a.colspan, 50) ?? 1, rowspan: entero(a.rowspan, 50) ?? 1, colwidth: anchos };
+}
 
 function esObjeto(valor: unknown): valor is Record<string, unknown> {
   return typeof valor === "object" && valor !== null && !Array.isArray(valor);
@@ -106,10 +121,18 @@ function limpiarNodo(valor: unknown): NodoContenido | null {
   if (tipo === "taskItem") {
     nodo.attrs = { checked: esObjeto(valor.attrs) && valor.attrs.checked === true };
   }
+  if (CELDAS.has(tipo)) nodo.attrs = atributosCelda(valor.attrs);
   if (Array.isArray(valor.content)) {
     const hijos = valor.content.map(limpiarNodo).filter((n): n is NodoContenido => n !== null);
     if (hijos.length) nodo.content = hijos;
   }
+  // Estructura mínima de una tabla: filas solo con celdas, celdas nunca vacías, sin tablas vacías.
+  if (tipo === "table") {
+    nodo.content = nodo.content?.filter((h) => h.type === "tableRow" && h.content?.length);
+    if (!nodo.content?.length) return null;
+  }
+  if (tipo === "tableRow") nodo.content = nodo.content?.filter((h) => CELDAS.has(h.type));
+  if (CELDAS.has(tipo) && !nodo.content?.length) nodo.content = [{ type: "paragraph" }];
   return nodo;
 }
 

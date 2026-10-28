@@ -2,6 +2,7 @@
 
 import Highlight from "@tiptap/extension-highlight";
 import { TaskItem, TaskList } from "@tiptap/extension-list";
+import { TableKit } from "@tiptap/extension-table";
 import { EditorContent, useEditor, useEditorState, type Editor, type JSONContent } from "@tiptap/react";
 import { BubbleMenu } from "@tiptap/react/menus";
 import StarterKit from "@tiptap/starter-kit";
@@ -14,12 +15,15 @@ import CuadroReferencia from "./CuadroReferencia";
 import CuadroVideo from "./CuadroVideo";
 import { ponerAbridor } from "./cuadrosEditor";
 import styles from "./EditorNota.module.css";
+import IndiceNota from "./IndiceNota";
+import { MoverBloques } from "./moverBloques";
 import { Referencia, TitulosReferencias } from "./nodoReferencia";
 import { Imagen, Video } from "./nodosMedios";
 
 // Alcance aprobado del editor (spec editor-notas, fase 1): títulos y subtítulos, negrita, cursiva,
 // subrayado, resaltado, listas con viñetas, numeradas y de tareas, citas, separadores y enlaces web;
-// fase 2: referencias a otras notas; fase 3: imágenes y vídeos de YouTube y Vimeo.
+// fase 2: referencias a otras notas; fase 3: imágenes y vídeos de YouTube y Vimeo;
+// fase 4: mover bloques, índice de la nota y tablas.
 function extensiones(control: { actual: ControlMenuBarra | null }) {
   return [
     StarterKit.configure({
@@ -48,6 +52,8 @@ function extensiones(control: { actual: ControlMenuBarra | null }) {
     Referencia,
     Imagen,
     Video,
+    TableKit.configure({ table: { resizable: false } }),
+    MoverBloques,
     crearComandosBarra(control),
   ];
 }
@@ -79,6 +85,7 @@ function estadoFormatos(e: Editor | null) {
     cita: e?.isActive("blockquote") ?? false,
     enlace: e?.isActive("link") ?? false,
     imagen: e?.isActive("imagen") ?? false,
+    tabla: e?.isActive("table") ?? false,
   };
 }
 
@@ -267,7 +274,24 @@ export default function EditorNota({ notaId, contenidoInicial, titulosReferencia
         [
           { etiqueta: "▣", titulo: activo?.imagen ? "Editar imagen" : "Imagen", activo: activo?.imagen, accion: abrirImagen },
           { etiqueta: "▶", titulo: "Vídeo", accion: () => setCuadroVideo(true) },
+          { etiqueta: "▦", titulo: "Tabla", activo: activo?.tabla, accion: () => c().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run() },
         ],
+        [
+          { etiqueta: "↑", titulo: "Subir bloque", accion: () => c().moverBloque("arriba").run() },
+          { etiqueta: "↓", titulo: "Bajar bloque", accion: () => c().moverBloque("abajo").run() },
+        ],
+        // Acciones de tabla: solo con el cursor dentro de una tabla (design D3).
+        ...(activo?.tabla
+          ? [
+              [
+                { etiqueta: "+F", titulo: "Añadir fila", accion: () => c().addRowAfter().run() },
+                { etiqueta: "+C", titulo: "Añadir columna", accion: () => c().addColumnAfter().run() },
+                { etiqueta: "−F", titulo: "Eliminar fila", accion: () => c().deleteRow().run() },
+                { etiqueta: "−C", titulo: "Eliminar columna", accion: () => c().deleteColumn().run() },
+                { etiqueta: "✕▦", titulo: "Eliminar tabla", accion: () => c().deleteTable().run() },
+              ],
+            ]
+          : []),
       ]
     : [];
 
@@ -299,6 +323,8 @@ export default function EditorNota({ notaId, contenidoInicial, titulosReferencia
           </div>
         </BubbleMenu>
       )}
+
+      <IndiceNota editor={editor} />
 
       <TitulosReferencias.Provider value={titulos}>
         <EditorContent editor={editor} />

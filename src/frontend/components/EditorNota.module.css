@@ -431,3 +431,81 @@
   border: 1px dashed var(--color-borde);
   border-radius: var(--radio);
 }
+
+/* Índice de la nota: lista discreta de subtítulos, con los menores sangrados (fase 4). */
+.indice {
+  margin: var(--espacio-3) 0;
+  padding: var(--espacio-2) var(--espacio-4);
+  border-left: 3px double var(--color-ornamento);
+}
+
+.indiceTitulo {
+  margin: 0 0 var(--espacio-1);
+  font-family: var(--fuente-texto);
+  font-size: var(--tamano-versalitas);
+  font-variant: small-caps;
+  text-transform: lowercase;
+  letter-spacing: var(--interletraje-versalitas);
+  color: var(--color-texto-suave);
+}
+
+.indice ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.indice li.indiceMenor {
+  padding-left: var(--espacio-4);
+}
+
+.indice button {
+  padding: 2px 0;
+  font: inherit;
+  text-align: left;
+  color: var(--color-texto);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.indice button:hover {
+  color: var(--color-acento);
+}
+
+/* Tablas: filetes finos, encabezado en versalitas y desplazamiento propio si son anchas. */
+.contenido :global(.tableWrapper) {
+  margin: var(--espacio-4) 0;
+  overflow-x: auto;
+}
+
+.contenido table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.contenido th,
+.contenido td {
+  min-width: 6rem;
+  padding: var(--espacio-1) var(--espacio-2);
+  vertical-align: top;
+  border: 1px solid var(--color-borde);
+}
+
+.contenido th {
+  font-variant: small-caps;
+  letter-spacing: 0.04em;
+  text-align: left;
+  background: var(--color-superficie);
+}
+
+.contenido th p,
+.contenido td p {
+  margin: 0;
+}
+
+.contenido :global(.selectedCell) {
+  background: var(--color-fondo);
+  box-shadow: inset 0 0 0 2px var(--color-acento);
+}
