@@ -15,8 +15,11 @@ export default defineConfig({
     trace: "on-first-retry",
   },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+  // Compila en .next-pruebas, separada de la carpeta .next de «npm run dev»: así las pruebas
+  // nunca rompen el servidor de desarrollo que se esté usando.
   webServer: {
     command: `npm run build && npx next start -p ${PORT}`,
+    env: { NEXT_DIST_DIR: ".next-pruebas" },
     url: `http://localhost:${PORT}`,
     reuseExistingServer: !process.env.CI,
     timeout: 240_000,

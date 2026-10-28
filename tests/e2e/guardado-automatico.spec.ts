@@ -114,7 +114,8 @@ test.describe("dos pestañas (escenario «Nota editada en otra pestaña»)", () 
     await expect(estado(otra)).toHaveText("Guardado");
     await escribir(page, "Versión de la primera pestaña");
     const aviso = page.getByRole("alert").filter({ hasText: "Esta nota se modificó en otro lugar." });
-    await expect(aviso).toBeVisible();
+    // Guardado automático (1,5 s) y viaje a Supabase: con la máquina cargada puede pasar de 5 s.
+    await expect(aviso).toBeVisible({ timeout: 15_000 });
     expect(await contenidoGuardado(id)).toBe("Versión de la segunda pestaña");
     return { id, aviso, otra };
   }

@@ -7,7 +7,9 @@ import { EditorContent, useEditor, useEditorState, type Editor, type JSONContent
 import { BubbleMenu } from "@tiptap/react/menus";
 import StarterKit from "@tiptap/starter-kit";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { subirImagen } from "@/backend/controllers/notas";
 import { esEnlaceWeb } from "@/backend/services/enlaces";
+import { ERROR_IMAGEN_GRANDE, ERROR_IMAGEN_TIPO, TAMANO_MAXIMO_IMAGEN } from "@/backend/services/medios";
 import { crearComandosBarra, type ControlMenuBarra, type MenuBarra } from "./comandosBarra";
 import CuadroEnlace from "./CuadroEnlace";
 import CuadroImagen, { type DatosImagen } from "./CuadroImagen";
@@ -16,15 +18,19 @@ import CuadroVideo from "./CuadroVideo";
 import { ponerAbridor } from "./cuadrosEditor";
 import styles from "./EditorNota.module.css";
 import IndiceNota from "./IndiceNota";
+import { crearArrastrarBloques } from "./arrastrarBloques";
 import { MoverBloques } from "./moverBloques";
 import { Referencia, TitulosReferencias } from "./nodoReferencia";
 import { Imagen, Video } from "./nodosMedios";
+import { crearPegarImagenes, type SubirArchivos } from "./pegarImagenes";
 
 // Alcance aprobado del editor (spec editor-notas, fase 1): títulos y subtítulos, negrita, cursiva,
 // subrayado, resaltado, listas con viñetas, numeradas y de tareas, citas, separadores y enlaces web;
 // fase 2: referencias a otras notas; fase 3: imágenes y vídeos de YouTube y Vimeo;
-// fase 4: mover bloques, índice de la nota y tablas.
-function extensiones(control: { actual: ControlMenuBarra | null }) {
+// fase 4: mover bloques (también arrastrándolos), índice de la nota y tablas.
+const TIPOS_ADMITIDOS = new Set(["image/png", "image/jpeg", "image/gif", "image/webp"]);
+
+function extensiones(control: { actual: ControlMenuBarra | null }, pegar: { actual: SubirArchivos | null }) {
   return [
     StarterKit.configure({
       heading: { levels: [2, 3] },
@@ -54,7 +60,9 @@ function extensiones(control: { actual: ControlMenuBarra | null }) {
     Video,
     TableKit.configure({ table: { resizable: false } }),
     MoverBloques,
+    crearArrastrarBloques(styles.asa),
     crearComandosBarra(control),
+    crearPegarImagenes(pegar),
   ];
 }
 
@@ -123,6 +131,9 @@ export default function EditorNota({ notaId, contenidoInicial, titulosReferencia
   });
   const menuActual = useRef<MenuBarra | null>(null);
   const abrirEnlaceRef = useRef<() => void>(() => {});
+  // Imágenes pegadas o soltadas en el editor (cambio editor-pegar-imagenes).
+  const pegar = useMemo<{ actual: SubirArchivos | null }>(() => ({ actual: null }), []);
+  const [avisoImagen, setAvisoImagen] = useState<{ tipo: "subiendo" | "error"; texto: string } | null>(null);
   const avisos = useRef({ onCambio, onSalir });
   avisos.current = { onCambio, onSalir };
 
@@ -160,7 +171,7 @@ export default function EditorNota({ notaId, contenidoInicial, titulosReferencia
   }, []);
 
   const editor = useEditor({
-    extensions: extensiones(control),
+    extensions: extensiones(control, pegar),
     content: contenidoInicial,
     immediatelyRender: false,
     editorProps: {
@@ -208,6 +219,36 @@ export default function EditorNota({ notaId, contenidoInicial, titulosReferencia
       editando: seleccionada ? { alt: String(attrs.alt ?? ""), pie: String(attrs.pie ?? "") } : null,
     });
   }
+
+  // Sube una tras otra las imágenes pegadas o soltadas y las inserta: al pegar, donde esté el cursor
+  // al terminar; al soltar, en el punto donde se soltaron. Si alguna falla, se avisa y no se inserta.
+  pegar.actual = async (archivos, pos) => {
+    if (!editor) return;
+    let destino = pos;
+    for (const archivo of archivos) {
+      if (!TIPOS_ADMITIDOS.has(archivo.type)) return setAvisoImagen({ tipo: "error", texto: ERROR_IMAGEN_TIPO });
+      if (archivo.size > TAMANO_MAXIMO_IMAGEN) return setAvisoImagen({ tipo: "error", texto: ERROR_IMAGEN_GRANDE });
+      setAvisoImagen({ tipo: "subiendo", texto: "Subiendo imagen…" });
+      const formulario = new FormData();
+      formulario.set("archivo", archivo);
+      let resultado: Awaited<ReturnType<typeof subirImagen>>;
+      try {
+        resultado = await subirImagen(notaId, formulario);
+      } catch {
+        resultado = { ok: false, error: "No se pudo subir la imagen. Inténtalo de nuevo." };
+      }
+      if (!resultado.ok) return setAvisoImagen({ tipo: "error", texto: resultado.error });
+      const nodo = { type: "imagen", attrs: { origen: "archivo", ruta: resultado.ruta, alt: "", pie: "" } };
+      if (destino === null) {
+        editor.chain().focus().insertContent(nodo).run();
+      } else {
+        const pos = Math.min(destino, editor.state.doc.content.size);
+        editor.chain().focus().insertContentAt(pos, nodo).run();
+        destino = editor.state.selection.to;
+      }
+    }
+    setAvisoImagen(null);
+  };
 
   function insertarImagen(imagen: DatosImagen) {
     setCuadroImagen({ abierto: false, editando: null });
@@ -324,10 +365,21 @@ export default function EditorNota({ notaId, contenidoInicial, titulosReferencia
         </BubbleMenu>
       )}
 
+      {avisoImagen && (
+        <p role={avisoImagen.tipo === "error" ? "alert" : "status"} className={styles.avisoImagen}>
+          {avisoImagen.texto}
+          {avisoImagen.tipo === "error" && (
+            <button type="button" onClick={() => setAvisoImagen(null)} className={styles.cerrarAviso}>
+              Cerrar
+            </button>
+          )}
+        </p>
+      )}
+
       <IndiceNota editor={editor} />
 
       <TitulosReferencias.Provider value={titulos}>
-        <EditorContent editor={editor} />
+        <EditorContent editor={editor} className={styles.lienzo} />
       </TitulosReferencias.Provider>
 
       {menuBarra && menuBarra.items.length > 0 && (

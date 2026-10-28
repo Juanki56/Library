@@ -1,6 +1,7 @@
 "use client";
 
 import { Extension } from "@tiptap/core";
+import type { Node as ProseMirrorNode } from "@tiptap/pm/model";
 import type { EditorState, Transaction } from "@tiptap/pm/state";
 import { NodeSelection, TextSelection } from "@tiptap/pm/state";
 
@@ -17,6 +18,18 @@ declare module "@tiptap/core" {
       moverBloque: (direccion: Direccion) => ReturnType;
     };
   }
+}
+
+// Bloque en una posición (también lo usa ArrastrarBloques): el ancestro más profundo que sea un
+// elemento de lista o un hijo directo del documento; en el nivel superior, el nodo que empieza ahí
+// (imagen, vídeo, separador).
+export function bloqueEn(doc: ProseMirrorNode, pos: number): { inicio: number; nodo: ProseMirrorNode } | null {
+  const $pos = doc.resolve(pos);
+  for (let d = $pos.depth; d >= 1; d--) {
+    const nodo = $pos.node(d);
+    if (d === 1 || ELEMENTOS_LISTA.has(nodo.type.name)) return { inicio: $pos.before(d), nodo };
+  }
+  return $pos.nodeAfter ? { inicio: pos, nodo: $pos.nodeAfter } : null;
 }
 
 // Bloque que se mueve: el nodo seleccionado (imagen, vídeo) o el ancestro más profundo del cursor

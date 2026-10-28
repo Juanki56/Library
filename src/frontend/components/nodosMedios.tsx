@@ -11,6 +11,7 @@ import {
   reproductorVideo,
   type Video as DatosVideo,
 } from "@/backend/services/medios";
+import { esEnlaceWeb } from "@/backend/services/enlaces";
 import type { AlmacenCuadro } from "./cuadrosEditor";
 import styles from "./EditorNota.module.css";
 
@@ -21,7 +22,9 @@ export const AVISO_IMAGEN = "No se pudo cargar la imagen.";
 // Atributo guardado tal cual en el JSON; en el HTML del portapapeles va como data-*.
 const atributo = (nombre: string, porDefecto: unknown = null) => ({
   default: porDefecto,
-  parseHTML: (el: HTMLElement) => el.getAttribute(`data-${nombre}`) ?? porDefecto,
+  // null si falta: así no pisa lo que lee otra regla (por ejemplo, el «alt» de un <img> pegado) y,
+  // si nadie lo da, se usa el valor por defecto.
+  parseHTML: (el: HTMLElement) => el.getAttribute(`data-${nombre}`),
   renderHTML: (attrs: Record<string, unknown>) => (attrs[nombre] ? { [`data-${nombre}`]: attrs[nombre] } : {}),
 });
 
@@ -77,7 +80,18 @@ export const Imagen = Node.create<object, AlmacenCuadro>({
   },
 
   parseHTML() {
-    return [{ tag: "figure[data-imagen]" }];
+    return [
+      { tag: "figure[data-imagen]" },
+      // Imágenes de contenido copiado de una web (cambio editor-pegar-imagenes, design D2): solo con
+      // dirección http/https; las demás (por ejemplo «data:») se descartan, como en el servidor.
+      {
+        tag: "img[src]",
+        getAttrs: (el) => {
+          const src = (el as HTMLElement).getAttribute("src") ?? "";
+          return esEnlaceWeb(src) ? { origen: "web", src, alt: (el as HTMLElement).getAttribute("alt") ?? "", pie: "" } : false;
+        },
+      },
+    ];
   },
 
   renderHTML({ HTMLAttributes }) {

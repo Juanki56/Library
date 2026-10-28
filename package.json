@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
@@ -11,7 +11,8 @@
     "test:e2e": "playwright test",
     "db:push": "supabase db push --linked",
     "db:tipos": "supabase gen types typescript --linked > src/backend/repositories/tipos-db.ts",
-    "test:integracion": "vitest run --config vitest.integracion.config.mts"
+    "test:integracion": "vitest run --config vitest.integracion.config.mts",
+    "test:e2e:desarrollo": "playwright test --config=playwright.desarrollo.config.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

@@ -235,6 +235,7 @@ Se distinguen como capacidades diferentes:
    - **Desde una URL** se guarda solo el enlace: la imagen se carga desde su web original y, si deja de estar disponible, la nota muestra un aviso en su lugar (decidido el 2026-10-28).
    - **Imágenes subidas que dejan de usarse** se borran del almacenamiento: al eliminar la nota y al quitarlas del texto tras guardarse (decidido el 2026-10-28).
    - Cada imagen admite **texto alternativo** y un **pie de imagen** opcional visible debajo (decidido el 2026-10-28).
+   - **Pegar o arrastrar imágenes:** una imagen pegada (por ejemplo, una captura) o un archivo de imagen arrastrado al editor se sube igual que con el cuadro «Imagen»; las imágenes de contenido copiado de una web se insertan como imágenes desde esa dirección (decidido el 2026-10-28).
 2. **Vídeos:** solo **enlaces** e **incrustaciones de YouTube y Vimeo**. Subir vídeos propios queda fuera por ahora.
 3. **Referencias:**
    - Por ahora, a **otras notas**.
@@ -470,7 +471,7 @@ Actualizar este documento **no** cambia el código ni las specs históricas de O
 | Libros | Ficha definitiva (§2.3): descripción, ISBN, portada y estado de lectura; relacionados, eliminar con aviso | — | Tipos de libro (no decididos) |
 | Fuentes y recursos | Tipos y datos definitivos (§2.4), filtro por tipo, relacionados, eliminar con aviso | — | — |
 | Relaciones | Vínculos sin duplicar entre las 4 entidades; enlace de citas con libros o recursos; sección «Conexiones» (§2.8) | — | Conexiones indirectas y mapa (más adelante) |
-| Editor de notas | Fases 1 a 4 (§3.3) | — | Arrastrar bloques con el ratón (no incluido) |
+| Editor de notas | Fases 1 a 4 (§3.3), arrastrar bloques, pegar y arrastrar imágenes | — | — |
 | Menú e Inicio | Las ocho áreas en el orden de §6; Inicio con accesos rápidos, notas, «Leyendo ahora», proyectos y citas | — | — |
 | Citas | Sección completa (§2.7) | — | Filtros propios (más adelante) |
 | Etiquetas | Sección completa (§2.5) | — | Etiquetas en citas y glosario (más adelante) |
@@ -527,6 +528,9 @@ El cambio `especificacion-inicial-app-estudio` refleja lo **implementado** y no 
 - **2026-10-28 — Libros, recursos, menú e Inicio implementados:** cambio `libros-recursos-menu-inicio` archivado; specs oficiales `libros`, `fuentes-recursos`, `navegacion` y `busqueda` actualizadas.
 - **2026-10-28 — Conexiones:** los elementos relacionados se muestran en una sección «Conexiones» lateral con contexto de cada elemento, solo los grupos con contenido, un buscador «Vincular…» y «Nueva nota vinculada» (§2.8). Motivo: aceptación de la propuesta por el usuario, que pidió además que se vea cómodo.
 - **2026-10-28 — Conexiones implementadas:** cambio `conexiones` archivado; spec oficial `relaciones` actualizada.
+- **2026-10-28 — Arrastrar bloques con el ratón:** el usuario lo pide. Se implementa con un asa propia junto al bloque, sin la extensión oficial (que exige paquetes de edición colaborativa); los botones y Alt+↑/↓ se mantienen. Motivo: decisión del usuario.
+- **2026-10-28 — Pegar y arrastrar imágenes en el editor:** el usuario esperaba poder pegar imágenes directamente. Se suben como las del cuadro «Imagen» (§3.2). Motivo: petición del usuario.
+- **2026-10-28 — Arrastrar bloques y pegar imágenes implementados:** cambios `editor-arrastrar-bloques` y `editor-pegar-imagenes` archivados; spec oficial `editor-notas` actualizada. Las pruebas E2E compilan en su propia carpeta y también se pueden pasar contra el servidor de desarrollo (`npm run test:e2e:desarrollo`).
 
 ## 10. Prompt de trabajo para Specs o Claude Code
 

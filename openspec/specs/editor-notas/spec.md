@@ -174,7 +174,7 @@ Describe cómo se escribe y da formato al contenido de las notas. Las cuatro fas
 - **THEN** la sección indica que ninguna nota la menciona todavía
 
 ### Requirement: Imágenes subidas
-**[Acordado]** El editor SHALL permitir subir una imagen PNG, JPEG, GIF o WebP de hasta 5 MB e insertarla en la nota. La imagen MUST guardarse de forma privada: solo su propietario puede verla. Si la subida falla, el usuario MUST recibir un aviso y no se inserta nada.
+**[Acordado]** El editor SHALL permitir subir una imagen PNG, JPEG, GIF o WebP de hasta 5 MB e insertarla en la nota, desde el cuadro «Imagen», pegándola o arrastrando el archivo al editor (decidido el 2026-10-28). La imagen MUST guardarse de forma privada: solo su propietario puede verla. Si la subida falla, el usuario MUST recibir un aviso y no se inserta nada.
 
 #### Scenario: Subir una imagen
 - **WHEN** el usuario sube una imagen PNG de 200 KB en una nota y la nota se guarda
@@ -192,8 +192,20 @@ Describe cómo se escribe y da formato al contenido de las notas. Las cuatro fas
 - **WHEN** otro usuario, o alguien sin sesión, intenta abrir la dirección de una imagen subida
 - **THEN** no obtiene la imagen
 
+#### Scenario: Pegar una captura
+- **WHEN** el usuario pega en el editor una captura de pantalla
+- **THEN** se ve «Subiendo imagen…», después la imagen aparece donde estaba el cursor y sigue viéndose al reabrir la nota
+
+#### Scenario: Arrastrar un archivo de imagen
+- **WHEN** el usuario arrastra un archivo PNG desde su ordenador y lo suelta entre dos párrafos
+- **THEN** la imagen se sube y aparece donde la soltó
+
+#### Scenario: Pegar algo que no es una imagen admitida
+- **WHEN** el usuario pega un archivo de más de 5 MB o que no es PNG, JPEG, GIF ni WebP
+- **THEN** recibe el aviso correspondiente y no se inserta nada
+
 ### Requirement: Imágenes desde una URL
-**[Acordado]** El editor SHALL permitir insertar una imagen indicando su dirección web (http o https). Se MUST guardar solo la dirección; la imagen se carga desde su origen. Si no se puede cargar, la nota MUST mostrar un aviso en su lugar sin afectar al resto del contenido.
+**[Acordado]** El editor SHALL permitir insertar una imagen indicando su dirección web (http o https), y al pegar contenido copiado de una web sus imágenes con dirección web se insertan igual. Se MUST guardar solo la dirección; la imagen se carga desde su origen. Si no se puede cargar, la nota MUST mostrar un aviso en su lugar sin afectar al resto del contenido.
 
 #### Scenario: Imagen desde la web
 - **WHEN** el usuario inserta la imagen de una dirección https
@@ -206,6 +218,10 @@ Describe cómo se escribe y da formato al contenido de las notas. Las cuatro fas
 #### Scenario: Dirección no web
 - **WHEN** el usuario indica una dirección que no empieza por http:// o https://
 - **THEN** no se inserta la imagen y se explica por qué
+
+#### Scenario: Pegar contenido de una web con imágenes
+- **WHEN** el usuario copia de una web un texto con una imagen https y lo pega en la nota
+- **THEN** se pegan el texto y la imagen, que se carga desde su dirección
 
 ### Requirement: Texto alternativo y pie de imagen
 **[Acordado]** Cada imagen SHALL admitir un texto alternativo y un pie de imagen opcionales, que se pueden añadir al insertarla y editar después. El pie MUST mostrarse debajo de la imagen.
@@ -245,7 +261,7 @@ Describe cómo se escribe y da formato al contenido de las notas. Las cuatro fas
 - **THEN** ese vídeo no se guarda y el resto del contenido sí
 
 ### Requirement: Mover bloques
-**[Acordado]** El editor SHALL permitir subir o bajar el bloque donde está el cursor, con botones de la barra y con el teclado (Alt+↑ y Alt+↓), sin cambiar su contenido. Dentro de una lista se mueve el elemento entre los de su lista. El nuevo orden MUST guardarse como cualquier otro cambio.
+**[Acordado]** El editor SHALL permitir mover el bloque donde está el cursor con botones de la barra y con el teclado (Alt+↑ y Alt+↓), y arrastrar cualquier bloque con el ratón desde un asa que aparece a su izquierda (decidido el 2026-10-28), sin cambiar su contenido. Dentro de una lista se mueve el elemento. El nuevo orden MUST guardarse como cualquier otro cambio.
 
 #### Scenario: Subir un párrafo
 - **WHEN** el usuario sitúa el cursor en el tercer párrafo de una nota y pulsa «Subir bloque»
@@ -262,6 +278,18 @@ Describe cómo se escribe y da formato al contenido de las notas. Las cuatro fas
 #### Scenario: En el borde
 - **WHEN** el usuario intenta subir el primer bloque de la nota
 - **THEN** no cambia nada
+
+#### Scenario: Arrastrar un párrafo
+- **WHEN** el usuario pasa el ratón junto al primer párrafo y arrastra su asa debajo del tercero
+- **THEN** el párrafo queda el último, con el mismo texto y formato, y al reabrir la nota se conserva el nuevo orden
+
+#### Scenario: Arrastrar un elemento de lista
+- **WHEN** el usuario arrastra el asa del último elemento de una lista encima del primero
+- **THEN** ese elemento pasa a ser el primero de la lista
+
+#### Scenario: Arrastrar una imagen
+- **WHEN** el usuario arrastra el asa de una imagen debajo del párrafo siguiente
+- **THEN** la imagen queda después de ese párrafo, con su texto alternativo y su pie
 
 ### Requirement: Índice de la nota
 **[Acordado]** Si la nota tiene subtítulos, SHALL mostrarse un índice con sus subtítulos y subtítulos menores, en el orden del texto y con los menores sangrados. Pulsar una entrada MUST llevar a ese subtítulo. El índice se actualiza mientras se escribe y no se guarda como contenido. Si la nota no tiene subtítulos, no se muestra.
