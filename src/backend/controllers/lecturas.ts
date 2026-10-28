@@ -7,6 +7,7 @@ import * as citas from "@/backend/services/citas";
 import * as eliminacion from "@/backend/services/eliminacion";
 import * as etiquetas from "@/backend/services/etiquetas";
 import * as glosario from "@/backend/services/glosario";
+import * as imagenes from "@/backend/services/imagenes";
 import * as inicio from "@/backend/services/inicio";
 import * as libros from "@/backend/services/libros";
 import * as menciones from "@/backend/services/menciones";
@@ -98,6 +99,12 @@ export async function referenciasDeNota(nota: notas.Nota) {
     menciones.notasQueMencionan(cliente, nota.id),
   ]);
   return { titulos, mencionan };
+}
+
+// Al abrir una nota se borran las imágenes subidas que ya no están en su contenido guardado
+// (editor-fase3-imagenes-videos, design D8).
+export async function limpiarImagenesDeNota(nota: notas.Nota) {
+  return imagenes.limpiarNoUsadas(await crearClienteServidor(), nota.id, nota.contenido);
 }
 
 export async function listarProyectos() {

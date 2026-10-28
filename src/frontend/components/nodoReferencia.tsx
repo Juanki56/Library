@@ -4,6 +4,7 @@ import { mergeAttributes, Node } from "@tiptap/core";
 import { NodeViewWrapper, ReactNodeViewRenderer, type ReactNodeViewProps } from "@tiptap/react";
 import Link from "next/link";
 import { createContext, useContext } from "react";
+import type { AlmacenCuadro } from "./cuadrosEditor";
 import styles from "./EditorNota.module.css";
 
 // Referencia a otra nota dentro del texto (cambio editor-fase2-referencias, design D1 y D2).
@@ -29,10 +30,7 @@ function VistaReferencia({ node }: ReactNodeViewProps) {
   );
 }
 
-// El menú «/» y la barra abren el cuadro de búsqueda a través de este almacén.
-export type AlmacenReferencia = { abrir: () => void };
-
-export const Referencia = Node.create<object, AlmacenReferencia>({
+export const Referencia = Node.create<object, AlmacenCuadro>({
   name: "referencia",
   group: "inline",
   inline: true,
@@ -70,7 +68,3 @@ export const Referencia = Node.create<object, AlmacenReferencia>({
     return ReactNodeViewRenderer(VistaReferencia);
   },
 });
-
-export function abrirCuadroReferencia(storage: unknown) {
-  (storage as { referencia?: AlmacenReferencia }).referencia?.abrir();
-}

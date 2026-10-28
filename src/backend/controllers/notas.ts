@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { crearClienteServidor } from "@/backend/auth/clienteServidor";
-import * as eliminacion from "@/backend/services/eliminacion";
+import * as imagenes from "@/backend/services/imagenes";
 import * as menciones from "@/backend/services/menciones";
 import * as notas from "@/backend/services/notas";
 
@@ -42,11 +42,17 @@ export async function notasParaReferencia(excluirId: string): Promise<menciones.
 }
 
 export async function eliminarNota(_estado: EstadoNota, formulario: FormData): Promise<EstadoNota> {
-  const resultado = await eliminacion.eliminar(await crearClienteServidor(), {
-    tipo: "nota",
-    id: texto(formulario, "id"),
-  });
+  // Con sus imágenes subidas (spec editor-notas: «Limpieza de imágenes subidas»).
+  const resultado = await imagenes.eliminarNota(await crearClienteServidor(), texto(formulario, "id"));
   if (!resultado.ok) return { error: resultado.error };
   revalidatePath("/notas");
   redirect("/notas");
+}
+
+// Sube una imagen a la nota (design D3). Devuelve la ruta privada o el aviso para el usuario.
+export async function subirImagen(notaId: string, formulario: FormData): Promise<imagenes.ResultadoSubida> {
+  if (typeof notaId !== "string" || !(formulario instanceof FormData)) {
+    return { ok: false, error: imagenes.ERROR_SUBIDA };
+  }
+  return imagenes.subirImagen(await crearClienteServidor(), notaId, formulario.get("archivo"));
 }

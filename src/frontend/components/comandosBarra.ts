@@ -3,7 +3,7 @@
 import { Extension, type Editor, type Range } from "@tiptap/core";
 import { PluginKey } from "@tiptap/pm/state";
 import Suggestion, { type SuggestionKeyDownProps, type SuggestionProps } from "@tiptap/suggestion";
-import { abrirCuadroReferencia } from "./nodoReferencia";
+import { abrirCuadro } from "./cuadrosEditor";
 
 // Menú «/» para insertar bloques (design D3): se activa con «/» al principio de un bloque
 // vacío y filtra sin distinguir tildes ni mayúsculas. También abre el cuadro de referencias.
@@ -51,7 +51,23 @@ export const COMANDOS: Comando[] = [
     descripcion: "Enlace a otra nota que muestra su título",
     ejecutar: (e, r) => {
       e.chain().focus().deleteRange(r).run();
-      abrirCuadroReferencia(e.storage);
+      abrirCuadro(e.storage, "referencia");
+    },
+  },
+  {
+    titulo: "Imagen",
+    descripcion: "Subir una imagen o insertarla desde la web",
+    ejecutar: (e, r) => {
+      e.chain().focus().deleteRange(r).run();
+      abrirCuadro(e.storage, "imagen");
+    },
+  },
+  {
+    titulo: "Vídeo",
+    descripcion: "Vídeo de YouTube o Vimeo",
+    ejecutar: (e, r) => {
+      e.chain().focus().deleteRange(r).run();
+      abrirCuadro(e.storage, "video");
     },
   },
 ];

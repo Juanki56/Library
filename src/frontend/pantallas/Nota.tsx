@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import {
   avisoEliminacion,
   etiquetasElemento,
+  limpiarImagenesDeNota,
   obtenerNota,
   obtenerRelacionados,
   referenciasDeNota,
@@ -25,6 +26,7 @@ export default async function Nota({ id }: { id: string }) {
     avisoEliminacion("nota", id),
     etiquetasElemento("nota", id),
     referenciasDeNota(nota),
+    limpiarImagenesDeNota(nota),
   ]);
 
   return (

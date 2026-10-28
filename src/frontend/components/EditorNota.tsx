@@ -9,13 +9,17 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { esEnlaceWeb } from "@/backend/services/enlaces";
 import { crearComandosBarra, type ControlMenuBarra, type MenuBarra } from "./comandosBarra";
 import CuadroEnlace from "./CuadroEnlace";
+import CuadroImagen, { type DatosImagen } from "./CuadroImagen";
 import CuadroReferencia from "./CuadroReferencia";
+import CuadroVideo from "./CuadroVideo";
+import { ponerAbridor } from "./cuadrosEditor";
 import styles from "./EditorNota.module.css";
-import { Referencia, TitulosReferencias, type AlmacenReferencia } from "./nodoReferencia";
+import { Referencia, TitulosReferencias } from "./nodoReferencia";
+import { Imagen, Video } from "./nodosMedios";
 
 // Alcance aprobado del editor (spec editor-notas, fase 1): títulos y subtítulos, negrita, cursiva,
 // subrayado, resaltado, listas con viñetas, numeradas y de tareas, citas, separadores y enlaces web;
-// fase 2: referencias a otras notas.
+// fase 2: referencias a otras notas; fase 3: imágenes y vídeos de YouTube y Vimeo.
 function extensiones(control: { actual: ControlMenuBarra | null }) {
   return [
     StarterKit.configure({
@@ -42,6 +46,8 @@ function extensiones(control: { actual: ControlMenuBarra | null }) {
       },
     }),
     Referencia,
+    Imagen,
+    Video,
     crearComandosBarra(control),
   ];
 }
@@ -72,6 +78,7 @@ function estadoFormatos(e: Editor | null) {
     tareas: e?.isActive("taskList") ?? false,
     cita: e?.isActive("blockquote") ?? false,
     enlace: e?.isActive("link") ?? false,
+    imagen: e?.isActive("imagen") ?? false,
   };
 }
 
@@ -96,6 +103,11 @@ function Botones({ botones }: { botones: Boton[] }) {
 export default function EditorNota({ notaId, contenidoInicial, titulosReferencias, onCambio, onSalir }: Props) {
   const [titulos, setTitulos] = useState(titulosReferencias);
   const [cuadroReferencia, setCuadroReferencia] = useState(false);
+  const [cuadroImagen, setCuadroImagen] = useState<{ abierto: boolean; editando: { alt: string; pie: string } | null }>({
+    abierto: false,
+    editando: null,
+  });
+  const [cuadroVideo, setCuadroVideo] = useState(false);
   const [menuBarra, setMenuBarra] = useState<MenuBarra | null>(null);
   const [cuadro, setCuadro] = useState<{ abierto: boolean; href: string; hayEnlace: boolean }>({
     abierto: false,
@@ -174,8 +186,31 @@ export default function EditorNota({ notaId, contenidoInicial, titulosReferencia
   // El menú «/» abre el cuadro de referencias a través del almacén del nodo.
   useEffect(() => {
     if (!editor) return;
-    (editor.storage as unknown as { referencia: AlmacenReferencia }).referencia.abrir = () => setCuadroReferencia(true);
+    ponerAbridor(editor.storage, "referencia", () => setCuadroReferencia(true));
+    ponerAbridor(editor.storage, "imagen", () => setCuadroImagen({ abierto: true, editando: null }));
+    ponerAbridor(editor.storage, "video", () => setCuadroVideo(true));
   }, [editor]);
+
+  // Con una imagen seleccionada, el botón edita su texto alternativo y su pie.
+  function abrirImagen() {
+    if (!editor) return;
+    const seleccionada = editor.isActive("imagen");
+    const attrs = editor.getAttributes("imagen");
+    setCuadroImagen({
+      abierto: true,
+      editando: seleccionada ? { alt: String(attrs.alt ?? ""), pie: String(attrs.pie ?? "") } : null,
+    });
+  }
+
+  function insertarImagen(imagen: DatosImagen) {
+    setCuadroImagen({ abierto: false, editando: null });
+    editor?.chain().focus().insertContent({ type: "imagen", attrs: imagen }).run();
+  }
+
+  function editarImagen(datos: { alt: string; pie: string }) {
+    setCuadroImagen({ abierto: false, editando: null });
+    editor?.chain().focus().updateAttributes("imagen", datos).run();
+  }
 
   function insertarReferencia(nota: { id: string; titulo: string }) {
     setTitulos((t) => ({ ...t, [nota.id]: nota.titulo }));
@@ -228,6 +263,10 @@ export default function EditorNota({ notaId, contenidoInicial, titulosReferencia
         [
           { etiqueta: "↗", titulo: activo?.enlace ? "Editar enlace" : "Enlace", activo: activo?.enlace, accion: abrirEnlace },
           { etiqueta: "§", titulo: "Referencia a una nota", accion: () => setCuadroReferencia(true) },
+        ],
+        [
+          { etiqueta: "▣", titulo: activo?.imagen ? "Editar imagen" : "Imagen", activo: activo?.imagen, accion: abrirImagen },
+          { etiqueta: "▶", titulo: "Vídeo", accion: () => setCuadroVideo(true) },
         ],
       ]
     : [];
@@ -301,6 +340,30 @@ export default function EditorNota({ notaId, contenidoInicial, titulosReferencia
         onQuitar={quitarEnlace}
         onCerrar={() => {
           setCuadro((x) => ({ ...x, abierto: false }));
+          editor?.commands.focus();
+        }}
+      />
+
+      <CuadroImagen
+        abierto={cuadroImagen.abierto}
+        notaId={notaId}
+        editando={cuadroImagen.editando}
+        onInsertar={insertarImagen}
+        onEditar={editarImagen}
+        onCerrar={() => {
+          setCuadroImagen({ abierto: false, editando: null });
+          editor?.commands.focus();
+        }}
+      />
+
+      <CuadroVideo
+        abierto={cuadroVideo}
+        onInsertar={(video) => {
+          setCuadroVideo(false);
+          editor?.chain().focus().insertContent({ type: "video", attrs: video }).run();
+        }}
+        onCerrar={() => {
+          setCuadroVideo(false);
           editor?.commands.focus();
         }}
       />

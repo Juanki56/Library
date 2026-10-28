@@ -2,6 +2,7 @@
 // spec editor-notas. El servidor no confía en lo que envía el navegador:
 // descarta nodos, marcas y enlaces fuera de ese alcance antes de guardar.
 import { esEnlaceWeb } from "./enlaces";
+import { esRutaImagen, esVideo, LONGITUD_TEXTO_IMAGEN } from "./medios";
 import { esIdentificador, esTipoReferencia } from "./referencias";
 
 export { esEnlaceWeb };
@@ -32,6 +33,8 @@ const NODOS = new Set([
   "taskList",
   "taskItem",
   "referencia",
+  "imagen",
+  "video",
 ]);
 const MARCAS = new Set(["bold", "italic", "underline", "highlight", "link"]);
 const NIVELES_TITULO = new Set([2, 3]); // el título de la nota ocupa el nivel 1
@@ -54,6 +57,21 @@ function limpiarMarcas(marcas: unknown): NodoContenido["marks"] {
   return limpias.length ? limpias : undefined;
 }
 
+const textoImagen = (valor: unknown) =>
+  typeof valor === "string" ? valor.trim().slice(0, LONGITUD_TEXTO_IMAGEN) : "";
+
+// Imagen subida (ruta en el almacenamiento privado) o desde una dirección web (design D1).
+function limpiarImagen(attrs: Record<string, unknown>): NodoContenido | null {
+  const datos = { alt: textoImagen(attrs.alt), pie: textoImagen(attrs.pie) };
+  if (attrs.origen === "archivo" && esRutaImagen(attrs.ruta)) {
+    return { type: "imagen", attrs: { origen: "archivo", ruta: attrs.ruta, ...datos } };
+  }
+  if (attrs.origen === "web" && esEnlaceWeb(attrs.src)) {
+    return { type: "imagen", attrs: { origen: "web", src: attrs.src, ...datos } };
+  }
+  return null;
+}
+
 function limpiarNodo(valor: unknown): NodoContenido | null {
   if (!esObjeto(valor) || typeof valor.type !== "string" || !NODOS.has(valor.type)) return null;
   const tipo = valor.type;
@@ -69,6 +87,12 @@ function limpiarNodo(valor: unknown): NodoContenido | null {
     const attrs = esObjeto(valor.attrs) ? valor.attrs : {};
     if (!esTipoReferencia(attrs.tipo) || !esIdentificador(attrs.id)) return null;
     return { type: "referencia", attrs: { tipo: attrs.tipo, id: attrs.id.toLowerCase() } };
+  }
+
+  if (tipo === "imagen") return limpiarImagen(esObjeto(valor.attrs) ? valor.attrs : {});
+  if (tipo === "video") {
+    const attrs = esObjeto(valor.attrs) ? valor.attrs : {};
+    return esVideo(attrs.proveedor, attrs.id) ? { type: "video", attrs: { proveedor: attrs.proveedor, id: attrs.id } } : null;
   }
 
   const nodo: NodoContenido = { type: tipo };
@@ -103,6 +127,7 @@ export function textoPlano(documento: NodoContenido): string {
   const lineas: string[] = [];
   const recorrer = (nodo: NodoContenido, actual: string[]): void => {
     if (nodo.type === "text") actual.push(nodo.text ?? "");
+    else if (nodo.type === "imagen" && typeof nodo.attrs?.pie === "string") lineas.push(nodo.attrs.pie);
     else if (nodo.type === "hardBreak") actual.push("\n");
     if (BLOQUES.has(nodo.type) && !nodo.content?.some((h) => BLOQUES.has(h.type))) {
       const linea: string[] = [];

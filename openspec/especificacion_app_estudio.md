@@ -187,6 +187,9 @@ Se distinguen como capacidades diferentes:
 1. **Imágenes:** se pueden **subir** (máximo 5 MB por imagen) y también **insertar desde una URL**.
    - Se almacenan de forma **privada por usuario** y siguen apareciendo al volver a abrir la nota.
    - Si falla la subida o el guardado, el usuario recibe un aviso y el contenido **no se da por guardado**.
+   - **Desde una URL** se guarda solo el enlace: la imagen se carga desde su web original y, si deja de estar disponible, la nota muestra un aviso en su lugar (decidido el 2026-10-28).
+   - **Imágenes subidas que dejan de usarse** se borran del almacenamiento: al eliminar la nota y al quitarlas del texto tras guardarse (decidido el 2026-10-28).
+   - Cada imagen admite **texto alternativo** y un **pie de imagen** opcional visible debajo (decidido el 2026-10-28).
 2. **Vídeos:** solo **enlaces** e **incrustaciones de YouTube y Vimeo**. Subir vídeos propios queda fuera por ahora.
 3. **Referencias:**
    - Por ahora, a **otras notas**.
@@ -209,7 +212,7 @@ Se distinguen como capacidades diferentes:
 
 ### 3.3 Estado actual
 
-**Fases 1 y 2 implementadas (2026-10-27 y 2026-10-28).** El editor tiene títulos y subtítulos, negrita, cursiva, subrayado, resaltado, listas con viñetas, numeradas y de tareas, citas en bloque, separadores y enlaces web con cuadro propio, menú al seleccionar y menú «/», y referencias a otras notas que muestran su título actual, con la sección «Notas que la mencionan». Guarda automáticamente con versión (sin sobrescribir cambios más recientes) y copia local de seguridad. El contenido se guarda en formato estructurado (JSON). Cada fase se prepara como un cambio de OpenSpec antes de implementarla.
+**Fases 1, 2 y 3 implementadas (2026-10-27 y 2026-10-28).** El editor tiene títulos y subtítulos, negrita, cursiva, subrayado, resaltado, listas con viñetas, numeradas y de tareas, citas en bloque, separadores y enlaces web con cuadro propio, menú al seleccionar y menú «/», y referencias a otras notas que muestran su título actual, con la sección «Notas que la mencionan»; imágenes subidas (privadas, hasta 5 MB) o desde la web, con texto alternativo y pie, y vídeos de YouTube y Vimeo. Guarda automáticamente con versión (sin sobrescribir cambios más recientes) y copia local de seguridad. El contenido se guarda en formato estructurado (JSON). Cada fase se prepara como un cambio de OpenSpec antes de implementarla.
 
 ## 4. Búsqueda global
 
@@ -408,7 +411,7 @@ Actualizar este documento **no** cambia el código ni las specs históricas de O
 | Libros | Ficha provisional, relacionados, eliminar con aviso | — | Campos y tipos definitivos |
 | Fuentes y recursos | Ficha provisional, relacionados, eliminar con aviso | — | Tipos y datos definitivos |
 | Relaciones | Vínculos sin duplicar entre las 4 entidades | Enlace opcional de una cita con un libro o recurso (E1) | Forma visual de los relacionados |
-| Editor de notas | Fases 1 y 2 (§3.3) | Fases 3 y 4 (§3.2) | — |
+| Editor de notas | Fases 1 a 3 (§3.3) | Fase 4 (§3.2) | — |
 | Menú | Las ocho áreas con su sección | — | Orden definitivo |
 | Citas | Sección completa (§2.7) | — | Filtros propios (más adelante) |
 | Etiquetas | Sección completa (§2.5) | — | Etiquetas en citas y glosario (más adelante) |
@@ -456,6 +459,8 @@ El cambio `especificacion-inicial-app-estudio` refleja lo **implementado** y no 
 - **2026-10-27 — Alcance técnico del editor:** se amplía el editor actual en cuatro fases. Imágenes subidas (5 MB, privadas) o desde URL; solo vídeos de YouTube y Vimeo; referencias a notas por identificador, ampliables a otros tipos; «Notas que la mencionan»; guardado automático sin sobrescribir cambios más recientes; subrayado, resaltado, separadores y listas de tareas, y tablas en la fase 4 (§3.2). Motivo: decisión del usuario sobre la evaluación propuesta.
 - **2026-10-27 — Fase 1 del editor implementada:** cambio `editor-fase1-escritura` archivado; la spec oficial `editor-notas` incluye guardado automático, formatos nuevos, menús y cuadro de enlaces.
 - **2026-10-28 — Fase 2 del editor implementada:** cambio `editor-fase2-referencias` archivado. Las referencias guardan solo tipo e identificador; una nota eliminada se muestra como «Nota eliminada»; las menciones las mantiene la base de datos al guardar.
+- **2026-10-28 — Detalles de imágenes (fase 3):** las imágenes desde una URL guardan solo el enlace; las subidas que dejan de usarse se borran del almacenamiento; cada imagen tiene texto alternativo y pie opcional (§3.2). Motivo: decisión del usuario.
+- **2026-10-28 — Fase 3 del editor implementada:** cambio `editor-fase3-imagenes-videos` archivado. Las imágenes subidas que dejan de usarse se borran al abrir la nota pasados dos minutos desde su subida, para no borrar una imagen cuyo guardado está en curso.
 
 ## 10. Prompt de trabajo para Specs o Claude Code
 

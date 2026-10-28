@@ -458,6 +458,35 @@ export type Database = {
         }
         Relationships: []
       }
+      imagenes_nota: {
+        Row: {
+          creado_en: string
+          nota_id: string
+          ruta: string
+          usuario_id: string
+        }
+        Insert: {
+          creado_en?: string
+          nota_id: string
+          ruta: string
+          usuario_id?: string
+        }
+        Update: {
+          creado_en?: string
+          nota_id?: string
+          ruta?: string
+          usuario_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "imagenes_nota_nota_id_usuario_id_fkey"
+            columns: ["nota_id", "usuario_id"]
+            isOneToOne: false
+            referencedRelation: "notas"
+            referencedColumns: ["id", "usuario_id"]
+          },
+        ]
+      }
       libro_proyecto: {
         Row: {
           creado_en: string
