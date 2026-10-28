@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { borrarUsuario, clienteDe, crearUsuario, type UsuarioPrueba } from "../utilidades/usuarios";
+import { conexiones } from "./conexiones";
 import { entrarComo } from "./sesion";
 
 // Tareas 8.1 y 8.2: navegación principal y elementos relacionados navegables (specs navegacion, relaciones).
@@ -62,7 +63,7 @@ test("desde una nota se navega a su libro y de vuelta (spec relaciones)", async 
   await datos.from("nota_libro").insert({ nota_id: nota!.id, libro_id: libro!.id });
   await datos.from("nota_proyecto").insert({ nota_id: nota!.id, proyecto_id: proyecto!.id });
 
-  const relacionados = page.getByRole("region", { name: "Elementos relacionados" });
+  const relacionados = conexiones(page);
 
   await page.goto(`/notas/${nota!.id}`);
   await relacionados.getByRole("region", { name: "Libros" }).getByRole("link", { name: "El capital" }).click();

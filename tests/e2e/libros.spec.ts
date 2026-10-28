@@ -2,6 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { expect, test, type Page } from "@playwright/test";
 import type { Database } from "@/backend/repositories/tipos-db";
 import { borrarUsuario, clienteDe, crearUsuario, type UsuarioPrueba } from "../utilidades/usuarios";
+import { grupo, vincular } from "./conexiones";
 import { entrarComo } from "./sesion";
 
 // Tareas 6.1 a 6.3: libros (specs libros, notas, relaciones).
@@ -21,8 +22,6 @@ test.beforeEach(async ({ page }) => {
   await entrarComo(page, usuario);
 });
 
-const grupo = (page: Page, nombre: string) =>
-  page.getByRole("region", { name: "Elementos relacionados" }).getByRole("region", { name: nombre });
 const campoTitulo = (page: Page) => page.getByRole("textbox", { name: "Título", exact: true });
 
 test("guarda un libro con solo el título (escenario «Libro con solo título»)", async ({ page }) => {
@@ -71,8 +70,7 @@ test("la página del libro muestra la misma nota canónica que el proyecto (spec
 
   // Vincula desde la página del libro la nota que ya está en el proyecto.
   await page.goto(`/libros/${libro!.id}`);
-  await grupo(page, "Notas").getByLabel("Vincular una nota").selectOption({ label: "Lucha de clases (libros)" });
-  await grupo(page, "Notas").getByRole("button", { name: "Vincular" }).click();
+  await vincular(page, "Lucha de clases (libros)");
 
   const enlaceLibro = grupo(page, "Notas").getByRole("link", { name: "Lucha de clases (libros)" });
   await expect(enlaceLibro).toHaveAttribute("href", `/notas/${nota!.id}`);
@@ -92,8 +90,7 @@ test("un libro en dos proyectos aparece una sola vez en la lista (escenario «Li
 
   await page.goto(`/libros/${libro!.id}`);
   for (const nombre of ["Proyecto A (libros)", "Proyecto B (libros)"]) {
-    await grupo(page, "Proyectos").getByLabel("Vincular un proyecto").selectOption({ label: nombre });
-    await grupo(page, "Proyectos").getByRole("button", { name: "Vincular" }).click();
+    await vincular(page, nombre);
     await expect(grupo(page, "Proyectos").getByRole("link", { name: nombre })).toBeVisible();
   }
 

@@ -182,6 +182,23 @@ La aplicación tendrá una **sección independiente** para guardar citas, frases
 
 **Diseño visual:** sigue la dirección aprobada (§7).
 
+### 2.8 Conexiones: cómo se muestran los elementos relacionados
+
+**Decidido el 2026-10-28.** El usuario aceptó la propuesta y pidió que, además, «se vea cómodo»:
+
+1. **Una sección «Conexiones»** en la página de cada nota, libro, recurso y proyecto. En pantallas anchas va en una columna lateral fija junto al contenido; en pantallas estrechas, debajo.
+2. **Todo lo conectado en un solo lugar:** etiquetas, vínculos agrupados por tipo, «Notas que la mencionan» y citas enlazadas.
+3. **Cada elemento con su contexto:**
+   - nota: extracto y fecha de modificación;
+   - libro: autores · editorial · año y estado de lectura;
+   - recurso: tipo · autor · sitio web;
+   - proyecto: su descripción, recortada.
+4. **Solo los grupos que tienen algo.** Sin ninguna conexión, una frase breve que invita a vincular.
+5. **Un único botón «Vincular…»** que abre un buscador en todos los tipos que se pueden vincular, sin distinguir tildes ni mayúsculas, manejable con teclado.
+6. **Crear y vincular:** desde un libro, recurso o proyecto, «Nueva nota vinculada» crea la nota ya vinculada.
+
+Se descarta por ahora el mapa o grafo de conexiones (ver §5), y se deja para más adelante mostrar conexiones indirectas.
+
 ## 3. Editor de notas
 
 **Estado: dirección funcional acordada (2026-10-27). Alcance técnico y forma de implementar cada capacidad pendientes.**
@@ -431,7 +448,7 @@ Incorporados en §2.5 (etiquetas), §2.6 (glosario), §2.7 (citas) y §4.1 (bús
 - [x] Estructura de los proyectos: apartados (2026-10-27, §2.1).
 - [x] Campos de los libros: decididos el 2026-10-28 (§2.3).
 - [x] Tipos de fuentes y recursos y sus datos: decididos el 2026-10-28 (§2.4).
-- [ ] Cómo se muestran los elementos relacionados.
+- [x] Cómo se muestran los elementos relacionados: decidido el 2026-10-28 (§2.8).
 - [ ] Separar explícitamente los requisitos de primera versión de las ideas futuras.
 
 ### Puntos a revisar: contradicciones detectadas el 2026-10-27
@@ -452,7 +469,7 @@ Actualizar este documento **no** cambia el código ni las specs históricas de O
 | Notas | Crear, editar, ordenar por fechas, eliminar con aviso, relacionados | — | — |
 | Libros | Ficha definitiva (§2.3): descripción, ISBN, portada y estado de lectura; relacionados, eliminar con aviso | — | Tipos de libro (no decididos) |
 | Fuentes y recursos | Tipos y datos definitivos (§2.4), filtro por tipo, relacionados, eliminar con aviso | — | — |
-| Relaciones | Vínculos sin duplicar entre las 4 entidades | Enlace opcional de una cita con un libro o recurso (E1) | Forma visual de los relacionados |
+| Relaciones | Vínculos sin duplicar entre las 4 entidades; enlace de citas con libros o recursos; sección «Conexiones» (§2.8) | — | Conexiones indirectas y mapa (más adelante) |
 | Editor de notas | Fases 1 a 4 (§3.3) | — | Arrastrar bloques con el ratón (no incluido) |
 | Menú e Inicio | Las ocho áreas en el orden de §6; Inicio con accesos rápidos, notas, «Leyendo ahora», proyectos y citas | — | — |
 | Citas | Sección completa (§2.7) | — | Filtros propios (más adelante) |
@@ -508,6 +525,8 @@ El cambio `especificacion-inicial-app-estudio` refleja lo **implementado** y no 
 - **2026-10-28 — Tipos de fuentes y recursos:** Artículo, Página web, Vídeo, Podcast, Documento o PDF, Curso, Audio y Otro; título obligatorio y dirección web, autor o creador, descripción, fecha de publicación, etiquetas y relaciones opcionales (§2.4). Motivo: decisión del usuario.
 - **2026-10-28 — Orden del menú e Inicio:** el usuario los deja a criterio de la implementación, buscando la mayor comodidad; se registran en §6. Motivo: delegación del usuario.
 - **2026-10-28 — Libros, recursos, menú e Inicio implementados:** cambio `libros-recursos-menu-inicio` archivado; specs oficiales `libros`, `fuentes-recursos`, `navegacion` y `busqueda` actualizadas.
+- **2026-10-28 — Conexiones:** los elementos relacionados se muestran en una sección «Conexiones» lateral con contexto de cada elemento, solo los grupos con contenido, un buscador «Vincular…» y «Nueva nota vinculada» (§2.8). Motivo: aceptación de la propuesta por el usuario, que pidió además que se vea cómodo.
+- **2026-10-28 — Conexiones implementadas:** cambio `conexiones` archivado; spec oficial `relaciones` actualizada.
 
 ## 10. Prompt de trabajo para Specs o Claude Code
 

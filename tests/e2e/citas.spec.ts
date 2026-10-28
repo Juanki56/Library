@@ -61,7 +61,7 @@ test("una cita enlazada a un libro aparece en él y en Inicio; editarla se refle
   await expect(page).toHaveURL(/\/citas$/);
 
   await page.goto(`/libros/${libro!.id}`);
-  const enLibro = page.getByRole("list", { name: "Citas enlazadas" });
+  const enLibro = page.getByRole("region", { name: "Citas enlazadas" });
   await expect(enLibro).toContainText("Los filósofos no han hecho más que interpretar el mundo.");
 
   // Editar desde Citas.
@@ -71,7 +71,7 @@ test("una cita enlazada a un libro aparece en él y en Inicio; editarla se refle
   await expect(page.getByRole("status")).toHaveText("Guardado.");
 
   await page.goto(`/libros/${libro!.id}`);
-  await expect(page.getByRole("list", { name: "Citas enlazadas" })).toContainText("de diversos modos");
+  await expect(page.getByRole("region", { name: "Citas enlazadas" })).toContainText("de diversos modos");
   await page.goto("/");
   await expect(page.getByRole("list", { name: "Citas guardadas" })).toContainText("de diversos modos");
 });

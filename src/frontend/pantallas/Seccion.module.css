@@ -176,3 +176,25 @@
     font-size: var(--tamano-h2);
   }
 }
+
+/* Página de detalle (nota, libro, recurso, proyecto) con «Conexiones» al lado (cambio conexiones).
+   En pantallas anchas, contenido a ancho de lectura y columna lateral; en estrechas, una debajo de otra. */
+.paginaDetalle {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--espacio-5);
+  max-width: calc(var(--ancho-lectura) + 19rem + var(--espacio-6));
+  margin: 0 auto;
+  padding: var(--espacio-5) var(--espacio-5) var(--espacio-6);
+}
+
+.contenidoDetalle {
+  min-width: 0;
+}
+
+@media (min-width: 78rem) {
+  .paginaDetalle {
+    grid-template-columns: minmax(0, var(--ancho-lectura)) 19rem;
+    gap: var(--espacio-6);
+  }
+}

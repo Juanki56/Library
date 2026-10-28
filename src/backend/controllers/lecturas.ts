@@ -88,6 +88,10 @@ export async function listarNotas(orden: notas.OrdenNotas) {
   return notas.listarNotas(await crearClienteServidor(), orden);
 }
 
+export async function destinoNotaVinculada(valor: unknown) {
+  return relacionados.destinoNotaVinculada(await crearClienteServidor(), valor);
+}
+
 export async function obtenerNota(id: string) {
   return notas.obtenerNota(await crearClienteServidor(), id);
 }

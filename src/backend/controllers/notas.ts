@@ -6,6 +6,8 @@ import { crearClienteServidor } from "@/backend/auth/clienteServidor";
 import * as imagenes from "@/backend/services/imagenes";
 import * as menciones from "@/backend/services/menciones";
 import * as notas from "@/backend/services/notas";
+import * as relacionados from "@/backend/services/relacionados";
+import * as vinculos from "@/backend/services/vinculos";
 
 export type EstadoNota = { error?: string; guardado?: boolean };
 
@@ -14,9 +16,17 @@ const texto = (formulario: FormData, campo: string) => {
   return typeof valor === "string" ? valor : "";
 };
 
+// Con «vincular» (tipo:id) la nota nace vinculada a ese libro, recurso o proyecto (cambio conexiones,
+// design D5). Si el vínculo fallara, la nota ya existe y se abre igualmente.
 export async function crearNota(_estado: EstadoNota, formulario: FormData): Promise<EstadoNota> {
-  const resultado = await notas.crearNota(await crearClienteServidor(), texto(formulario, "titulo"));
+  const cliente = await crearClienteServidor();
+  const resultado = await notas.crearNota(cliente, texto(formulario, "titulo"));
   if (!resultado.ok) return { error: resultado.error };
+  const destino = await relacionados.destinoNotaVinculada(cliente, texto(formulario, "vincular"));
+  if (destino) {
+    await vinculos.vincular(cliente, { tipo: "nota", id: resultado.valor }, destino);
+    revalidatePath("/", "layout");
+  }
   revalidatePath("/notas");
   redirect(`/notas/${resultado.valor}`);
 }

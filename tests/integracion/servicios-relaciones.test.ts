@@ -155,7 +155,8 @@ describe("elementos relacionados (spec relaciones: «Elementos relacionados visi
       "Comunismo (relacionados)",
       "Historia social (relacionados)",
     ]);
-    expect(porTipo.libro.elementos).toEqual([{ id: l.id, nombre: "El manifiesto comunista (relacionados)" }]);
+    // Cada elemento lleva su contexto (cambio conexiones); este libro no tiene datos, así que no hay detalle.
+    expect(porTipo.libro.elementos).toEqual([{ id: l.id, nombre: "El manifiesto comunista (relacionados)", detalle: null }]);
     expect(porTipo.recurso.elementos).toEqual([]);
     const idsCandidatos = porTipo.proyecto.candidatos.map((c) => c.id);
     expect(idsCandidatos).not.toContain(p1.id);

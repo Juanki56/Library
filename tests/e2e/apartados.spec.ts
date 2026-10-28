@@ -2,6 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { expect, test, type Page } from "@playwright/test";
 import type { Database } from "@/backend/repositories/tipos-db";
 import { borrarUsuario, clienteDe, crearUsuario, type UsuarioPrueba } from "../utilidades/usuarios";
+import { grupo } from "./conexiones";
 import { entrarComo } from "./sesion";
 
 // Tarea 3.1 (apartados-proyectos): el ejemplo «Estudiar filosofía» en la interfaz (spec proyectos).
@@ -73,7 +74,7 @@ test("ejemplo «Estudiar filosofía»: apartados numerados, orden, varios aparta
     await expect(ap.getByRole("link", { name: "Kant y el deber" })).toBeVisible();
   }
   await expect(
-    page.getByRole("region", { name: "Elementos relacionados" }).getByRole("region", { name: "Notas" }).getByRole("link", {
+    grupo(page, "Notas").getByRole("link", {
       name: "Kant y el deber",
     }),
   ).toHaveCount(1);

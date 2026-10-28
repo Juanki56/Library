@@ -1,7 +1,8 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import type { Database } from "@/backend/repositories/tipos-db";
 import { borrarUsuario, clienteDe, crearUsuario, type UsuarioPrueba } from "../utilidades/usuarios";
+import { grupo, ofrecidos, vincular } from "./conexiones";
 import { entrarComo } from "./sesion";
 
 // Tareas 5.1 y 5.2: proyectos (specs proyectos, notas, relaciones).
@@ -26,8 +27,6 @@ async function crearProyecto(nombre: string) {
   return data!.id;
 }
 
-const grupo = (page: Page, nombre: string) =>
-  page.getByRole("region", { name: "Elementos relacionados" }).getByRole("region", { name: nombre });
 
 test("crea un proyecto sin descripción y aparece en la lista (spec proyectos)", async ({ page }) => {
   await page.getByRole("navigation", { name: "Principal" }).getByRole("link", { name: "Proyectos" }).click();
@@ -67,8 +66,7 @@ test("ejemplo «Comunismo»: notas y libros relacionados, sin copias (specs proy
   // Vincula la nota existente a los dos proyectos desde la interfaz.
   for (const id of [comunismo, historia]) {
     await page.goto(`/proyectos/${id}`);
-    await grupo(page, "Notas").getByLabel("Vincular una nota").selectOption({ label: "La lucha de clases" });
-    await grupo(page, "Notas").getByRole("button", { name: "Vincular" }).click();
+    await vincular(page, "La lucha de clases");
     await expect(grupo(page, "Notas").getByRole("link", { name: "La lucha de clases" })).toBeVisible();
   }
 
@@ -77,7 +75,8 @@ test("ejemplo «Comunismo»: notas y libros relacionados, sin copias (specs proy
   await expect(grupo(page, "Libros").getByText("El manifiesto comunista")).toBeVisible();
 
   // Una nota ya vinculada no se ofrece otra vez (spec relaciones: sin duplicación).
-  await expect(grupo(page, "Notas").getByLabel("Vincular una nota")).toHaveCount(0);
+  await expect(await ofrecidos(page, "La lucha de clases")).toHaveCount(0);
+  await page.keyboard.press("Escape");
 
   // Un cambio hecho desde un proyecto se ve desde el otro (spec notas).
   await grupo(page, "Notas").getByRole("link", { name: "La lucha de clases" }).click();
@@ -106,7 +105,8 @@ test("quitar un vínculo no borra la nota (spec relaciones)", async ({ page }) =
 
   await page.goto(`/proyectos/${proyecto}`);
   await grupo(page, "Notas").getByRole("button", { name: "Quitar vínculo con «Nota que se queda»" }).click();
-  await expect(grupo(page, "Notas").getByText("Sin notas vinculados.")).toBeVisible();
+  // Sin notas vinculadas, el grupo no se muestra (solo grupos con contenido).
+  await expect(grupo(page, "Notas")).toHaveCount(0);
 
   await page.goto("/notas");
   await expect(page.getByRole("link", { name: "Nota que se queda" })).toBeVisible();

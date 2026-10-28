@@ -126,3 +126,10 @@
   font-style: italic;
   color: var(--color-texto-suave);
 }
+
+/* Aviso informativo dentro de un formulario (por ejemplo, «Se vinculará con…»). */
+.aviso {
+  margin: 0;
+  font-style: italic;
+  color: var(--color-texto-suave);
+}

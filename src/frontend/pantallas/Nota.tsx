@@ -11,10 +11,8 @@ import {
 } from "@/backend/controllers/lecturas";
 import { eliminarNota } from "@/backend/controllers/notas";
 import ConfirmarEliminacion from "@/frontend/components/ConfirmarEliminacion";
-import ElementosRelacionados from "@/frontend/components/ElementosRelacionados";
-import EtiquetasElemento from "@/frontend/components/EtiquetasElemento";
+import Conexiones from "@/frontend/components/Conexiones";
 import FormularioNota from "@/frontend/components/FormularioNota";
-import NotasQueMencionan from "@/frontend/components/NotasQueMencionan";
 import { fecha } from "./fechas";
 import styles from "./Seccion.module.css";
 
@@ -30,31 +28,37 @@ export default async function Nota({ id }: { id: string }) {
   ]);
 
   return (
-    <main className={styles.pagina}>
-      <div className={styles.encabezado}>
-        <p className={styles.metadatos}>
-          Creada el {fecha(nota.creadoEn)} · Modificada el {fecha(nota.actualizadoEn)}
-        </p>
-        <Link href="/notas" className={styles.accion}>
-          Volver a notas
-        </Link>
-      </div>
+    <main className={styles.paginaDetalle}>
+      <div className={styles.contenidoDetalle}>
+        <div className={styles.encabezado}>
+          <p className={styles.metadatos}>
+            Creada el {fecha(nota.creadoEn)} · Modificada el {fecha(nota.actualizadoEn)}
+          </p>
+          <Link href="/notas" className={styles.accion}>
+            Volver a notas
+          </Link>
+        </div>
 
-      <FormularioNota
+        <FormularioNota
+          id={nota.id}
+          titulo={nota.titulo}
+          version={nota.actualizadoEn}
+          contenido={nota.contenido as JSONContent}
+          titulosReferencias={referencias.titulos}
+        />
+
+        <div className={styles.acciones}>
+          <span />
+          <ConfirmarEliminacion id={nota.id} nombre={nota.titulo} aviso={aviso ?? ""} accion={eliminarNota} />
+        </div>
+      </div>
+      <Conexiones
+        tipo="nota"
         id={nota.id}
-        titulo={nota.titulo}
-        version={nota.actualizadoEn}
-        contenido={nota.contenido as JSONContent}
-        titulosReferencias={referencias.titulos}
+        grupos={relacionados}
+        etiquetas={etiquetas}
+        mencionan={referencias.mencionan}
       />
-      <NotasQueMencionan notas={referencias.mencionan} />
-      <EtiquetasElemento tipo="nota" id={nota.id} propias={etiquetas.propias} todas={etiquetas.todas} />
-      <ElementosRelacionados tipo="nota" id={nota.id} grupos={relacionados} />
-
-      <div className={styles.acciones}>
-        <span />
-        <ConfirmarEliminacion id={nota.id} nombre={nota.titulo} aviso={aviso ?? ""} accion={eliminarNota} />
-      </div>
     </main>
   );
 }

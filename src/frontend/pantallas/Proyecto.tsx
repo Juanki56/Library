@@ -10,8 +10,7 @@ import {
 import { eliminarProyecto } from "@/backend/controllers/proyectos";
 import ApartadosProyecto from "@/frontend/components/ApartadosProyecto";
 import ConfirmarEliminacion from "@/frontend/components/ConfirmarEliminacion";
-import ElementosRelacionados from "@/frontend/components/ElementosRelacionados";
-import EtiquetasElemento from "@/frontend/components/EtiquetasElemento";
+import Conexiones from "@/frontend/components/Conexiones";
 import FormularioProyecto from "@/frontend/components/FormularioProyecto";
 import styles from "./Seccion.module.css";
 
@@ -27,28 +26,29 @@ export default async function Proyecto({ id }: { id: string }) {
   ]);
 
   return (
-    <main className={styles.pagina}>
-      <div className={styles.encabezado}>
-        <h1>{proyecto.nombre}</h1>
-        <Link href="/proyectos" className={styles.accion}>
-          Volver a proyectos
-        </Link>
-      </div>
+    <main className={styles.paginaDetalle}>
+      <div className={styles.contenidoDetalle}>
+        <div className={styles.encabezado}>
+          <h1>{proyecto.nombre}</h1>
+          <Link href="/proyectos" className={styles.accion}>
+            Volver a proyectos
+          </Link>
+        </div>
 
-      <FormularioProyecto proyecto={proyecto} />
-      <EtiquetasElemento tipo="proyecto" id={proyecto.id} propias={etiquetas.propias} todas={etiquetas.todas} />
-      <ApartadosProyecto proyectoId={proyecto.id} organizacion={organizacion} />
-      <ElementosRelacionados tipo="proyecto" id={proyecto.id} grupos={relacionados} />
+        <FormularioProyecto proyecto={proyecto} />
+        <ApartadosProyecto proyectoId={proyecto.id} organizacion={organizacion} />
 
-      <div className={styles.acciones}>
-        <span />
-        <ConfirmarEliminacion
-          id={proyecto.id}
-          nombre={proyecto.nombre}
-          aviso={aviso ?? ""}
-          accion={eliminarProyecto}
-        />
+        <div className={styles.acciones}>
+          <span />
+          <ConfirmarEliminacion
+            id={proyecto.id}
+            nombre={proyecto.nombre}
+            aviso={aviso ?? ""}
+            accion={eliminarProyecto}
+          />
+        </div>
       </div>
+      <Conexiones tipo="proyecto" id={proyecto.id} grupos={relacionados} etiquetas={etiquetas} />
     </main>
   );
 }

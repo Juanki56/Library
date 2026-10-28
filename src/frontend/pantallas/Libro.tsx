@@ -8,10 +8,8 @@ import {
   obtenerRelacionados,
 } from "@/backend/controllers/lecturas";
 import { eliminarLibro } from "@/backend/controllers/libros";
-import CitasEnlazadas from "@/frontend/components/CitasEnlazadas";
 import ConfirmarEliminacion from "@/frontend/components/ConfirmarEliminacion";
-import ElementosRelacionados from "@/frontend/components/ElementosRelacionados";
-import EtiquetasElemento from "@/frontend/components/EtiquetasElemento";
+import Conexiones from "@/frontend/components/Conexiones";
 import FormularioLibro from "@/frontend/components/FormularioLibro";
 import PortadaLibro from "@/frontend/components/PortadaLibro";
 import { ESTADOS_LECTURA } from "@/backend/services/fichas";
@@ -30,34 +28,34 @@ export default async function Libro({ id }: { id: string }) {
   ]);
 
   return (
-    <main className={styles.pagina}>
-      <div className={styles.encabezado}>
-        <div>
-          <h1>{libro.titulo}</h1>
-          {referencia(libro) && <p className={styles.metadatos}>{referencia(libro)}</p>}
-          {(libro.estadoLectura || libro.isbn) && (
-            <p className={styles.metadatos}>
-              {[libro.estadoLectura && ESTADOS_LECTURA[libro.estadoLectura], libro.isbn && `ISBN ${libro.isbn}`]
-                .filter(Boolean)
-                .join(" · ")}
-            </p>
-          )}
+    <main className={styles.paginaDetalle}>
+      <div className={styles.contenidoDetalle}>
+        <div className={styles.encabezado}>
+          <div>
+            <h1>{libro.titulo}</h1>
+            {referencia(libro) && <p className={styles.metadatos}>{referencia(libro)}</p>}
+            {(libro.estadoLectura || libro.isbn) && (
+              <p className={styles.metadatos}>
+                {[libro.estadoLectura && ESTADOS_LECTURA[libro.estadoLectura], libro.isbn && `ISBN ${libro.isbn}`]
+                  .filter(Boolean)
+                  .join(" · ")}
+              </p>
+            )}
+          </div>
+          <Link href="/libros" className={styles.accion}>
+            Volver a libros
+          </Link>
         </div>
-        <Link href="/libros" className={styles.accion}>
-          Volver a libros
-        </Link>
-      </div>
 
-      <FormularioLibro libro={libro} />
-      <PortadaLibro id={libro.id} titulo={libro.titulo} ruta={libro.portadaRuta} url={libro.portadaUrl} />
-      <EtiquetasElemento tipo="libro" id={libro.id} propias={etiquetas.propias} todas={etiquetas.todas} />
-      <ElementosRelacionados tipo="libro" id={libro.id} grupos={relacionados} />
-      <CitasEnlazadas citas={citas} />
+        <FormularioLibro libro={libro} />
+        <PortadaLibro id={libro.id} titulo={libro.titulo} ruta={libro.portadaRuta} url={libro.portadaUrl} />
 
-      <div className={styles.acciones}>
-        <span />
-        <ConfirmarEliminacion id={libro.id} nombre={libro.titulo} aviso={aviso ?? ""} accion={eliminarLibro} />
+        <div className={styles.acciones}>
+          <span />
+          <ConfirmarEliminacion id={libro.id} nombre={libro.titulo} aviso={aviso ?? ""} accion={eliminarLibro} />
+        </div>
       </div>
+      <Conexiones tipo="libro" id={libro.id} grupos={relacionados} etiquetas={etiquetas} citas={citas} />
     </main>
   );
 }

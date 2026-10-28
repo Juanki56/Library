@@ -2,6 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { expect, test, type Page } from "@playwright/test";
 import type { Database } from "@/backend/repositories/tipos-db";
 import { borrarUsuario, clienteDe, crearUsuario, type UsuarioPrueba } from "../utilidades/usuarios";
+import { grupo, vincular } from "./conexiones";
 import { entrarComo } from "./sesion";
 
 // Tareas 7.1 y 7.2: fuentes y recursos (specs fuentes-recursos, relaciones).
@@ -21,8 +22,6 @@ test.beforeEach(async ({ page }) => {
   await entrarComo(page, usuario);
 });
 
-const grupo = (page: Page, nombre: string) =>
-  page.getByRole("region", { name: "Elementos relacionados" }).getByRole("region", { name: nombre });
 const campoTitulo = (page: Page) => page.getByRole("textbox", { name: "Título", exact: true });
 
 test("guarda un recurso sin dirección web (escenario «Recurso sin dirección web»)", async ({ page }) => {
@@ -65,14 +64,13 @@ test("un recurso en varios espacios es el mismo y sus cambios se ven en todos (s
 
   // Lo vincula desde su propia página a un proyecto, una nota y un libro.
   await page.goto(`/recursos/${recurso!.id}`);
-  const vinculos: [string, string, string][] = [
-    ["Proyectos", "Vincular un proyecto", "Comunismo (recursos)"],
-    ["Notas", "Vincular una nota", "La lucha de clases (recursos)"],
-    ["Libros", "Vincular un libro", "Manifiesto (recursos)"],
+  const vinculos: [string, string][] = [
+    ["Proyectos", "Comunismo (recursos)"],
+    ["Notas", "La lucha de clases (recursos)"],
+    ["Libros", "Manifiesto (recursos)"],
   ];
-  for (const [nombreGrupo, etiqueta, elemento] of vinculos) {
-    await grupo(page, nombreGrupo).getByLabel(etiqueta).selectOption({ label: elemento });
-    await grupo(page, nombreGrupo).getByRole("button", { name: "Vincular" }).click();
+  for (const [nombreGrupo, elemento] of vinculos) {
+    await vincular(page, elemento);
     await expect(grupo(page, nombreGrupo).getByRole("link", { name: elemento })).toBeVisible();
   }
 

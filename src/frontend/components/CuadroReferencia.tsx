@@ -73,8 +73,9 @@ export default function CuadroReferencia({ abierto, notaId, onElegir, onCerrar }
         <label className={styles.cuadroCampo}>
           Buscar nota
           <input
-            type="search"
+            type="text"
             role="combobox"
+            autoComplete="off"
             aria-expanded={resultados.length > 0}
             aria-controls={idLista}
             aria-activedescendant={resultados.length ? `${idLista}-${seleccion}` : undefined}

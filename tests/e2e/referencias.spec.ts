@@ -108,7 +108,7 @@ test("muestra el título actual y abre la nota referida (escenarios «Título ac
 test("«Notas que la mencionan» lista cada nota una vez y se vacía al quitar la referencia", async ({ page }) => {
   const destino = await crearNota("Destino de menciones");
   await abrir(page, destino);
-  await expect(menciones(page)).toContainText("Ninguna nota menciona esta todavía.");
+  await expect(menciones(page)).toHaveCount(0);
 
   const doble = {
     type: "doc",
@@ -136,7 +136,7 @@ test("«Notas que la mencionan» lista cada nota una vez y se vacía al quitar l
   await expect(estado(page)).toHaveText("Guardado");
 
   await abrir(page, destino);
-  await expect(menciones(page)).toContainText("Ninguna nota menciona esta todavía.");
+  await expect(menciones(page)).toHaveCount(0);
 });
 
 test("una referencia a una nota eliminada se muestra como «Nota eliminada» (escenario «Nota referida eliminada»)", async ({
