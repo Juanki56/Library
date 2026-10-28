@@ -209,7 +209,7 @@ Se distinguen como capacidades diferentes:
 
 ### 3.3 Estado actual
 
-**Fase 1 implementada (2026-10-27).** El editor tiene títulos y subtítulos, negrita, cursiva, subrayado, resaltado, listas con viñetas, numeradas y de tareas, citas en bloque, separadores y enlaces web con cuadro propio, menú al seleccionar y menú «/». Guarda automáticamente con versión (sin sobrescribir cambios más recientes) y copia local de seguridad. El contenido se guarda en formato estructurado (JSON). Cada fase se prepara como un cambio de OpenSpec antes de implementarla.
+**Fases 1 y 2 implementadas (2026-10-27 y 2026-10-28).** El editor tiene títulos y subtítulos, negrita, cursiva, subrayado, resaltado, listas con viñetas, numeradas y de tareas, citas en bloque, separadores y enlaces web con cuadro propio, menú al seleccionar y menú «/», y referencias a otras notas que muestran su título actual, con la sección «Notas que la mencionan». Guarda automáticamente con versión (sin sobrescribir cambios más recientes) y copia local de seguridad. El contenido se guarda en formato estructurado (JSON). Cada fase se prepara como un cambio de OpenSpec antes de implementarla.
 
 ## 4. Búsqueda global
 
@@ -408,7 +408,7 @@ Actualizar este documento **no** cambia el código ni las specs históricas de O
 | Libros | Ficha provisional, relacionados, eliminar con aviso | — | Campos y tipos definitivos |
 | Fuentes y recursos | Ficha provisional, relacionados, eliminar con aviso | — | Tipos y datos definitivos |
 | Relaciones | Vínculos sin duplicar entre las 4 entidades | Enlace opcional de una cita con un libro o recurso (E1) | Forma visual de los relacionados |
-| Editor de notas | Fase 1 (§3.3) | Fases 2 a 4 (§3.2) | — |
+| Editor de notas | Fases 1 y 2 (§3.3) | Fases 3 y 4 (§3.2) | — |
 | Menú | Las ocho áreas con su sección | — | Orden definitivo |
 | Citas | Sección completa (§2.7) | — | Filtros propios (más adelante) |
 | Etiquetas | Sección completa (§2.5) | — | Etiquetas en citas y glosario (más adelante) |
@@ -455,6 +455,7 @@ El cambio `especificacion-inicial-app-estudio` refleja lo **implementado** y no 
 - **2026-10-27 — Citas, Etiquetas, Glosario y Búsqueda implementados:** cambio `secciones-citas-etiquetas-glosario-busqueda` archivado; specs oficiales actualizadas.
 - **2026-10-27 — Alcance técnico del editor:** se amplía el editor actual en cuatro fases. Imágenes subidas (5 MB, privadas) o desde URL; solo vídeos de YouTube y Vimeo; referencias a notas por identificador, ampliables a otros tipos; «Notas que la mencionan»; guardado automático sin sobrescribir cambios más recientes; subrayado, resaltado, separadores y listas de tareas, y tablas en la fase 4 (§3.2). Motivo: decisión del usuario sobre la evaluación propuesta.
 - **2026-10-27 — Fase 1 del editor implementada:** cambio `editor-fase1-escritura` archivado; la spec oficial `editor-notas` incluye guardado automático, formatos nuevos, menús y cuadro de enlaces.
+- **2026-10-28 — Fase 2 del editor implementada:** cambio `editor-fase2-referencias` archivado. Las referencias guardan solo tipo e identificador; una nota eliminada se muestra como «Nota eliminada»; las menciones las mantiene la base de datos al guardar.
 
 ## 10. Prompt de trabajo para Specs o Claude Code
 

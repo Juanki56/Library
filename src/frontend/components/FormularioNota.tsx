@@ -8,7 +8,13 @@ import styles from "./Formularios.module.css";
 import aviso from "./FormularioNota.module.css";
 import { useGuardadoAutomatico } from "./useGuardadoAutomatico";
 
-type Props = { id: string; titulo: string; contenido: JSONContent; version: string };
+type Props = {
+  id: string;
+  titulo: string;
+  contenido: JSONContent;
+  version: string;
+  titulosReferencias: Record<string, string>;
+};
 
 const TEXTO_ESTADO = {
   guardado: "Guardado",
@@ -17,7 +23,7 @@ const TEXTO_ESTADO = {
 } as const;
 
 // Título y contenido con guardado automático, sin botón de guardar (spec editor-notas).
-export default function FormularioNota({ id, titulo, contenido, version }: Props) {
+export default function FormularioNota({ id, titulo, contenido, version, titulosReferencias }: Props) {
   const { situacion, cambio, guardarAhora, reintentar, guardarEncima } = useGuardadoAutomatico(id, version);
   const [inicial, setInicial] = useState({ titulo, contenido, clave: 0 });
   const [copia, setCopia] = useState<CopiaGuardada | null>(null);
@@ -122,7 +128,9 @@ export default function FormularioNota({ id, titulo, contenido, version }: Props
       </label>
       <EditorNota
         key={`editor-${inicial.clave}`}
+        notaId={id}
         contenidoInicial={inicial.contenido}
+        titulosReferencias={titulosReferencias}
         onCambio={(json) => cambiar({ contenido: json })}
         onSalir={guardarAhora}
       />

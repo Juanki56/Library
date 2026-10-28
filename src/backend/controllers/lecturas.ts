@@ -9,6 +9,7 @@ import * as etiquetas from "@/backend/services/etiquetas";
 import * as glosario from "@/backend/services/glosario";
 import * as inicio from "@/backend/services/inicio";
 import * as libros from "@/backend/services/libros";
+import * as menciones from "@/backend/services/menciones";
 import * as notas from "@/backend/services/notas";
 import * as proyectos from "@/backend/services/proyectos";
 import * as recursos from "@/backend/services/recursos";
@@ -87,6 +88,16 @@ export async function listarNotas(orden: notas.OrdenNotas) {
 
 export async function obtenerNota(id: string) {
   return notas.obtenerNota(await crearClienteServidor(), id);
+}
+
+// Referencias de una nota (editor-fase2-referencias): títulos actuales y quién la menciona.
+export async function referenciasDeNota(nota: notas.Nota) {
+  const cliente = await crearClienteServidor();
+  const [titulos, mencionan] = await Promise.all([
+    menciones.titulosReferenciados(cliente, nota.contenido),
+    menciones.notasQueMencionan(cliente, nota.id),
+  ]);
+  return { titulos, mencionan };
 }
 
 export async function listarProyectos() {

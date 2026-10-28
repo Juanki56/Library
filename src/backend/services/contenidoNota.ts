@@ -2,6 +2,7 @@
 // spec editor-notas. El servidor no confía en lo que envía el navegador:
 // descarta nodos, marcas y enlaces fuera de ese alcance antes de guardar.
 import { esEnlaceWeb } from "./enlaces";
+import { esIdentificador, esTipoReferencia } from "./referencias";
 
 export { esEnlaceWeb };
 
@@ -30,6 +31,7 @@ const NODOS = new Set([
   "horizontalRule",
   "taskList",
   "taskItem",
+  "referencia",
 ]);
 const MARCAS = new Set(["bold", "italic", "underline", "highlight", "link"]);
 const NIVELES_TITULO = new Set([2, 3]); // el título de la nota ocupa el nivel 1
@@ -60,6 +62,13 @@ function limpiarNodo(valor: unknown): NodoContenido | null {
     if (typeof valor.text !== "string" || valor.text === "") return null;
     const marcas = limpiarMarcas(valor.marks);
     return marcas ? { type: "text", text: valor.text, marks: marcas } : { type: "text", text: valor.text };
+  }
+
+  // Referencia a otro elemento: solo tipo admitido e identificador, nunca el título (design D1).
+  if (tipo === "referencia") {
+    const attrs = esObjeto(valor.attrs) ? valor.attrs : {};
+    if (!esTipoReferencia(attrs.tipo) || !esIdentificador(attrs.id)) return null;
+    return { type: "referencia", attrs: { tipo: attrs.tipo, id: attrs.id.toLowerCase() } };
   }
 
   const nodo: NodoContenido = { type: tipo };

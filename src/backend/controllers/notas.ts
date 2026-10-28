@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { crearClienteServidor } from "@/backend/auth/clienteServidor";
 import * as eliminacion from "@/backend/services/eliminacion";
+import * as menciones from "@/backend/services/menciones";
 import * as notas from "@/backend/services/notas";
 
 export type EstadoNota = { error?: string; guardado?: boolean };
@@ -32,6 +33,12 @@ export async function guardarNotaAutomatico(
     return { tipo: "error", error: notas.ERROR_CONTENIDO, validacion: true };
   }
   return notas.guardarConVersion(await crearClienteServidor(), id, titulo, contenido, versionBase);
+}
+
+// Notas que se pueden referenciar desde la nota abierta (cuadro «Referencia a una nota», design D3).
+export async function notasParaReferencia(excluirId: string): Promise<menciones.NotaReferida[]> {
+  if (typeof excluirId !== "string") return [];
+  return menciones.notasParaReferencia(await crearClienteServidor(), excluirId);
 }
 
 export async function eliminarNota(_estado: EstadoNota, formulario: FormData): Promise<EstadoNota> {

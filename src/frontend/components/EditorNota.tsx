@@ -5,14 +5,17 @@ import { TaskItem, TaskList } from "@tiptap/extension-list";
 import { EditorContent, useEditor, useEditorState, type Editor, type JSONContent } from "@tiptap/react";
 import { BubbleMenu } from "@tiptap/react/menus";
 import StarterKit from "@tiptap/starter-kit";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { esEnlaceWeb } from "@/backend/services/enlaces";
 import { crearComandosBarra, type ControlMenuBarra, type MenuBarra } from "./comandosBarra";
 import CuadroEnlace from "./CuadroEnlace";
+import CuadroReferencia from "./CuadroReferencia";
 import styles from "./EditorNota.module.css";
+import { Referencia, TitulosReferencias, type AlmacenReferencia } from "./nodoReferencia";
 
 // Alcance aprobado del editor (spec editor-notas, fase 1): títulos y subtítulos, negrita, cursiva,
-// subrayado, resaltado, listas con viñetas, numeradas y de tareas, citas, separadores y enlaces web.
+// subrayado, resaltado, listas con viñetas, numeradas y de tareas, citas, separadores y enlaces web;
+// fase 2: referencias a otras notas.
 function extensiones(control: { actual: ControlMenuBarra | null }) {
   return [
     StarterKit.configure({
@@ -38,12 +41,16 @@ function extensiones(control: { actual: ControlMenuBarra | null }) {
           `${marcada ? "Tarea hecha" : "Tarea pendiente"}: ${nodo.textContent || "tarea vacía"}`,
       },
     }),
+    Referencia,
     crearComandosBarra(control),
   ];
 }
 
 type Props = {
+  notaId: string;
   contenidoInicial: JSONContent;
+  // Título actual de cada nota referenciada en el contenido (design D2).
+  titulosReferencias: Record<string, string>;
   // Cada cambio del contenido, como JSON (lo recoge el guardado automático).
   onCambio: (contenido: string) => void;
   // El editor pierde el foco: momento para guardar sin esperar.
@@ -86,7 +93,9 @@ function Botones({ botones }: { botones: Boton[] }) {
   ));
 }
 
-export default function EditorNota({ contenidoInicial, onCambio, onSalir }: Props) {
+export default function EditorNota({ notaId, contenidoInicial, titulosReferencias, onCambio, onSalir }: Props) {
+  const [titulos, setTitulos] = useState(titulosReferencias);
+  const [cuadroReferencia, setCuadroReferencia] = useState(false);
   const [menuBarra, setMenuBarra] = useState<MenuBarra | null>(null);
   const [cuadro, setCuadro] = useState<{ abierto: boolean; href: string; hayEnlace: boolean }>({
     abierto: false,
@@ -162,6 +171,25 @@ export default function EditorNota({ contenidoInicial, onCambio, onSalir }: Prop
   }
   abrirEnlaceRef.current = abrirEnlace;
 
+  // El menú «/» abre el cuadro de referencias a través del almacén del nodo.
+  useEffect(() => {
+    if (!editor) return;
+    (editor.storage as unknown as { referencia: AlmacenReferencia }).referencia.abrir = () => setCuadroReferencia(true);
+  }, [editor]);
+
+  function insertarReferencia(nota: { id: string; titulo: string }) {
+    setTitulos((t) => ({ ...t, [nota.id]: nota.titulo }));
+    setCuadroReferencia(false);
+    editor
+      ?.chain()
+      .focus()
+      .insertContent([
+        { type: "referencia", attrs: { tipo: "nota", id: nota.id } },
+        { type: "text", text: " " },
+      ])
+      .run();
+  }
+
   function aplicarEnlace(href: string) {
     if (!editor) return;
     if (editor.state.selection.empty && !editor.isActive("link")) {
@@ -197,7 +225,10 @@ export default function EditorNota({ contenidoInicial, onCambio, onSalir }: Prop
           { etiqueta: "❝", titulo: "Cita en bloque", activo: activo?.cita, accion: () => c().toggleBlockquote().run() },
           { etiqueta: "—", titulo: "Separador", accion: () => c().setHorizontalRule().run() },
         ],
-        [{ etiqueta: "↗", titulo: activo?.enlace ? "Editar enlace" : "Enlace", activo: activo?.enlace, accion: abrirEnlace }],
+        [
+          { etiqueta: "↗", titulo: activo?.enlace ? "Editar enlace" : "Enlace", activo: activo?.enlace, accion: abrirEnlace },
+          { etiqueta: "§", titulo: "Referencia a una nota", accion: () => setCuadroReferencia(true) },
+        ],
       ]
     : [];
 
@@ -230,7 +261,9 @@ export default function EditorNota({ contenidoInicial, onCambio, onSalir }: Prop
         </BubbleMenu>
       )}
 
-      <EditorContent editor={editor} />
+      <TitulosReferencias.Provider value={titulos}>
+        <EditorContent editor={editor} />
+      </TitulosReferencias.Provider>
 
       {menuBarra && menuBarra.items.length > 0 && (
         <div
@@ -268,6 +301,16 @@ export default function EditorNota({ contenidoInicial, onCambio, onSalir }: Prop
         onQuitar={quitarEnlace}
         onCerrar={() => {
           setCuadro((x) => ({ ...x, abierto: false }));
+          editor?.commands.focus();
+        }}
+      />
+
+      <CuadroReferencia
+        abierto={cuadroReferencia}
+        notaId={notaId}
+        onElegir={insertarReferencia}
+        onCerrar={() => {
+          setCuadroReferencia(false);
           editor?.commands.focus();
         }}
       />

@@ -3,9 +3,10 @@
 import { Extension, type Editor, type Range } from "@tiptap/core";
 import { PluginKey } from "@tiptap/pm/state";
 import Suggestion, { type SuggestionKeyDownProps, type SuggestionProps } from "@tiptap/suggestion";
+import { abrirCuadroReferencia } from "./nodoReferencia";
 
 // Menú «/» para insertar bloques (design D3): se activa con «/» al principio de un bloque
-// vacío y filtra sin distinguir tildes ni mayúsculas.
+// vacío y filtra sin distinguir tildes ni mayúsculas. También abre el cuadro de referencias.
 
 export type Comando = { titulo: string; descripcion: string; ejecutar: (editor: Editor, range: Range) => void };
 
@@ -45,9 +46,17 @@ export const COMANDOS: Comando[] = [
     descripcion: "Línea de separación",
     ejecutar: (e, r) => e.chain().focus().deleteRange(r).setHorizontalRule().run(),
   },
+  {
+    titulo: "Referencia a una nota",
+    descripcion: "Enlace a otra nota que muestra su título",
+    ejecutar: (e, r) => {
+      e.chain().focus().deleteRange(r).run();
+      abrirCuadroReferencia(e.storage);
+    },
+  },
 ];
 
-const sinTildes = (t: string) => t.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase().trim();
+export const sinTildes = (t: string) => t.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase().trim();
 
 export function filtrarComandos(consulta: string): Comando[] {
   const q = sinTildes(consulta);

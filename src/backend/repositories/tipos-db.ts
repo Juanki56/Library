@@ -800,6 +800,42 @@ export type Database = {
         }
         Relationships: []
       }
+      referencias_nota: {
+        Row: {
+          creado_en: string
+          destino_id: string
+          origen_id: string
+          usuario_id: string
+        }
+        Insert: {
+          creado_en?: string
+          destino_id: string
+          origen_id: string
+          usuario_id: string
+        }
+        Update: {
+          creado_en?: string
+          destino_id?: string
+          origen_id?: string
+          usuario_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referencias_nota_destino_id_usuario_id_fkey"
+            columns: ["destino_id", "usuario_id"]
+            isOneToOne: false
+            referencedRelation: "notas"
+            referencedColumns: ["id", "usuario_id"]
+          },
+          {
+            foreignKeyName: "referencias_nota_origen_id_usuario_id_fkey"
+            columns: ["origen_id", "usuario_id"]
+            isOneToOne: false
+            referencedRelation: "notas"
+            referencedColumns: ["id", "usuario_id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
