@@ -48,7 +48,8 @@ test("muestra las notas recientes con extracto, fecha y proyectos, y los libros"
   await expect(elemento).toContainText("La historia de toda sociedad es la historia de la lucha de clases.");
   await expect(elemento).toContainText(/Modificada el \d{1,2} de [a-z]+ de \d{4} · en Comunismo · Historia social/);
 
-  const libros = page.getByRole("list", { name: "Libros" });
+  // Ningún libro en lectura: se muestran los últimos añadidos.
+  const libros = page.getByRole("list", { name: "Libros recientes" });
   await expect(libros.getByRole("link", { name: "El manifiesto comunista" })).toBeVisible();
   await expect(libros).toContainText("Karl Marx, Friedrich Engels · 1848");
 

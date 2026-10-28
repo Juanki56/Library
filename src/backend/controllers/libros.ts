@@ -3,7 +3,6 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { crearClienteServidor } from "@/backend/auth/clienteServidor";
-import * as eliminacion from "@/backend/services/eliminacion";
 import * as libros from "@/backend/services/libros";
 
 export type EstadoLibro = { error?: string; guardado?: boolean };
@@ -18,7 +17,9 @@ const entrada = (formulario: FormData): libros.EntradaLibro => ({
   autores: texto(formulario, "autores"),
   anio: texto(formulario, "anio"),
   editorial: texto(formulario, "editorial"),
-  notasBibliograficas: texto(formulario, "notasBibliograficas"),
+  descripcion: texto(formulario, "descripcion"),
+  isbn: texto(formulario, "isbn"),
+  estadoLectura: texto(formulario, "estadoLectura"),
 });
 
 export async function crearLibro(_estado: EstadoLibro, formulario: FormData): Promise<EstadoLibro> {
@@ -40,11 +41,25 @@ export async function guardarLibro(_estado: EstadoLibro, formulario: FormData): 
 }
 
 export async function eliminarLibro(_estado: EstadoLibro, formulario: FormData): Promise<EstadoLibro> {
-  const resultado = await eliminacion.eliminar(await crearClienteServidor(), {
-    tipo: "libro",
-    id: texto(formulario, "id"),
-  });
+  // Con su portada subida (requisito «Portada del libro»).
+  const resultado = await libros.eliminarLibro(await crearClienteServidor(), texto(formulario, "id"));
   if (!resultado.ok) return { error: resultado.error };
   revalidatePath("/", "layout");
   redirect("/libros");
+}
+
+// Portada del libro (design D3): subir un archivo, indicar una dirección web o quitarla.
+export async function cambiarPortada(_estado: EstadoLibro, formulario: FormData): Promise<EstadoLibro> {
+  const id = texto(formulario, "id");
+  const accion = texto(formulario, "accion");
+  const cambio: libros.CambioPortada =
+    accion === "quitar"
+      ? { tipo: "quitar" }
+      : texto(formulario, "origen") === "web"
+        ? { tipo: "web", url: texto(formulario, "url") }
+        : { tipo: "archivo", archivo: formulario.get("archivo") };
+  const resultado = await libros.cambiarPortada(await crearClienteServidor(), id, cambio);
+  if (!resultado.ok) return { error: resultado.error };
+  revalidatePath("/", "layout");
+  return { guardado: true };
 }

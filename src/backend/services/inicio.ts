@@ -3,7 +3,8 @@ import type { Cliente } from "@/backend/repositories/clienteLibre";
 import * as repo from "@/backend/repositories/inicio";
 import { listarCitas, type Cita } from "./citas";
 
-// Contenido de Inicio: notas recientes, libros y citas recientes (spec navegacion).
+// Contenido de Inicio (spec navegacion, decidido el 2026-10-28): notas recientes, «Leyendo ahora»
+// (o los últimos libros añadidos), proyectos recientes y citas. Sin métricas ni contadores.
 
 export type NotaReciente = {
   id: string;
@@ -21,8 +22,11 @@ export type LibroReciente = {
   editorial: string | null;
 };
 
+export type ProyectoReciente = { id: string; nombre: string; descripcion: string | null; actualizadoEn: string };
+
 const NOTAS = 5;
 const LIBROS = 4;
+const PROYECTOS = 4;
 const CITAS = 3;
 const LONGITUD_EXTRACTO = 160;
 
@@ -34,16 +38,31 @@ export function extracto(texto: string, longitud = LONGITUD_EXTRACTO): string {
   return `${corte.slice(0, corte.lastIndexOf(" ") > 0 ? corte.lastIndexOf(" ") : longitud)}…`;
 }
 
-export async function contenidoInicio(
-  cliente: Cliente,
-): Promise<{ notas: NotaReciente[]; libros: LibroReciente[]; citas: Cita[] }> {
-  const [notas, libros, citas] = await Promise.all([
+export type ContenidoInicio = {
+  notas: NotaReciente[];
+  // «leyendo»: libros en lectura; «recientes»: no hay ninguno en lectura y se muestran los últimos añadidos.
+  libros: { modo: "leyendo" | "recientes"; lista: LibroReciente[] };
+  proyectos: ProyectoReciente[];
+  citas: Cita[];
+};
+
+export async function contenidoInicio(cliente: Cliente): Promise<ContenidoInicio> {
+  const [notas, leyendo, proyectos, citas] = await Promise.all([
     repo.notasRecientes(cliente, NOTAS),
-    repo.librosRecientes(cliente, LIBROS),
+    repo.librosLeyendo(cliente, LIBROS),
+    repo.proyectosRecientes(cliente, PROYECTOS),
     listarCitas(cliente, CITAS),
   ]);
   if (notas.error) throw notas.error;
-  if (libros.error) throw libros.error;
+  if (leyendo.error) throw leyendo.error;
+  if (proyectos.error) throw proyectos.error;
+
+  let libros: ContenidoInicio["libros"] = { modo: "leyendo", lista: leyendo.data };
+  if (!leyendo.data.length) {
+    const recientes = await repo.librosRecientes(cliente, LIBROS);
+    if (recientes.error) throw recientes.error;
+    libros = { modo: "recientes", lista: recientes.data };
+  }
 
   return {
     notas: notas.data.map((n) => ({
@@ -56,7 +75,13 @@ export async function contenidoInicio(
         .filter((nombre): nombre is string => Boolean(nombre))
         .sort((a, b) => a.localeCompare(b, "es")),
     })),
-    libros: libros.data,
+    libros,
+    proyectos: proyectos.data.map((p) => ({
+      id: p.id,
+      nombre: p.nombre,
+      descripcion: p.descripcion,
+      actualizadoEn: p.actualizado_en,
+    })),
     citas,
   };
 }

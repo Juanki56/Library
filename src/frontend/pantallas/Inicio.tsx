@@ -6,8 +6,16 @@ import { fecha } from "./fechas";
 import { referencia } from "./ListaLibros";
 import styles from "./Inicio.module.css";
 
-// Inicio: portada y listas editoriales de notas recientes, libros y citas (spec navegacion, §7).
+// Inicio (spec navegacion, decidido el 2026-10-28): accesos rápidos y listas editoriales de notas
+// recientes, «Leyendo ahora», proyectos y citas (§6 y §7).
 // Sin métricas, contadores ni tiempos relativos (spec exclusiones-alcance).
+
+const ACCESOS = [
+  { ruta: "/notas/nueva", texto: "Nueva nota" },
+  { ruta: "/libros/nuevo", texto: "Nuevo libro" },
+  { ruta: "/recursos/nuevo", texto: "Nuevo recurso" },
+  { ruta: "/citas/nueva", texto: "Nueva cita" },
+];
 
 function Encabezado({ id, numeral, titulo, ruta, enlace }: {
   id: string;
@@ -35,7 +43,8 @@ function Encabezado({ id, numeral, titulo, ruta, enlace }: {
 }
 
 export default async function Inicio() {
-  const { notas, libros, citas } = await contenidoInicio();
+  const { notas, libros, proyectos, citas } = await contenidoInicio();
+  const leyendo = libros.modo === "leyendo";
 
   return (
     <main className={styles.pagina}>
@@ -44,6 +53,13 @@ export default async function Inicio() {
         <span className={styles.fileteDoble} aria-hidden="true" />
         <h1 className={styles.titulo}>Archivo de conocimiento</h1>
         <span className={styles.fileteDoble} aria-hidden="true" />
+        <nav aria-label="Crear" className={styles.accesos}>
+          {ACCESOS.map((a) => (
+            <Link key={a.ruta} href={a.ruta} className={styles.acceso}>
+              {a.texto}
+            </Link>
+          ))}
+        </nav>
       </header>
 
       <div className={styles.columnas}>
@@ -73,14 +89,20 @@ export default async function Inicio() {
 
         <div className={styles.columnaLateral}>
           <section aria-labelledby="inicio-libros">
-            <Encabezado id="inicio-libros" numeral="II" titulo="Libros" ruta="/libros" enlace="Ver todos" />
-            {libros.length === 0 ? (
+            <Encabezado
+              id="inicio-libros"
+              numeral="II"
+              titulo={leyendo ? "Leyendo ahora" : "Libros recientes"}
+              ruta="/libros"
+              enlace="Ver todos"
+            />
+            {libros.lista.length === 0 ? (
               <p className={styles.vacio}>
                 Todavía no has añadido ningún libro. <Link href="/libros/nuevo">Añadir uno</Link>
               </p>
             ) : (
-              <ul className={styles.listaLibros} aria-label="Libros">
-                {libros.map((l) => (
+              <ul className={styles.listaLibros} aria-label={leyendo ? "Leyendo ahora" : "Libros recientes"}>
+                {libros.lista.map((l) => (
                   <li key={l.id}>
                     <Link href={`/libros/${l.id}`} className={styles.tituloLibro}>
                       {l.titulo}
@@ -92,8 +114,28 @@ export default async function Inicio() {
             )}
           </section>
 
+          <section aria-labelledby="inicio-proyectos">
+            <Encabezado id="inicio-proyectos" numeral="III" titulo="Proyectos" ruta="/proyectos" enlace="Ver todos" />
+            {proyectos.length === 0 ? (
+              <p className={styles.vacio}>
+                Todavía no has creado ningún proyecto. <Link href="/proyectos/nuevo">Crear uno</Link>
+              </p>
+            ) : (
+              <ul className={styles.listaLibros} aria-label="Proyectos recientes">
+                {proyectos.map((p) => (
+                  <li key={p.id}>
+                    <Link href={`/proyectos/${p.id}`} className={styles.tituloLibro}>
+                      {p.nombre}
+                    </Link>
+                    <p className={styles.metadatos}>Modificado el {fecha(p.actualizadoEn)}</p>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+
           <section aria-labelledby="inicio-citas">
-            <Encabezado id="inicio-citas" numeral="III" titulo="Citas guardadas" ruta="/citas" enlace="Ver todas" />
+            <Encabezado id="inicio-citas" numeral="IV" titulo="Citas guardadas" ruta="/citas" enlace="Ver todas" />
             {citas.length === 0 ? (
               <p className={styles.vacio}>
                 Todavía no has guardado ninguna cita. <Link href="/citas/nueva">Guardar la primera</Link>

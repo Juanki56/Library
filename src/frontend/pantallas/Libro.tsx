@@ -13,10 +13,12 @@ import ConfirmarEliminacion from "@/frontend/components/ConfirmarEliminacion";
 import ElementosRelacionados from "@/frontend/components/ElementosRelacionados";
 import EtiquetasElemento from "@/frontend/components/EtiquetasElemento";
 import FormularioLibro from "@/frontend/components/FormularioLibro";
+import PortadaLibro from "@/frontend/components/PortadaLibro";
+import { ESTADOS_LECTURA } from "@/backend/services/fichas";
 import { referencia } from "./ListaLibros";
 import styles from "./Seccion.module.css";
 
-// Página propia del libro: datos bibliográficos y notas, recursos y proyectos relacionados (spec libros).
+// Página propia del libro: datos, portada y notas, recursos y proyectos relacionados (spec libros).
 export default async function Libro({ id }: { id: string }) {
   const libro = await obtenerLibro(id);
   if (!libro) notFound();
@@ -33,6 +35,13 @@ export default async function Libro({ id }: { id: string }) {
         <div>
           <h1>{libro.titulo}</h1>
           {referencia(libro) && <p className={styles.metadatos}>{referencia(libro)}</p>}
+          {(libro.estadoLectura || libro.isbn) && (
+            <p className={styles.metadatos}>
+              {[libro.estadoLectura && ESTADOS_LECTURA[libro.estadoLectura], libro.isbn && `ISBN ${libro.isbn}`]
+                .filter(Boolean)
+                .join(" · ")}
+            </p>
+          )}
         </div>
         <Link href="/libros" className={styles.accion}>
           Volver a libros
@@ -40,6 +49,7 @@ export default async function Libro({ id }: { id: string }) {
       </div>
 
       <FormularioLibro libro={libro} />
+      <PortadaLibro id={libro.id} titulo={libro.titulo} ruta={libro.portadaRuta} url={libro.portadaUrl} />
       <EtiquetasElemento tipo="libro" id={libro.id} propias={etiquetas.propias} todas={etiquetas.todas} />
       <ElementosRelacionados tipo="libro" id={libro.id} grupos={relacionados} />
       <CitasEnlazadas citas={citas} />

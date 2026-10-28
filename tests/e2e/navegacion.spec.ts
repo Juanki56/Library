@@ -39,13 +39,13 @@ test("el menú da acceso a las ocho áreas acordadas (spec navegacion)", async (
   const menu = page.getByRole("navigation", { name: "Principal" });
   await expect(menu.getByRole("link")).toHaveText([
     "Inicio",
+    "Notas",
     "Proyectos",
     "Libros",
-    "Notas",
     "Fuentes y recursos",
-    "Etiquetas",
-    "Glosario",
     "Citas",
+    "Glosario",
+    "Etiquetas",
   ]);
   for (const [enlace, titulo] of [["Etiquetas", "Etiquetas"], ["Glosario", "Glosario"], ["Citas", "Citas"]]) {
     await menu.getByRole("link", { name: enlace, exact: true }).click();

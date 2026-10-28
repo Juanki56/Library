@@ -198,3 +198,30 @@
     gap: var(--espacio-5);
   }
 }
+
+/* Accesos rápidos para crear, bajo el título: discretos, en versalitas, sin cifras. */
+.accesos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--espacio-2);
+  margin-top: var(--espacio-3);
+}
+
+.acceso {
+  padding: var(--espacio-1) var(--espacio-3);
+  font-size: var(--tamano-pequeno);
+  font-variant: small-caps;
+  text-transform: lowercase;
+  letter-spacing: var(--interletraje-versalitas);
+  color: var(--color-acento);
+  text-decoration: none;
+  border: 1px solid var(--color-ornamento);
+  border-radius: var(--radio);
+}
+
+.acceso:hover {
+  color: var(--color-sobre-acento);
+  background: var(--color-acento);
+  border-color: var(--color-acento);
+}

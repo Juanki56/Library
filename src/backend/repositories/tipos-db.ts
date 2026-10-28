@@ -529,9 +529,13 @@ export type Database = {
           anio: number | null
           autores: string | null
           creado_en: string
+          descripcion: string | null
           editorial: string | null
+          estado_lectura: string | null
           id: string
-          notas_bibliograficas: string | null
+          isbn: string | null
+          portada_ruta: string | null
+          portada_url: string | null
           titulo: string
           usuario_id: string
         }
@@ -540,9 +544,13 @@ export type Database = {
           anio?: number | null
           autores?: string | null
           creado_en?: string
+          descripcion?: string | null
           editorial?: string | null
+          estado_lectura?: string | null
           id?: string
-          notas_bibliograficas?: string | null
+          isbn?: string | null
+          portada_ruta?: string | null
+          portada_url?: string | null
           titulo: string
           usuario_id?: string
         }
@@ -551,9 +559,13 @@ export type Database = {
           anio?: number | null
           autores?: string | null
           creado_en?: string
+          descripcion?: string | null
           editorial?: string | null
+          estado_lectura?: string | null
           id?: string
-          notas_bibliograficas?: string | null
+          isbn?: string | null
+          portada_ruta?: string | null
+          portada_url?: string | null
           titulo?: string
           usuario_id?: string
         }
@@ -802,7 +814,9 @@ export type Database = {
           autor: string | null
           creado_en: string
           descripcion: string | null
+          fecha_publicacion: string | null
           id: string
+          tipo: string
           titulo: string
           url: string | null
           usuario_id: string
@@ -812,7 +826,9 @@ export type Database = {
           autor?: string | null
           creado_en?: string
           descripcion?: string | null
+          fecha_publicacion?: string | null
           id?: string
+          tipo?: string
           titulo: string
           url?: string | null
           usuario_id?: string
@@ -822,7 +838,9 @@ export type Database = {
           autor?: string | null
           creado_en?: string
           descripcion?: string | null
+          fecha_publicacion?: string | null
           id?: string
+          tipo?: string
           titulo?: string
           url?: string | null
           usuario_id?: string

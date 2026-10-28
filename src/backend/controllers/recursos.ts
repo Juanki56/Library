@@ -18,6 +18,8 @@ const entrada = (formulario: FormData): recursos.EntradaRecurso => ({
   url: texto(formulario, "url"),
   autor: texto(formulario, "autor"),
   descripcion: texto(formulario, "descripcion"),
+  tipo: texto(formulario, "tipo"),
+  fechaPublicacion: texto(formulario, "fechaPublicacion"),
 });
 
 export async function crearRecurso(_estado: EstadoRecurso, formulario: FormData): Promise<EstadoRecurso> {

@@ -1,0 +1,74 @@
+/* Portada del libro: sección con filete doble, imagen con marco fino a la izquierda. */
+.seccion {
+  margin-top: var(--espacio-6);
+  padding-top: var(--espacio-4);
+  border-top: 3px double var(--color-ornamento);
+}
+
+.titulo {
+  margin: 0 0 var(--espacio-3);
+  font-size: var(--tamano-h2);
+}
+
+.cuerpo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--espacio-4);
+}
+
+.cuerpo > form {
+  flex: 1 1 18rem;
+}
+
+.portada {
+  width: 10rem;
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra-papel);
+}
+
+.aviso {
+  width: 10rem;
+  margin: 0;
+  padding: var(--espacio-3);
+  font-style: italic;
+  font-size: var(--tamano-pequeno);
+  color: var(--color-texto-suave);
+  border: 1px dashed var(--color-borde);
+  border-radius: var(--radio);
+}
+
+.opciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espacio-3);
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.opciones legend {
+  margin-bottom: var(--espacio-1);
+  color: var(--color-texto-suave);
+}
+
+.opciones label {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-1);
+}
+
+.quitar {
+  min-height: 2.75rem;
+  padding: 0 var(--espacio-3);
+  font: inherit;
+  font-size: var(--tamano-pequeno);
+  color: var(--color-texto);
+  background: transparent;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  cursor: pointer;
+}

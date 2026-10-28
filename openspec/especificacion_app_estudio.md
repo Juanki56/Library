@@ -66,13 +66,41 @@ Un libro puede conectarse con uno o varios proyectos. Sus notas relacionadas deb
 
 Ejemplo: *El manifiesto comunista* puede tener sus propios datos bibliográficos y contenido asociado, y estar relacionado con el proyecto *Comunismo*.
 
+**Campos del libro (decidido el 2026-10-28):**
+
+| Campo | ¿Obligatorio? |
+|---|---|
+| Título | Sí |
+| Autor o autores | No |
+| Descripción | No |
+| Editorial | No |
+| Año de publicación | No |
+| ISBN | No |
+| Portada | No |
+| Estado de lectura | No |
+| Etiquetas | No |
+| Notas y proyectos relacionados | No |
+
+- **Estado de lectura:** «Por leer», «Leyendo» o «Leído». Es opcional: un libro registrado solo como referencia puede quedarse sin estado.
+- **Detalles de implementación (propuestos al implementar, revisables):**
+  - Las «notas bibliográficas» actuales pasan a llamarse **Descripción**, conservando su texto.
+  - La **portada** se sube (PNG, JPEG, GIF o WebP, hasta 5 MB, privada) o se indica su dirección web, igual que las imágenes de las notas. Al cambiarla, quitarla o eliminar el libro, la imagen subida se borra.
+  - El **ISBN** admite ISBN-10 o ISBN-13, con o sin guiones, y se comprueba su dígito de control.
+
 ### 2.4 Fuentes y recursos
 
 Las fuentes y recursos permiten guardar materiales utilizados o considerados relevantes para estudiar: por ejemplo, páginas web, artículos u otros materiales.
 
 Un recurso debe crearse una sola vez y poder relacionarse con varios proyectos, libros o notas. Al consultarlo desde distintos espacios, no debe duplicarse.
 
-La forma exacta de gestionar los tipos de recurso y los datos bibliográficos queda pendiente de especificación.
+**Tipos y datos (decidido el 2026-10-28):**
+
+- **Tipos:** Artículo, Página web, Vídeo, Podcast, Documento o PDF, Curso, Audio y Otro.
+- **Datos:** título (obligatorio) y, opcionalmente, dirección web, autor o creador, descripción, fecha de publicación, etiquetas y relaciones con libros, notas y proyectos.
+- **Detalles de implementación (propuestos al implementar, revisables):**
+  - El tipo se elige siempre de la lista; por defecto, y para los recursos ya guardados, es «Otro».
+  - La fecha de publicación es una fecha completa (día, mes y año).
+  - La lista de recursos se puede filtrar por tipo.
 
 ### 2.5 Etiquetas
 
@@ -238,7 +266,7 @@ La aplicación tendrá una **búsqueda global** para encontrar contenido en toda
 |---|---|---|---|
 | Proyecto | Nombre | Nombre y descripción | La descripción es opcional; si está vacía solo se busca en el nombre. |
 | Nota | Título | Título y texto del contenido (versión en texto plano del editor) | El formato (negritas, listas…) no influye en la búsqueda. |
-| Libro | Título | Título, **autores** y notas bibliográficas | Los autores se buscan como texto; no hay filtro por autor. La editorial no se incluye. |
+| Libro | Título | Título, **autores** y descripción (antes «notas bibliográficas») | Los autores se buscan como texto; no hay filtro por autor. La editorial no se incluye. |
 | Fuente o recurso | Título | Título, **autor** y descripción | La dirección web no se incluye. |
 | Cita | Extracto del texto | Texto, **autor** y **fuente u origen** (texto libre) | Las citas no tienen título propio. |
 | Término del glosario | Término | Término, definición, ejemplo e información adicional | — |
@@ -271,7 +299,7 @@ Un mapa gráfico de conocimiento se dejó como posible idea futura, no como requ
 
 ## 6. Menú principal
 
-**Estado: áreas acordadas (2026-10-27). Orden, diseño e Inicio pendientes.**
+**Estado: áreas acordadas (2026-10-27). Orden e Inicio decididos el 2026-10-28.**
 
 Las principales áreas de la aplicación tienen **secciones independientes** en el menú. Las áreas acordadas son:
 
@@ -286,12 +314,26 @@ Las principales áreas de la aplicación tienen **secciones independientes** en 
 
 **Citas tiene su propia sección en el menú principal.** No es una posibilidad pendiente.
 
-**Pendiente de decisión:**
+**Orden del menú (2026-10-28):** el usuario lo dejó a criterio de la implementación, buscando la mayor comodidad. Se ordena por uso previsto, con las notas como pieza central:
 
-- El **orden definitivo** de las secciones (la lista anterior no lo fija).
-- El **diseño visual** del menú.
-- La **estructura y el contenido de la pantalla Inicio**.
-- Dónde se coloca el acceso a la **búsqueda global** (ver §4).
+1. Inicio
+2. Notas
+3. Proyectos
+4. Libros
+5. Fuentes y recursos
+6. Citas
+7. Glosario
+8. Etiquetas
+
+**Inicio (2026-10-28):** también a criterio de la implementación, buscando la mayor comodidad, sin métricas ni contadores (§5):
+
+- **Accesos rápidos** para crear: nota, libro, recurso y cita.
+- **Notas recientes**, para seguir escribiendo.
+- **Leyendo ahora:** libros con estado «Leyendo»; si no hay ninguno, los últimos libros añadidos.
+- **Proyectos** modificados recientemente.
+- **Citas guardadas** más recientes.
+
+La búsqueda global está en la cabecera (§4). El diseño visual del menú es el aprobado en §7.
 
 ## 7. Dirección visual
 
@@ -383,12 +425,12 @@ Incorporados en §2.5 (etiquetas), §2.6 (glosario), §2.7 (citas) y §4.1 (bús
 ### 9.4 Otros pendientes generales
 
 - [x] **Editor:** evaluado y con alcance técnico acordado en cuatro fases (2026-10-27, §3.2).
-- [ ] Orden y diseño del menú (las áreas ya están acordadas, §6).
-- [ ] Qué aparece en Inicio y cómo se organiza.
+- [x] Orden y diseño del menú: decidido el 2026-10-28 (§6).
+- [x] Qué aparece en Inicio y cómo se organiza: decidido el 2026-10-28 (§6).
 - [x] Dirección visual: aprobada el 2026-10-27 (§7).
 - [x] Estructura de los proyectos: apartados (2026-10-27, §2.1).
-- [ ] Campos y tipos de libros.
-- [ ] Tipos de fuentes y recursos y sus datos.
+- [x] Campos de los libros: decididos el 2026-10-28 (§2.3).
+- [x] Tipos de fuentes y recursos y sus datos: decididos el 2026-10-28 (§2.4).
 - [ ] Cómo se muestran los elementos relacionados.
 - [ ] Separar explícitamente los requisitos de primera versión de las ideas futuras.
 
@@ -408,16 +450,16 @@ Actualizar este documento **no** cambia el código ni las specs históricas de O
 | Cuentas | Registro con confirmación, entrada, salida, aislamiento por usuario | — | SMTP propio (aplazado) |
 | Proyectos | Crear, editar, eliminar con aviso, relacionados, apartados (§2.1) | — | — |
 | Notas | Crear, editar, ordenar por fechas, eliminar con aviso, relacionados | — | — |
-| Libros | Ficha provisional, relacionados, eliminar con aviso | — | Campos y tipos definitivos |
-| Fuentes y recursos | Ficha provisional, relacionados, eliminar con aviso | — | Tipos y datos definitivos |
+| Libros | Ficha definitiva (§2.3): descripción, ISBN, portada y estado de lectura; relacionados, eliminar con aviso | — | Tipos de libro (no decididos) |
+| Fuentes y recursos | Tipos y datos definitivos (§2.4), filtro por tipo, relacionados, eliminar con aviso | — | — |
 | Relaciones | Vínculos sin duplicar entre las 4 entidades | Enlace opcional de una cita con un libro o recurso (E1) | Forma visual de los relacionados |
 | Editor de notas | Fases 1 a 4 (§3.3) | — | Arrastrar bloques con el ratón (no incluido) |
-| Menú | Las ocho áreas con su sección | — | Orden definitivo |
+| Menú e Inicio | Las ocho áreas en el orden de §6; Inicio con accesos rápidos, notas, «Leyendo ahora», proyectos y citas | — | — |
 | Citas | Sección completa (§2.7) | — | Filtros propios (más adelante) |
 | Etiquetas | Sección completa (§2.5) | — | Etiquetas en citas y glosario (más adelante) |
 | Glosario | Sección completa (§2.6) | — | Relaciones opcionales (más adelante) |
 | Búsqueda global | Completa (§4) | — | Filtros adicionales (más adelante) |
-| Identidad visual | Dirección aprobada aplicada a toda la app (§7) | — | Orden del menú (§6) |
+| Identidad visual | Dirección aprobada aplicada a toda la app (§7) | — | — |
 
 ### 9.6 OpenSpec: documentos que habrá que actualizar en el próximo cambio
 
@@ -462,6 +504,10 @@ El cambio `especificacion-inicial-app-estudio` refleja lo **implementado** y no 
 - **2026-10-28 — Detalles de imágenes (fase 3):** las imágenes desde una URL guardan solo el enlace; las subidas que dejan de usarse se borran del almacenamiento; cada imagen tiene texto alternativo y pie opcional (§3.2). Motivo: decisión del usuario.
 - **2026-10-28 — Fase 3 del editor implementada:** cambio `editor-fase3-imagenes-videos` archivado. Las imágenes subidas que dejan de usarse se borran al abrir la nota pasados dos minutos desde su subida, para no borrar una imagen cuyo guardado está en curso.
 - **2026-10-28 — Fase 4 del editor implementada:** cambio `editor-fase4-organizacion-tablas` archivado. Los bloques se mueven con botones y Alt+↑/↓; arrastrar con el ratón no se incluye porque la extensión oficial exige paquetes de edición colaborativa (Yjs). El índice se calcula del contenido y no se guarda. Tablas sin combinar celdas ni ajustar anchos.
+- **2026-10-28 — Campos de los libros:** título obligatorio; autores, descripción, editorial, año, ISBN, portada, estado de lectura (Por leer, Leyendo, Leído), etiquetas y relaciones opcionales (§2.3). Motivo: decisión del usuario.
+- **2026-10-28 — Tipos de fuentes y recursos:** Artículo, Página web, Vídeo, Podcast, Documento o PDF, Curso, Audio y Otro; título obligatorio y dirección web, autor o creador, descripción, fecha de publicación, etiquetas y relaciones opcionales (§2.4). Motivo: decisión del usuario.
+- **2026-10-28 — Orden del menú e Inicio:** el usuario los deja a criterio de la implementación, buscando la mayor comodidad; se registran en §6. Motivo: delegación del usuario.
+- **2026-10-28 — Libros, recursos, menú e Inicio implementados:** cambio `libros-recursos-menu-inicio` archivado; specs oficiales `libros`, `fuentes-recursos`, `navegacion` y `busqueda` actualizadas.
 
 ## 10. Prompt de trabajo para Specs o Claude Code
 

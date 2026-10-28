@@ -26,24 +26,39 @@ const CADUCIDAD_URL = 3600; // segundos
 // automático en curso): solo se limpian las subidas hace más de este tiempo.
 export const ESPERA_LIMPIEZA_MS = 2 * 60 * 1000;
 
-// Sube una imagen a la carpeta privada del usuario y la registra en su nota (design D3).
+// Valida y sube una imagen a <usuario>/<carpeta>/<archivo> en el almacenamiento privado (design D3).
 // El tipo se comprueba por el contenido del archivo, no por su nombre ni por lo que declara el navegador.
-export async function subirImagen(cliente: Cliente, notaId: string, archivo: unknown): Promise<ResultadoSubida> {
+// La usan las imágenes de las notas y las portadas de los libros (la carpeta es la nota o el libro).
+export async function subirArchivoImagen(cliente: Cliente, carpeta: string, archivo: unknown): Promise<ResultadoSubida> {
   if (!(archivo instanceof Blob) || archivo.size === 0) return { ok: false, error: ERROR_SIN_IMAGEN };
   if (archivo.size > TAMANO_MAXIMO_IMAGEN) return { ok: false, error: ERROR_IMAGEN_GRANDE };
-  if (!esIdentificador(notaId)) return { ok: false, error: ERROR_NOTA };
 
   const datos = await archivo.arrayBuffer();
   const extension = extensionPorFirma(new Uint8Array(datos, 0, Math.min(16, datos.byteLength)));
   if (!extension) return { ok: false, error: ERROR_IMAGEN_TIPO };
 
-  const [{ data: sesion }, nota] = await Promise.all([cliente.auth.getUser(), versionDeNota(cliente, notaId)]);
+  const { data: sesion } = await cliente.auth.getUser();
   if (!sesion.user) return { ok: false, error: ERROR_SUBIDA };
+
+  const ruta = `${sesion.user.id}/${carpeta.toLowerCase()}/${randomUUID()}.${extension}`;
+  const subida = await repo.subirArchivo(cliente, ruta, datos, TIPOS_IMAGEN[extension]);
+  return subida.error ? { ok: false, error: ERROR_SUBIDA } : { ok: true, ruta };
+}
+
+export async function borrarArchivos(cliente: Cliente, rutas: string[]) {
+  const { error } = await repo.borrarArchivos(cliente, rutas);
+  if (error) console.error("No se pudieron borrar imágenes", error);
+}
+
+// Sube una imagen a una nota propia y la registra para poder limpiarla después (design D8).
+export async function subirImagen(cliente: Cliente, notaId: string, archivo: unknown): Promise<ResultadoSubida> {
+  if (!esIdentificador(notaId)) return { ok: false, error: ERROR_NOTA };
+  const nota = await versionDeNota(cliente, notaId);
   if (nota.error || !nota.data) return { ok: false, error: ERROR_NOTA };
 
-  const ruta = `${sesion.user.id}/${notaId.toLowerCase()}/${randomUUID()}.${extension}`;
-  const subida = await repo.subirArchivo(cliente, ruta, datos, TIPOS_IMAGEN[extension]);
-  if (subida.error) return { ok: false, error: ERROR_SUBIDA };
+  const subida = await subirArchivoImagen(cliente, notaId, archivo);
+  if (!subida.ok) return subida;
+  const ruta = subida.ruta;
 
   const registro = await repo.registrarImagen(cliente, ruta, notaId.toLowerCase());
   if (registro.error) {

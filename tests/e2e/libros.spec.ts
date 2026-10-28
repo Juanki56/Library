@@ -44,7 +44,7 @@ test("edita los datos bibliográficos y rechaza un año no válido", async ({ pa
   await page.getByLabel("Autor o autores").fill("Karl Marx");
   await page.getByLabel("Año").fill("1867");
   await page.getByLabel("Editorial").fill("Siglo XXI");
-  await page.getByLabel("Notas bibliográficas").fill("Tomo I");
+  await page.getByLabel("Descripción").fill("Tomo I");
   await page.getByRole("button", { name: "Guardar" }).click();
   await expect(page.getByRole("status")).toHaveText("Guardado.");
 

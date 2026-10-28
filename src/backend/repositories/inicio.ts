@@ -10,10 +10,31 @@ export async function notasRecientes(cliente: Cliente, cantidad: number) {
     .limit(cantidad);
 }
 
+const COLUMNAS_LIBRO = "id, titulo, autores, anio, editorial";
+
+// Libros en lectura, los últimos modificados primero.
+export async function librosLeyendo(cliente: Cliente, cantidad: number) {
+  return cliente
+    .from("libros")
+    .select(COLUMNAS_LIBRO)
+    .eq("estado_lectura", "leyendo")
+    .order("actualizado_en", { ascending: false })
+    .limit(cantidad);
+}
+
+// Últimos libros añadidos.
 export async function librosRecientes(cliente: Cliente, cantidad: number) {
   return cliente
     .from("libros")
-    .select("id, titulo, autores, anio, editorial")
+    .select(COLUMNAS_LIBRO)
+    .order("creado_en", { ascending: false })
+    .limit(cantidad);
+}
+
+export async function proyectosRecientes(cliente: Cliente, cantidad: number) {
+  return cliente
+    .from("proyectos")
+    .select("id, nombre, descripcion, actualizado_en")
     .order("actualizado_en", { ascending: false })
     .limit(cantidad);
 }

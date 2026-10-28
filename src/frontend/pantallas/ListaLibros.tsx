@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { listarLibros } from "@/backend/controllers/lecturas";
+import { ESTADOS_LECTURA } from "@/backend/services/fichas";
 import type { Libro } from "@/backend/services/libros";
 import styles from "./Seccion.module.css";
 
@@ -27,7 +28,11 @@ export default async function ListaLibros() {
           {libros.map((l) => (
             <li key={l.id} className={styles.elemento}>
               <Link href={`/libros/${l.id}`}>{l.titulo}</Link>
-              {referencia(l) && <p className={styles.metadatos}>{referencia(l)}</p>}
+              {(referencia(l) || l.estadoLectura) && (
+                <p className={styles.metadatos}>
+                  {[referencia(l), l.estadoLectura && ESTADOS_LECTURA[l.estadoLectura]].filter(Boolean).join(" · ")}
+                </p>
+              )}
             </li>
           ))}
         </ul>

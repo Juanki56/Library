@@ -20,7 +20,7 @@ Búsqueda global en proyectos, notas, libros, recursos, citas y glosario, sin di
 - **THEN** los tres aparecen en los resultados
 
 ### Requirement: Campos de búsqueda por tipo
-**[Acordado]** La búsqueda SHALL usar, por tipo: proyecto (nombre y descripción), nota (título y texto), libro (título, autores y notas bibliográficas), recurso (título, autor y descripción), cita (texto, autor y fuente u origen) y término (término, definición, ejemplo e información adicional).
+**[Acordado]** La búsqueda SHALL usar, por tipo: proyecto (nombre y descripción), nota (título y texto), libro (título, autores y descripción, antes llamada «notas bibliográficas»), recurso (título, autor o creador y descripción), cita (texto, autor y fuente u origen) y término (término, definición, ejemplo e información adicional).
 
 #### Scenario: Buscar por autor
 - **WHEN** el usuario busca «Marx» y tiene un libro de Karl Marx y una cita de Marx

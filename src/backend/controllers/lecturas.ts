@@ -6,6 +6,7 @@ import * as busqueda from "@/backend/services/busqueda";
 import * as citas from "@/backend/services/citas";
 import * as eliminacion from "@/backend/services/eliminacion";
 import * as etiquetas from "@/backend/services/etiquetas";
+import type { TipoRecurso } from "@/backend/services/fichas";
 import * as glosario from "@/backend/services/glosario";
 import * as imagenes from "@/backend/services/imagenes";
 import * as inicio from "@/backend/services/inicio";
@@ -123,8 +124,8 @@ export async function obtenerLibro(id: string) {
   return libros.obtenerLibro(await crearClienteServidor(), id);
 }
 
-export async function listarRecursos() {
-  return recursos.listarRecursos(await crearClienteServidor());
+export async function listarRecursos(tipo?: TipoRecurso) {
+  return recursos.listarRecursos(await crearClienteServidor(), tipo);
 }
 
 export async function obtenerRecurso(id: string) {

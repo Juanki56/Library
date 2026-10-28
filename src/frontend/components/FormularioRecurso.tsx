@@ -2,11 +2,13 @@
 
 import { useActionState } from "react";
 import { crearRecurso, guardarRecurso } from "@/backend/controllers/recursos";
+import { TIPOS_RECURSO } from "@/backend/services/fichas";
 import type { Recurso } from "@/backend/services/recursos";
 import { enviarSinVaciar } from "./enviarSinVaciar";
 import styles from "./Formularios.module.css";
 
-// Campos provisionales de fuentes y recursos (spec fuentes-recursos). Solo el título es obligatorio.
+// Tipos y datos de fuentes y recursos decididos el 2026-10-28 (spec fuentes-recursos).
+// Solo el título es obligatorio; el tipo es «Otro» si no se elige.
 export default function FormularioRecurso({ recurso }: { recurso?: Recurso }) {
   const [estado, enviar, enviando] = useActionState(recurso ? guardarRecurso : crearRecurso, {});
 
@@ -35,8 +37,29 @@ export default function FormularioRecurso({ recurso }: { recurso?: Recurso }) {
           className={styles.texto}
         />
       </label>
+      <div className={styles.fila}>
+        <label className={styles.campo}>
+          Tipo
+          <select name="tipo" defaultValue={recurso?.tipo ?? "otro"} className={styles.texto}>
+            {Object.entries(TIPOS_RECURSO).map(([valor, texto]) => (
+              <option key={valor} value={valor}>
+                {texto}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className={styles.campo}>
+          Fecha de publicación
+          <input
+            name="fechaPublicacion"
+            type="date"
+            defaultValue={recurso?.fecha_publicacion ?? ""}
+            className={styles.texto}
+          />
+        </label>
+      </div>
       <label className={styles.campo}>
-        Autor
+        Autor o creador
         <input name="autor" defaultValue={recurso?.autor ?? ""} maxLength={300} className={styles.texto} />
       </label>
       <label className={styles.campo}>

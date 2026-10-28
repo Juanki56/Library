@@ -13,6 +13,8 @@ import ConfirmarEliminacion from "@/frontend/components/ConfirmarEliminacion";
 import ElementosRelacionados from "@/frontend/components/ElementosRelacionados";
 import EtiquetasElemento from "@/frontend/components/EtiquetasElemento";
 import FormularioRecurso from "@/frontend/components/FormularioRecurso";
+import { TIPOS_RECURSO } from "@/backend/services/fichas";
+import { fechaDia } from "./fechas";
 import styles from "./Seccion.module.css";
 
 // Página del recurso: sus datos y los proyectos, libros y notas con que se relaciona (spec fuentes-recursos).
@@ -31,6 +33,11 @@ export default async function Recurso({ id }: { id: string }) {
       <div className={styles.encabezado}>
         <div>
           <h1>{recurso.titulo}</h1>
+          <p className={styles.metadatos}>
+            {[TIPOS_RECURSO[recurso.tipo], recurso.autor, recurso.fecha_publicacion && fechaDia(recurso.fecha_publicacion)]
+              .filter(Boolean)
+              .join(" · ")}
+          </p>
           {recurso.url && (
             <p className={styles.metadatos}>
               <a href={recurso.url} target="_blank" rel="noopener noreferrer">
