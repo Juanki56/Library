@@ -237,6 +237,7 @@ Se distinguen como capacidades diferentes:
    - Cada imagen admite **texto alternativo** y un **pie de imagen** opcional visible debajo (decidido el 2026-10-28).
    - **Pegar o arrastrar imágenes:** una imagen pegada (por ejemplo, una captura) o un archivo de imagen arrastrado al editor se sube igual que con el cuadro «Imagen»; las imágenes de contenido copiado de una web se insertan como imágenes desde esa dirección (decidido el 2026-10-28).
 2. **Vídeos:** solo **enlaces** e **incrustaciones de YouTube y Vimeo**. Subir vídeos propios queda fuera por ahora.
+   - **Pegar un enlace de YouTube o Vimeo solo en una línea vacía** lo convierte en el reproductor; pegado dentro de un texto sigue siendo un enlace (decidido el 2026-10-28).
 3. **Referencias:**
    - Por ahora, a **otras notas**.
    - La referencia guarda el **identificador** y muestra siempre el **título actualizado**, sin duplicar contenido.
@@ -531,6 +532,8 @@ El cambio `especificacion-inicial-app-estudio` refleja lo **implementado** y no 
 - **2026-10-28 — Arrastrar bloques con el ratón:** el usuario lo pide. Se implementa con un asa propia junto al bloque, sin la extensión oficial (que exige paquetes de edición colaborativa); los botones y Alt+↑/↓ se mantienen. Motivo: decisión del usuario.
 - **2026-10-28 — Pegar y arrastrar imágenes en el editor:** el usuario esperaba poder pegar imágenes directamente. Se suben como las del cuadro «Imagen» (§3.2). Motivo: petición del usuario.
 - **2026-10-28 — Arrastrar bloques y pegar imágenes implementados:** cambios `editor-arrastrar-bloques` y `editor-pegar-imagenes` archivados; spec oficial `editor-notas` actualizada. Las pruebas E2E compilan en su propia carpeta y también se pueden pasar contra el servidor de desarrollo (`npm run test:e2e:desarrollo`).
+- **2026-10-28 — Pegar enlaces de vídeo:** un enlace de YouTube o Vimeo pegado solo en una línea vacía se convierte en reproductor; dentro de un texto sigue siendo un enlace (§3.2). Motivo: decisión del usuario.
+- **2026-10-28 — Pegar enlaces de vídeo implementado:** cambio `editor-pegar-videos` archivado; spec oficial `editor-notas` actualizada.
 
 ## 10. Prompt de trabajo para Specs o Claude Code
 

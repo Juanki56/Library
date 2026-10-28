@@ -1,6 +1,7 @@
 "use client";
 
 import { mergeAttributes, Node } from "@tiptap/core";
+import { Plugin, PluginKey, TextSelection } from "@tiptap/pm/state";
 import { NodeViewWrapper, ReactNodeViewRenderer, type ReactNodeViewProps } from "@tiptap/react";
 import { useState } from "react";
 import {
@@ -8,6 +9,7 @@ import {
   enlaceVideo,
   esVideo,
   NOMBRE_PROVEEDOR,
+  reconocerVideo,
   reproductorVideo,
   type Video as DatosVideo,
 } from "@/backend/services/medios";
@@ -137,6 +139,35 @@ export const Video = Node.create<object, AlmacenCuadro>({
 
   addStorage() {
     return { abrir: () => {} };
+  },
+
+  // Pegar un enlace de YouTube o Vimeo solo en una línea vacía lo convierte en el reproductor
+  // (cambio editor-pegar-videos, design D1). Dentro de un texto sigue siendo un enlace normal.
+  addProseMirrorPlugins() {
+    const tipo = this.type;
+    return [
+      new Plugin({
+        key: new PluginKey("pegarVideo"),
+        props: {
+          handlePaste: (vista, evento) => {
+            if (evento.clipboardData?.files.length) return false;
+            const texto = evento.clipboardData?.getData("text/plain").trim() ?? "";
+            if (!texto || /\s/.test(texto)) return false;
+            const video = reconocerVideo(texto);
+            const { $from, empty } = vista.state.selection;
+            if (!video || !empty || $from.parent.type.name !== "paragraph" || $from.parent.content.size > 0) return false;
+
+            const inicio = $from.before();
+            const parrafo = vista.state.schema.nodes.paragraph.create();
+            const tr = vista.state.tr.replaceWith(inicio, $from.after(), [tipo.create(video), parrafo]);
+            // El cursor queda en el párrafo de después del vídeo, para seguir escribiendo.
+            tr.setSelection(TextSelection.create(tr.doc, inicio + 2));
+            vista.dispatch(tr.scrollIntoView());
+            return true;
+          },
+        },
+      }),
+    ];
   },
 
   addAttributes() {

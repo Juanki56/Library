@@ -242,7 +242,7 @@ Describe cómo se escribe y da formato al contenido de las notas. Las cuatro fas
 - **THEN** esa imagen se borra del almacenamiento, como tarde la siguiente vez que se abre la nota pasados dos minutos desde su subida, y las demás imágenes se conservan
 
 ### Requirement: Vídeos de YouTube y Vimeo
-**[Acordado]** El editor SHALL permitir insertar un vídeo de YouTube o Vimeo a partir de su enlace, mostrando el reproductor en la nota. Cualquier otro enlace MUST rechazarse con un mensaje. Del vídeo se MUST guardar solo el proveedor y su identificador.
+**[Acordado]** El editor SHALL permitir insertar un vídeo de YouTube o Vimeo a partir de su enlace, desde el cuadro «Insertar vídeo» o pegando el enlace solo en una línea vacía (decidido el 2026-10-28), mostrando el reproductor en la nota. En el cuadro, cualquier otro enlace MUST rechazarse con un mensaje. Del vídeo se MUST guardar solo el proveedor y su identificador.
 
 #### Scenario: Insertar un vídeo de YouTube
 - **WHEN** el usuario pega el enlace https://www.youtube.com/watch?v=dQw4w9WgXcQ en el cuadro «Insertar vídeo»
@@ -259,6 +259,18 @@ Describe cómo se escribe y da formato al contenido de las notas. Las cuatro fas
 #### Scenario: Vídeo manipulado descartado
 - **WHEN** llega al servidor un vídeo de otro proveedor o con un identificador no válido
 - **THEN** ese vídeo no se guarda y el resto del contenido sí
+
+#### Scenario: Pegar el enlace en una línea vacía
+- **WHEN** el usuario pega https://youtu.be/dQw4w9WgXcQ en una línea vacía de la nota
+- **THEN** en esa línea aparece el reproductor del vídeo, que se conserva al reabrir la nota
+
+#### Scenario: Pegar el enlace dentro de un texto
+- **WHEN** el usuario pega el mismo enlace en una línea que ya tiene texto
+- **THEN** se pega como un enlace normal y no aparece ningún reproductor
+
+#### Scenario: Pegar un enlace de otro sitio en una línea vacía
+- **WHEN** el usuario pega un enlace que no es de YouTube ni de Vimeo en una línea vacía
+- **THEN** se pega como un enlace normal
 
 ### Requirement: Mover bloques
 **[Acordado]** El editor SHALL permitir mover el bloque donde está el cursor con botones de la barra y con el teclado (Alt+↑ y Alt+↓), y arrastrar cualquier bloque con el ratón desde un asa que aparece a su izquierda (decidido el 2026-10-28), sin cambiar su contenido. Dentro de una lista se mueve el elemento. El nuevo orden MUST guardarse como cualquier otro cambio.
