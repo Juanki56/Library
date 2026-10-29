@@ -889,7 +889,16 @@ export type Database = {
     }
     Functions: {
       buscar: {
-        Args: { consulta: string; filtro?: string }
+        Args: {
+          autor?: string
+          consulta: string
+          desde?: string
+          etiqueta?: string
+          filtro?: string
+          hasta?: string
+          libro?: string
+          proyecto?: string
+        }
         Returns: {
           cuerpo: string
           id: string

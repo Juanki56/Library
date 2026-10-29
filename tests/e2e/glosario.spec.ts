@@ -23,6 +23,8 @@ test.beforeEach(async ({ page }) => {
 
 test("registra un término sin ejemplo y aparece en su letra", async ({ page }) => {
   await page.getByRole("navigation", { name: "Principal" }).getByRole("link", { name: "Glosario" }).click();
+  // Espera a la lista: Inicio también tiene un acceso «Nuevo término» y no debe pulsarse ese a mitad de navegación.
+  await expect(page).toHaveURL(/\/glosario$/);
   await page.getByRole("link", { name: "Nuevo término" }).click();
   await page.getByLabel("Término").fill("Plusvalía");
   await page.getByLabel("Definición").fill("Valor que produce el trabajo por encima del salario.");

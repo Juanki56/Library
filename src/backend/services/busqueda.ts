@@ -1,6 +1,7 @@
 import "server-only";
 import * as repo from "@/backend/repositories/busqueda";
 import type { Cliente } from "@/backend/repositories/clienteLibre";
+import { hayFiltros, type FiltrosBusqueda } from "./filtros";
 import { fragmento, terminosDe, type ParteFragmento } from "./fragmento";
 
 // Búsqueda global (spec busqueda, design D5).
@@ -31,11 +32,18 @@ export function esTipoBusqueda(valor: unknown): valor is TipoBusqueda {
   return typeof valor === "string" && (TIPOS_BUSQUEDA as readonly string[]).includes(valor);
 }
 
-export async function buscar(cliente: Cliente, consulta: string, filtro?: TipoBusqueda): Promise<Resultado[]> {
+// Con filtros adicionales (autor, etiqueta, fechas, proyecto, libro) se puede buscar sin texto
+// (cambio filtros-citas-busqueda). Sin texto ni filtros no hay resultados.
+export async function buscar(
+  cliente: Cliente,
+  consulta: string,
+  filtro?: TipoBusqueda,
+  filtros: FiltrosBusqueda = {},
+): Promise<Resultado[]> {
   const terminos = terminosDe(consulta);
-  if (terminos.length === 0) return [];
+  if (terminos.length === 0 && !hayFiltros(filtros)) return [];
 
-  const { data, error } = await repo.buscar(cliente, terminos.join(" "), filtro);
+  const { data, error } = await repo.buscar(cliente, terminos.join(" "), { filtro, ...filtros });
   if (error) throw error;
 
   const idsNotas = data.filter((r) => r.tipo === "nota").map((r) => r.id);

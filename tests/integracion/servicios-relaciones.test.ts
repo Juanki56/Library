@@ -158,16 +158,21 @@ describe("elementos relacionados (spec relaciones: «Elementos relacionados visi
     // Cada elemento lleva su contexto (cambio conexiones); este libro no tiene datos, así que no hay detalle.
     expect(porTipo.libro.elementos).toEqual([{ id: l.id, nombre: "El manifiesto comunista (relacionados)", detalle: null }]);
     expect(porTipo.recurso.elementos).toEqual([]);
-    const idsCandidatos = porTipo.proyecto.candidatos.map((c) => c.id);
+    // Los candidatos solo se calculan si se piden (al abrir «Vincular…», cambio rendimiento-paginas).
+    expect(porTipo.proyecto.candidatos).toEqual([]);
+    const { candidatosParaVincular } = await import("@/backend/services/relacionados");
+    const candidatos = await candidatosParaVincular(clienteA, n);
+    const idsCandidatos = candidatos.filter((c) => c.tipo === "proyecto").map((c) => c.id);
     expect(idsCandidatos).not.toContain(p1.id);
     expect(idsCandidatos).not.toContain(p2.id);
+    expect(candidatos.some((c) => c.id === l.id)).toBe(false);
   });
 
   it("no muestra elementos de otro usuario ni como relacionados ni como candidatos", async () => {
     const { obtenerRelacionados } = await import("@/backend/services/relacionados");
     await proyecto(clienteA, "Proyecto secreto de A");
     const propia = await nota(clienteB, "Nota de B");
-    const grupos = await obtenerRelacionados(clienteB, propia);
+    const grupos = await obtenerRelacionados(clienteB, propia, { conCandidatos: true });
     const nombres = grupos.flatMap((g) => [...g.elementos, ...g.candidatos].map((e) => e.nombre));
     expect(nombres).not.toContain("Proyecto secreto de A");
   });

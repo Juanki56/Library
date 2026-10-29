@@ -28,6 +28,8 @@ async function crearNota(titulo: string) {
 
 test("crear una nota la abre y aparece en el listado", async ({ page }) => {
   await page.getByRole("navigation", { name: "Principal" }).getByRole("link", { name: "Notas" }).click();
+  // Espera a la lista: Inicio también tiene un acceso «Nueva nota» y no debe pulsarse ese a mitad de navegación.
+  await expect(page).toHaveURL(/\/notas$/);
   await page.getByRole("link", { name: "Nueva nota" }).click();
   await page.getByRole("textbox", { name: "Título", exact: true }).fill("Materialismo histórico");
   await page.getByRole("button", { name: "Crear nota" }).click();

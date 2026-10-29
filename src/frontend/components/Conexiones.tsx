@@ -5,7 +5,7 @@ import type { Etiqueta } from "@/backend/services/etiquetas";
 import type { GrupoRelacionados } from "@/backend/services/relacionados";
 import { existeSeccion } from "@/frontend/navegacion";
 import { fecha } from "@/frontend/pantallas/fechas";
-import CuadroVincular, { QuitarVinculo, type Candidato } from "./CuadroVincular";
+import CuadroVincular, { QuitarVinculo } from "./CuadroVincular";
 import EtiquetasElemento from "./EtiquetasElemento";
 import VistaCita from "./VistaCita";
 import styles from "./Conexiones.module.css";
@@ -36,9 +36,6 @@ export default function Conexiones({ tipo, id, grupos, etiquetas, mencionan = []
   const conContenido = ORDEN.map((t) => grupos.find((g) => g.tipo === t)).filter(
     (g): g is GrupoRelacionados => Boolean(g && g.elementos.length),
   );
-  const candidatos: Candidato[] = ORDEN.flatMap(
-    (t) => grupos.find((g) => g.tipo === t)?.candidatos.map((c) => ({ tipo: t, ...c })) ?? [],
-  );
   const vacio = conContenido.length === 0 && mencionan.length === 0 && citas.length === 0;
   const puedeNotaVinculada = tipo !== "nota";
 
@@ -48,7 +45,7 @@ export default function Conexiones({ tipo, id, grupos, etiquetas, mencionan = []
         Conexiones
       </h2>
       <div className={styles.acciones}>
-        <CuadroVincular origenTipo={tipo} origenId={id} candidatos={candidatos} />
+        <CuadroVincular origenTipo={tipo} origenId={id} />
         {puedeNotaVinculada && (
           <Link href={`/notas/nueva?vincular=${tipo}:${id}`} className={styles.nuevaNota}>
             Nueva nota vinculada

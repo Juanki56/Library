@@ -26,6 +26,8 @@ const campoTitulo = (page: Page) => page.getByRole("textbox", { name: "Título",
 
 test("guarda un recurso sin dirección web (escenario «Recurso sin dirección web»)", async ({ page }) => {
   await page.getByRole("navigation", { name: "Principal" }).getByRole("link", { name: "Fuentes y recursos" }).click();
+  // Espera a la lista: Inicio también tiene un acceso «Nuevo recurso» y no debe pulsarse ese a mitad de navegación.
+  await expect(page).toHaveURL(/\/recursos$/);
   await page.getByRole("link", { name: "Nuevo recurso" }).click();
   await campoTitulo(page).fill("Apuntes de clase");
   await page.getByLabel("Descripción").fill("Fotocopias del seminario");

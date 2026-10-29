@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
-  avisoEliminacion,
   etiquetasElemento,
   obtenerProyecto,
   obtenerRelacionados,
@@ -18,10 +17,9 @@ import styles from "./Seccion.module.css";
 export default async function Proyecto({ id }: { id: string }) {
   const proyecto = await obtenerProyecto(id);
   if (!proyecto) notFound();
-  const [organizacion, relacionados, aviso, etiquetas] = await Promise.all([
+  const [organizacion, relacionados, etiquetas] = await Promise.all([
     organizacionProyecto(id),
     obtenerRelacionados("proyecto", id),
-    avisoEliminacion("proyecto", id),
     etiquetasElemento("proyecto", id),
   ]);
 
@@ -43,7 +41,7 @@ export default async function Proyecto({ id }: { id: string }) {
           <ConfirmarEliminacion
             id={proyecto.id}
             nombre={proyecto.nombre}
-            aviso={aviso ?? ""}
+            avisoDe="proyecto"
             accion={eliminarProyecto}
           />
         </div>

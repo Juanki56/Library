@@ -2,7 +2,6 @@ import type { JSONContent } from "@tiptap/react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
-  avisoEliminacion,
   etiquetasElemento,
   limpiarImagenesDeNota,
   obtenerNota,
@@ -19,9 +18,8 @@ import styles from "./Seccion.module.css";
 export default async function Nota({ id }: { id: string }) {
   const nota = await obtenerNota(id);
   if (!nota) notFound();
-  const [relacionados, aviso, etiquetas, referencias] = await Promise.all([
+  const [relacionados, etiquetas, referencias] = await Promise.all([
     obtenerRelacionados("nota", id),
-    avisoEliminacion("nota", id),
     etiquetasElemento("nota", id),
     referenciasDeNota(nota),
     limpiarImagenesDeNota(nota),
@@ -49,7 +47,7 @@ export default async function Nota({ id }: { id: string }) {
 
         <div className={styles.acciones}>
           <span />
-          <ConfirmarEliminacion id={nota.id} nombre={nota.titulo} aviso={aviso ?? ""} accion={eliminarNota} />
+          <ConfirmarEliminacion id={nota.id} nombre={nota.titulo} avisoDe="nota" accion={eliminarNota} />
         </div>
       </div>
       <Conexiones

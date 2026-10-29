@@ -16,7 +16,8 @@ export type ElementoConexion = ElementoBreve & { detalle: string | null; extract
 export type GrupoRelacionados = {
   tipo: Entidad;
   elementos: ElementoConexion[];
-  // Elementos aún no vinculados, para ofrecerlos sin duplicar vínculos (spec relaciones).
+  // Elementos aún no vinculados, para ofrecerlos sin duplicar vínculos (spec relaciones). Solo se
+  // calculan si se piden: «Conexiones» los carga al abrir «Vincular…» (candidatosParaVincular).
   candidatos: ElementoBreve[];
 };
 
@@ -67,16 +68,20 @@ function aBreve(fila: Fila | null, campo: string): ElementoBreve | null {
 
 // Elementos relacionados con uno dado, agrupados por tipo y con su contexto (spec relaciones:
 // "Elementos relacionados visibles"). Cada elemento aparece una sola vez.
-export async function obtenerRelacionados(cliente: Cliente, { tipo, id }: Referencia): Promise<GrupoRelacionados[]> {
+export async function obtenerRelacionados(
+  cliente: Cliente,
+  { tipo, id }: Referencia,
+  { conCandidatos = false }: { conCandidatos?: boolean } = {},
+): Promise<GrupoRelacionados[]> {
   return Promise.all(
     relacionesDe(tipo).map(async ({ relacion, otra }) => {
       const destino = ENTIDADES[otra];
       const [vinculados, todos] = await Promise.all([
         listarVinculados(cliente, relacion.tabla, ENTIDADES[tipo].columnaVinculo, id, destino.tabla, CONTEXTO[otra].columnas),
-        listarTodos(cliente, destino.tabla, destino.campoNombre),
+        conCandidatos ? listarTodos(cliente, destino.tabla, destino.campoNombre) : null,
       ]);
       if (vinculados.error) throw vinculados.error;
-      if (todos.error) throw todos.error;
+      if (todos?.error) throw todos.error;
 
       const elementos = vinculados.data
         .map((fila) => {
@@ -87,7 +92,7 @@ export async function obtenerRelacionados(cliente: Cliente, { tipo, id }: Refere
         .filter((e): e is ElementoConexion => e !== null)
         .sort((x, y) => x.nombre.localeCompare(y.nombre, "es"));
       const yaVinculados = new Set(elementos.map((e) => e.id));
-      const candidatos = todos.data
+      const candidatos = (todos?.data ?? [])
         .map((fila) => aBreve(fila, destino.campoNombre))
         .filter((e): e is ElementoBreve => e !== null && !yaVinculados.has(e.id));
 
@@ -105,4 +110,14 @@ export async function destinoNotaVinculada(cliente: Cliente, valor: unknown): Pr
   const { data, error } = await nombreDe(cliente, ENTIDADES[tipo].tabla, ENTIDADES[tipo].campoNombre, id);
   if (error || !data) return null;
   return { tipo, id, nombre: String(data[ENTIDADES[tipo].campoNombre] ?? "") };
+}
+
+// Lo que se puede vincular con un elemento, de todos los tipos permitidos y sin lo ya vinculado
+// (cambio rendimiento-paginas): se pide al abrir «Vincular…», no al cargar la página.
+export async function candidatosParaVincular(
+  cliente: Cliente,
+  origen: Referencia,
+): Promise<(ElementoBreve & { tipo: Entidad })[]> {
+  const grupos = await obtenerRelacionados(cliente, origen, { conCandidatos: true });
+  return grupos.flatMap((g) => g.candidatos.map((c) => ({ tipo: g.tipo, ...c })));
 }

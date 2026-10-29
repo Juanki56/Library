@@ -30,6 +30,8 @@ async function crearProyecto(nombre: string) {
 
 test("crea un proyecto sin descripción y aparece en la lista (spec proyectos)", async ({ page }) => {
   await page.getByRole("navigation", { name: "Principal" }).getByRole("link", { name: "Proyectos" }).click();
+  // Espera a la lista: Inicio también tiene un acceso «Nuevo proyecto» y no debe pulsarse ese a mitad de navegación.
+  await expect(page).toHaveURL(/\/proyectos$/);
   await page.getByRole("link", { name: "Nuevo proyecto" }).click();
   await page.getByRole("textbox", { name: "Nombre", exact: true }).fill("Comunismo");
   await page.getByRole("button", { name: "Crear proyecto" }).click();

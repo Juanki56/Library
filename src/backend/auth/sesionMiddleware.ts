@@ -30,9 +30,11 @@ export async function actualizarSesion(request: NextRequest) {
     },
   });
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // getClaims verifica la sesión (y la renueva si ha caducado) comprobando la firma del token con
+  // las claves públicas de Supabase, sin una consulta al servidor de autenticación en cada página.
+  // Si el proyecto no usa claves asimétricas, Supabase recurre a la consulta como antes.
+  const { data } = await supabase.auth.getClaims();
+  const user = data?.claims?.sub ? data.claims : null;
   const ruta = request.nextUrl.pathname;
 
   if (!user && !empiezaPor(ruta, RUTAS_PUBLICAS)) {

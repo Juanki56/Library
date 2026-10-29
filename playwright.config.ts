@@ -22,6 +22,7 @@ export default defineConfig({
     env: { NEXT_DIST_DIR: ".next-pruebas" },
     url: `http://localhost:${PORT}`,
     reuseExistingServer: !process.env.CI,
-    timeout: 240_000,
+    // Margen amplio: con «npm run dev» abierto a la vez, la compilación puede pasar de 4 minutos.
+    timeout: 420_000,
   },
 });

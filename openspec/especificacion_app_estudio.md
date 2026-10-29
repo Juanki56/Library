@@ -178,7 +178,9 @@ La aplicación tendrá una **sección independiente** para guardar citas, frases
 - La lista muestra primero las **más recientes**.
 - Si no hay autor u origen, se muestra «Sin autor» o «Sin origen», **sin inventar** ninguno.
 
-**Se deja para más adelante:** filtros propios de la sección (por autor o por tipo) y etiquetas en citas.
+**Filtros de la sección (decididos el 2026-10-28):** por **tipo** (cita, frase de autor, proverbio) y por **autor**, elegido de los autores de tus citas o «Sin autor»; se combinan entre sí.
+
+**Se deja para más adelante:** etiquetas en citas.
 
 **Diseño visual:** sigue la dirección aprobada (§7).
 
@@ -299,7 +301,14 @@ La aplicación tendrá una **búsqueda global** para encontrar contenido en toda
 - Se accede desde un **cuadro de búsqueda en la cabecera**, que lleva a una página de resultados con **filtro por tipo**.
 - Las **etiquetas** no aparecen como resultados, porque tienen su propia sección.
 
-**Se deja para más adelante:** filtros por autor, etiqueta, fecha, proyecto o libro.
+**Filtros adicionales (decididos el 2026-10-28):** además del tipo, por **autor**, **etiqueta**, **fecha**, **proyecto** o **libro**. Detalles propuestos al implementar, revisables:
+
+- **Autor:** texto que se busca, sin tildes ni mayúsculas, en los autores de libros, el autor o creador de recursos y el autor de citas. Los demás tipos no tienen autor y no aparecen con este filtro.
+- **Etiqueta:** proyectos, notas, libros y recursos con esa etiqueta (las citas y el glosario aún no tienen etiquetas).
+- **Fecha:** «modificado desde» y «hasta», sobre la fecha de modificación.
+- **Proyecto:** notas, libros y recursos vinculados a ese proyecto.
+- **Libro:** notas y recursos vinculados a ese libro y citas enlazadas a él.
+- Los filtros se combinan, y con algún filtro se puede buscar **sin escribir texto** (por ejemplo, todo lo del proyecto «Comunismo» con la etiqueta «Clases»).
 
 ## 5. Exclusiones explícitas
 
@@ -438,8 +447,8 @@ Incorporados en §2.5 (etiquetas), §2.6 (glosario), §2.7 (citas) y §4.1 (bús
 
 - Etiquetas en **citas** y **términos del glosario**.
 - Relaciones opcionales del **glosario** con notas, libros o proyectos.
-- Filtros propios dentro de la sección **Citas** (por autor, por tipo).
-- Filtros de búsqueda por autor, etiqueta, fecha, proyecto o libro.
+- ~~Filtros propios dentro de la sección **Citas** (por autor, por tipo).~~ Implementado el 2026-10-28 (§2.7).
+- ~~Filtros de búsqueda por autor, etiqueta, fecha, proyecto o libro.~~ Implementado el 2026-10-28 (§4.1).
 
 ### 9.4 Otros pendientes generales
 
@@ -451,7 +460,7 @@ Incorporados en §2.5 (etiquetas), §2.6 (glosario), §2.7 (citas) y §4.1 (bús
 - [x] Campos de los libros: decididos el 2026-10-28 (§2.3).
 - [x] Tipos de fuentes y recursos y sus datos: decididos el 2026-10-28 (§2.4).
 - [x] Cómo se muestran los elementos relacionados: decidido el 2026-10-28 (§2.8).
-- [ ] Separar explícitamente los requisitos de primera versión de las ideas futuras.
+- [x] Separar explícitamente los requisitos de primera versión de las ideas futuras: versión 1 cerrada el 2026-10-28 (§9.6).
 
 ### Puntos a revisar: contradicciones detectadas el 2026-10-27
 
@@ -471,16 +480,40 @@ Actualizar este documento **no** cambia el código ni las specs históricas de O
 | Notas | Crear, editar, ordenar por fechas, eliminar con aviso, relacionados | — | — |
 | Libros | Ficha definitiva (§2.3): descripción, ISBN, portada y estado de lectura; relacionados, eliminar con aviso | — | Tipos de libro (no decididos) |
 | Fuentes y recursos | Tipos y datos definitivos (§2.4), filtro por tipo, relacionados, eliminar con aviso | — | — |
-| Relaciones | Vínculos sin duplicar entre las 4 entidades; enlace de citas con libros o recursos; sección «Conexiones» (§2.8) | — | Conexiones indirectas y mapa (más adelante) |
+| Relaciones | Vínculos sin duplicar entre las 4 entidades; enlace de citas con libros o recursos; sección «Conexiones» (§2.8) | — | Conexiones indirectas y mapa (idea futura) |
 | Editor de notas | Fases 1 a 4 (§3.3), arrastrar bloques, pegar y arrastrar imágenes | — | — |
 | Menú e Inicio | Las ocho áreas en el orden de §6; Inicio con accesos rápidos, notas, «Leyendo ahora», proyectos y citas | — | — |
-| Citas | Sección completa (§2.7) | — | Filtros propios (más adelante) |
-| Etiquetas | Sección completa (§2.5) | — | Etiquetas en citas y glosario (más adelante) |
-| Glosario | Sección completa (§2.6) | — | Relaciones opcionales (más adelante) |
-| Búsqueda global | Completa (§4) | — | Filtros adicionales (más adelante) |
+| Citas | Sección completa (§2.7), filtros por tipo y autor | — | Etiquetas en citas (idea futura) |
+| Etiquetas | Sección completa (§2.5) | — | Etiquetas en citas y glosario (idea futura) |
+| Glosario | Sección completa (§2.6) | — | Relaciones opcionales (idea futura) |
+| Búsqueda global | Completa (§4), con filtros por tipo, autor, etiqueta, fecha, proyecto y libro | — | — |
 | Identidad visual | Dirección aprobada aplicada a toda la app (§7) | — | — |
 
-### 9.6 OpenSpec: documentos que habrá que actualizar en el próximo cambio
+### 9.6 Alcance de la versión 1 (cerrado el 2026-10-28)
+
+**La versión 1 está completa.** Incluye todo lo acordado e implementado hasta el 2026-10-28, con sus specs oficiales en `openspec/specs/`:
+
+- **Cuentas:** registro con confirmación, entrada y salida, aislamiento total entre usuarios.
+- **Proyectos** con apartados ordenados; **notas** únicas aunque estén en varios espacios; **libros** con su ficha (descripción, ISBN, portada, estado de lectura); **fuentes y recursos** con tipos y fecha de publicación.
+- **Relaciones** sin duplicar, mostradas en «Conexiones» con su contexto, con «Vincular…» y «Nueva nota vinculada».
+- **Editor de notas** (las cuatro fases): formato, guardado automático sin pisar cambios, menús, enlaces, referencias a notas y «Notas que la mencionan», imágenes (subidas, desde la web, pegadas o arrastradas), vídeos de YouTube y Vimeo (también pegando el enlace), mover y arrastrar bloques, índice y tablas.
+- **Citas** con tipos, enlace opcional a un libro o recurso y filtros por tipo y autor; **etiquetas** compartidas; **glosario**.
+- **Búsqueda global** en la cabecera, sin tildes y por inicio de palabra, con filtros por tipo, autor, etiqueta, fecha, proyecto y libro.
+- **Menú** de ocho áreas en el orden de §6, **Inicio** con accesos rápidos y listas editoriales, **dirección visual** aprobada (§7).
+- **Exclusiones** (§5): sin seguimiento del tiempo de estudio, sesiones, rachas ni métricas de productividad.
+
+**Ideas futuras, fuera de la versión 1.** No son requisitos: cada una necesita una decisión explícita y su propio cambio de OpenSpec antes de implementarse.
+
+- Etiquetas en citas y en términos del glosario.
+- Relaciones opcionales del glosario con notas, libros o proyectos.
+- Tipos o categorías de libro (nunca se decidieron).
+- Conexiones indirectas (por ejemplo, libros que aparecen en notas de un proyecto).
+- Mapa o grafo de conexiones (§5 lo dejó como posible idea futura).
+- Combinar o dividir celdas y ajustar el ancho de las columnas en las tablas.
+- Subir vídeos propios.
+- Servicio de correo propio (SMTP), aplazado mientras la app sea de uso personal.
+
+### 9.7 OpenSpec: documentos que habrá que actualizar en el próximo cambio
 
 El cambio `especificacion-inicial-app-estudio` refleja lo **implementado** y no se reescribe. Antes de preparar el siguiente cambio habrá que decidir si se **archiva** primero. Al archivarlo, sus specs pasan a `openspec/specs/`, incluidas las de etiquetas, glosario, citas y búsqueda, que están desactualizadas. El cambio siguiente las corregiría con deltas `MODIFIED` o `REMOVED`.
 
@@ -534,6 +567,10 @@ El cambio `especificacion-inicial-app-estudio` refleja lo **implementado** y no 
 - **2026-10-28 — Arrastrar bloques y pegar imágenes implementados:** cambios `editor-arrastrar-bloques` y `editor-pegar-imagenes` archivados; spec oficial `editor-notas` actualizada. Las pruebas E2E compilan en su propia carpeta y también se pueden pasar contra el servidor de desarrollo (`npm run test:e2e:desarrollo`).
 - **2026-10-28 — Pegar enlaces de vídeo:** un enlace de YouTube o Vimeo pegado solo en una línea vacía se convierte en reproductor; dentro de un texto sigue siendo un enlace (§3.2). Motivo: decisión del usuario.
 - **2026-10-28 — Pegar enlaces de vídeo implementado:** cambio `editor-pegar-videos` archivado; spec oficial `editor-notas` actualizada.
+- **2026-10-28 — Filtros en Citas y en la búsqueda global:** el usuario los pide (§2.7 y §4.1). Citas por tipo y autor; búsqueda por autor, etiqueta, fecha, proyecto o libro, combinables y sin necesidad de texto. Motivo: decisión del usuario.
+- **2026-10-28 — Páginas más rápidas:** cambio `rendimiento-paginas` archivado. La sesión se verifica sin consultar al servidor en cada página y la lista de «Vincular…» y el aviso de «Eliminar» se cargan al abrirlos. Medido: libro de 1034 a 415 ms, proyecto de 937 a 428 ms, nota de 756 a 346 ms.
+- **2026-10-28 — Filtros implementados:** cambio `filtros-citas-busqueda` archivado; specs oficiales `citas` y `busqueda` actualizadas.
+- **2026-10-28 — Versión 1 cerrada:** el alcance de la versión 1 y las ideas futuras quedan separados en §9.6. Motivo: petición del usuario.
 
 ## 10. Prompt de trabajo para Specs o Claude Code
 

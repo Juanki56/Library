@@ -1,6 +1,7 @@
 import "server-only";
 import type { Cliente } from "@/backend/repositories/clienteLibre";
 import * as repo from "@/backend/repositories/etiquetas";
+import { normalizar } from "./normalizar";
 import { ENTIDADES, type Entidad } from "./catalogo";
 import type { ElementoBreve } from "./relacionados";
 
@@ -25,10 +26,8 @@ export const ERROR_NO_ENCONTRADO = "No se encontró el elemento.";
 export const ERROR_GENERICO = "No se ha podido guardar la etiqueta. Inténtalo más tarde.";
 const LONGITUD_NOMBRE = 60;
 
-// Misma regla que public.normalizar en la base de datos: sin mayúsculas, tildes ni espacios sobrantes.
-export function normalizar(texto: string): string {
-  return texto.trim().replace(/\s+/g, " ").normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
-}
+export { normalizar };
+
 
 // Nombre limpio para guardar: se conserva la forma escrita, sin espacios sobrantes.
 export function limpiarNombre(texto: string): string {

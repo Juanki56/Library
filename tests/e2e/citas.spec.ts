@@ -25,6 +25,8 @@ const lista = (page: Page) => page.getByRole("list", { name: "Lista de citas" })
 
 test("guarda un proverbio sin autor ni origen, sin inventar datos", async ({ page }) => {
   await page.getByRole("navigation", { name: "Principal" }).getByRole("link", { name: "Citas" }).click();
+  // Espera a la lista: Inicio también tiene un acceso «Nueva cita» y no debe pulsarse ese a mitad de navegación.
+  await expect(page).toHaveURL(/\/citas$/);
   await page.getByRole("link", { name: "Nueva cita" }).click();
   await page.getByLabel("Texto de la cita").fill("Poco a poco se va lejos.");
   await page.getByLabel("Tipo").selectOption("proverbio");

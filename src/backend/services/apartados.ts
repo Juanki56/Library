@@ -56,7 +56,7 @@ const porTipoYNombre = (x: ElementoDeApartado, y: ElementoDeApartado) =>
 export async function organizacion(cliente: Cliente, proyectoId: string): Promise<Organizacion> {
   const [listado, relacionados, ...asignaciones] = await Promise.all([
     repo.listarApartados(cliente, proyectoId),
-    obtenerRelacionados(cliente, { tipo: "proyecto", id: proyectoId }),
+    obtenerRelacionados(cliente, { tipo: "proyecto", id: proyectoId }, { conCandidatos: true }),
     ...TIPOS_ASIGNABLES.map((t) => repo.listarAsignaciones(cliente, ASIGNABLES[t].tabla, ASIGNABLES[t].columna, proyectoId)),
   ]);
   if (listado.error) throw listado.error;

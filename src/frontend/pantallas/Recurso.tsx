@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
-  avisoEliminacion,
   citasDe,
   etiquetasElemento,
   obtenerRecurso,
@@ -19,9 +18,8 @@ import styles from "./Seccion.module.css";
 export default async function Recurso({ id }: { id: string }) {
   const recurso = await obtenerRecurso(id);
   if (!recurso) notFound();
-  const [relacionados, aviso, citas, etiquetas] = await Promise.all([
+  const [relacionados, citas, etiquetas] = await Promise.all([
     obtenerRelacionados("recurso", id),
-    avisoEliminacion("recurso", id),
     citasDe("recurso", id),
     etiquetasElemento("recurso", id),
   ]);
@@ -57,7 +55,7 @@ export default async function Recurso({ id }: { id: string }) {
           <ConfirmarEliminacion
             id={recurso.id}
             nombre={recurso.titulo}
-            aviso={aviso ?? ""}
+            avisoDe="recurso"
             accion={eliminarRecurso}
           />
         </div>

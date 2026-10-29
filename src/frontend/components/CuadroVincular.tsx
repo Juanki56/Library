@@ -1,7 +1,7 @@
 "use client";
 
 import { startTransition, useEffect, useId, useRef, useState } from "react";
-import { desvincularElementos, vincularElementos } from "@/backend/controllers/relaciones";
+import { candidatosParaVincular, desvincularElementos, vincularElementos } from "@/backend/controllers/relaciones";
 import type { Entidad } from "@/backend/services/catalogo";
 import { sinTildes } from "./comandosBarra";
 import styles from "./Conexiones.module.css";
@@ -24,7 +24,9 @@ function datos(origen: Origen, destino: { tipo: Entidad; id: string }) {
 
 // «Vincular…» (cambio conexiones, design D3): un único buscador en todos los tipos que se pueden
 // vincular, sin los ya vinculados, sin distinguir tildes ni mayúsculas y manejable con teclado.
-export default function CuadroVincular({ candidatos, ...origen }: Origen & { candidatos: Candidato[] }) {
+// La lista se pide al abrir el cuadro, no al cargar la página (cambio rendimiento-paginas).
+export default function CuadroVincular(origen: Origen) {
+  const [candidatos, setCandidatos] = useState<Candidato[] | null>(null);
   const dialogo = useRef<HTMLDialogElement>(null);
   const [consulta, setConsulta] = useState("");
   const [seleccion, setSeleccion] = useState(0);
@@ -33,14 +35,35 @@ export default function CuadroVincular({ candidatos, ...origen }: Origen & { can
   const idTitulo = useId();
   const idLista = useId();
 
-  const q = sinTildes(consulta);
-  const resultados = candidatos.filter((c) => sinTildes(c.nombre).includes(q)).slice(0, MAXIMO_RESULTADOS);
+  // Intro pulsado mientras la lista aún se carga: se elige el primer resultado en cuanto llegue.
+  const enterPendiente = useRef(false);
+  const consultaActual = useRef("");
+  consultaActual.current = consulta;
+
+  const filtrar = (lista: Candidato[], texto: string) => {
+    const q = sinTildes(texto);
+    return lista.filter((c) => sinTildes(c.nombre).includes(q)).slice(0, MAXIMO_RESULTADOS);
+  };
+  const resultados = filtrar(candidatos ?? [], consulta);
 
   function abrir() {
     setConsulta("");
     setSeleccion(0);
     setError(null);
+    setCandidatos(null);
+    enterPendiente.current = false;
     dialogo.current?.showModal();
+    candidatosParaVincular(origen.origenTipo, origen.origenId)
+      .then((lista) => {
+        setCandidatos(lista);
+        const primero = filtrar(lista, consultaActual.current)[0];
+        if (enterPendiente.current && primero) elegir(primero);
+        enterPendiente.current = false;
+      })
+      .catch(() => {
+        setCandidatos([]);
+        setError("No se pudo cargar la lista. Cierra y vuelve a intentarlo.");
+      });
   }
 
   async function elegir(candidato: Candidato) {
@@ -58,6 +81,11 @@ export default function CuadroVincular({ candidatos, ...origen }: Origen & { can
   }
 
   function tecla(evento: React.KeyboardEvent) {
+    if (candidatos === null && evento.key === "Enter") {
+      evento.preventDefault();
+      enterPendiente.current = true;
+      return;
+    }
     if (!resultados.length) return;
     if (evento.key === "ArrowDown" || evento.key === "ArrowUp") {
       evento.preventDefault();
@@ -97,7 +125,11 @@ export default function CuadroVincular({ candidatos, ...origen }: Origen & { can
               autoFocus
             />
           </label>
-          {resultados.length === 0 ? (
+          {candidatos === null ? (
+            <p role="status" className={styles.cuadroAviso}>
+              Cargando…
+            </p>
+          ) : resultados.length === 0 ? (
             <p role="status" className={styles.cuadroAviso}>
               {candidatos.length ? "Nada coincide con lo escrito." : "No queda nada más que vincular."}
             </p>

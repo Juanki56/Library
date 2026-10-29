@@ -26,6 +26,8 @@ const campoTitulo = (page: Page) => page.getByRole("textbox", { name: "Título",
 
 test("guarda un libro con solo el título (escenario «Libro con solo título»)", async ({ page }) => {
   await page.getByRole("navigation", { name: "Principal" }).getByRole("link", { name: "Libros" }).click();
+  // Espera a la lista: Inicio también tiene un acceso «Nuevo libro» y no debe pulsarse ese a mitad de navegación.
+  await expect(page).toHaveURL(/\/libros$/);
   await page.getByRole("link", { name: "Nuevo libro" }).click();
   await campoTitulo(page).fill("El manifiesto comunista");
   await page.getByRole("button", { name: "Crear libro" }).click();

@@ -1,8 +1,18 @@
 import "server-only";
 import type { Cliente } from "./clienteLibre";
 
-export async function buscar(cliente: Cliente, consulta: string, filtro?: string) {
-  return cliente.rpc("buscar", { consulta, filtro });
+export type FiltrosConsulta = {
+  filtro?: string;
+  autor?: string;
+  etiqueta?: string;
+  desde?: string;
+  hasta?: string;
+  proyecto?: string;
+  libro?: string;
+};
+
+export async function buscar(cliente: Cliente, consulta: string, filtros: FiltrosConsulta = {}) {
+  return cliente.rpc("buscar", { consulta, ...filtros });
 }
 
 // Proyectos y libros de las notas encontradas, para mostrar sus relaciones en los resultados.

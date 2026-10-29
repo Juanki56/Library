@@ -4,8 +4,8 @@ import type { Entidad } from "@/backend/services/catalogo";
 import * as apartados from "@/backend/services/apartados";
 import * as busqueda from "@/backend/services/busqueda";
 import * as citas from "@/backend/services/citas";
-import * as eliminacion from "@/backend/services/eliminacion";
 import * as etiquetas from "@/backend/services/etiquetas";
+import type { FiltrosBusqueda } from "@/backend/services/filtros";
 import type { TipoRecurso } from "@/backend/services/fichas";
 import * as glosario from "@/backend/services/glosario";
 import * as imagenes from "@/backend/services/imagenes";
@@ -76,8 +76,23 @@ export async function obtenerEntradaGlosario(id: string) {
   return glosario.obtenerEntrada(await crearClienteServidor(), id);
 }
 
-export async function buscar(consulta: string, filtro?: busqueda.TipoBusqueda) {
-  return busqueda.buscar(await crearClienteServidor(), consulta, filtro);
+export async function buscar(consulta: string, filtro?: busqueda.TipoBusqueda, filtros?: FiltrosBusqueda) {
+  return busqueda.buscar(await crearClienteServidor(), consulta, filtro, filtros);
+}
+
+// Listas para el panel «Filtros» de la búsqueda (cambio filtros-citas-busqueda).
+export async function opcionesFiltrosBusqueda() {
+  const cliente = await crearClienteServidor();
+  const [listaEtiquetas, listaProyectos, listaLibros] = await Promise.all([
+    etiquetas.listarEtiquetas(cliente),
+    proyectos.listarProyectos(cliente),
+    libros.listarLibros(cliente),
+  ]);
+  return {
+    etiquetas: listaEtiquetas.map((e) => ({ id: e.id, nombre: e.nombre })),
+    proyectos: listaProyectos.map((p) => ({ id: p.id, nombre: p.nombre })),
+    libros: listaLibros.map((l) => ({ id: l.id, nombre: l.titulo })),
+  };
 }
 
 export async function contenidoInicio() {
@@ -151,7 +166,3 @@ export async function obtenerRelacionados(tipo: Entidad, id: string) {
 }
 
 // Texto del aviso que se muestra antes de confirmar una eliminación (spec relaciones).
-export async function avisoEliminacion(tipo: Entidad, id: string) {
-  const resumen = await eliminacion.resumenEliminacion(await crearClienteServidor(), { tipo, id });
-  return resumen ? eliminacion.textoAviso(resumen) : null;
-}

@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
-  avisoEliminacion,
   citasDe,
   etiquetasElemento,
   obtenerLibro,
@@ -20,9 +19,8 @@ import styles from "./Seccion.module.css";
 export default async function Libro({ id }: { id: string }) {
   const libro = await obtenerLibro(id);
   if (!libro) notFound();
-  const [relacionados, aviso, citas, etiquetas] = await Promise.all([
+  const [relacionados, citas, etiquetas] = await Promise.all([
     obtenerRelacionados("libro", id),
-    avisoEliminacion("libro", id),
     citasDe("libro", id),
     etiquetasElemento("libro", id),
   ]);
@@ -52,7 +50,7 @@ export default async function Libro({ id }: { id: string }) {
 
         <div className={styles.acciones}>
           <span />
-          <ConfirmarEliminacion id={libro.id} nombre={libro.titulo} aviso={aviso ?? ""} accion={eliminarLibro} />
+          <ConfirmarEliminacion id={libro.id} nombre={libro.titulo} avisoDe="libro" accion={eliminarLibro} />
         </div>
       </div>
       <Conexiones tipo="libro" id={libro.id} grupos={relacionados} etiquetas={etiquetas} citas={citas} />

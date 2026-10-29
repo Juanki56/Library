@@ -1,8 +1,10 @@
 import Link from "next/link";
-import { buscar } from "@/backend/controllers/lecturas";
+import { buscar, opcionesFiltrosBusqueda } from "@/backend/controllers/lecturas";
 import type { TipoBusqueda } from "@/backend/services/busqueda";
+import { CLAVES_FILTROS, hayFiltros, type FiltrosBusqueda } from "@/backend/services/filtros";
 import styles from "./Buscar.module.css";
 import seccion from "./Seccion.module.css";
+import PanelFiltros from "@/frontend/components/PanelFiltros";
 
 const FILTROS: { tipo?: TipoBusqueda; texto: string }[] = [
   { texto: "Todos" },
@@ -23,11 +25,25 @@ const NOMBRE_TIPO: Record<TipoBusqueda, string> = {
   termino: "glosario",
 };
 
-// Resultados de la búsqueda global con filtro por tipo (spec busqueda).
-export default async function Buscar({ consulta, filtro }: { consulta: string; filtro?: TipoBusqueda }) {
-  const resultados = consulta ? await buscar(consulta, filtro) : [];
-  const enlace = (tipo?: TipoBusqueda) =>
-    `/buscar?q=${encodeURIComponent(consulta)}${tipo ? `&tipo=${tipo}` : ""}`;
+type Props = { consulta: string; filtro?: TipoBusqueda; filtros: FiltrosBusqueda };
+
+// Dirección de la búsqueda con sus filtros; los enlaces de tipo conservan los demás.
+function direccion(consulta: string, tipo: TipoBusqueda | undefined, filtros: FiltrosBusqueda) {
+  const p = new URLSearchParams();
+  if (consulta) p.set("q", consulta);
+  if (tipo) p.set("tipo", tipo);
+  for (const clave of CLAVES_FILTROS) if (filtros[clave]) p.set(clave, filtros[clave]!);
+  return `/buscar?${p.toString()}`;
+}
+
+// Resultados de la búsqueda global con filtro por tipo y filtros adicionales (spec busqueda).
+export default async function Buscar({ consulta, filtro, filtros }: Props) {
+  const conFiltros = hayFiltros(filtros);
+  const [resultados, opciones] = await Promise.all([
+    consulta || conFiltros ? buscar(consulta, filtro, filtros) : [],
+    opcionesFiltrosBusqueda(),
+  ]);
+  const enlace = (tipo?: TipoBusqueda) => direccion(consulta, tipo, filtros);
 
   return (
     <main className={seccion.pagina}>
@@ -35,12 +51,20 @@ export default async function Buscar({ consulta, filtro }: { consulta: string; f
         <h1>Búsqueda</h1>
       </div>
 
-      {!consulta ? (
-        <p className={seccion.vacio}>Escribe en el buscador de arriba qué quieres encontrar.</p>
+      <PanelFiltros consulta={consulta} filtro={filtro} filtros={filtros} opciones={opciones} abierto={conFiltros} />
+
+      {!consulta && !conFiltros ? (
+        <p className={seccion.vacio}>Escribe en el buscador de arriba qué quieres encontrar, o usa los filtros.</p>
       ) : (
         <>
           <p className={styles.consulta}>
-            Resultados para <strong>«{consulta}»</strong>
+            {consulta ? (
+              <>
+                Resultados para <strong>«{consulta}»</strong>
+              </>
+            ) : (
+              "Resultados de los filtros"
+            )}
           </p>
           <nav aria-label="Filtrar por tipo" className={seccion.orden}>
             {FILTROS.map((f) =>
@@ -57,7 +81,9 @@ export default async function Buscar({ consulta, filtro }: { consulta: string; f
           </nav>
 
           {resultados.length === 0 ? (
-            <p className={seccion.vacio}>No se ha encontrado nada{filtro ? " de este tipo" : ""}.</p>
+            <p className={seccion.vacio}>
+              No se ha encontrado nada{filtro || conFiltros ? " con estos filtros" : ""}.
+            </p>
           ) : (
             <ol className={styles.resultados} aria-label="Resultados">
               {resultados.map((r) => (
