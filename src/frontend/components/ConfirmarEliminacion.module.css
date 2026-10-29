@@ -66,3 +66,9 @@
 .error {
   color: var(--color-error);
 }
+
+.cancelar:disabled,
+.confirmar:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}

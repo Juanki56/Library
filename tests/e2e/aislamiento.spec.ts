@@ -30,8 +30,10 @@ test.afterAll(async () => {
 test("otro usuario no puede abrir las páginas de A aunque conozca la dirección", async ({ page }) => {
   await entrarComo(page, b);
   for (const ruta of rutasDeA) {
-    const respuesta = await page.goto(ruta);
-    expect(respuesta?.status(), ruta).toBe(404);
+    // Con «Cargando…» la respuesta empieza antes de saber que no existe: el código HTTP es 200 y
+    // lo que cuenta es la página de «no encontrada» (cambio velocidad-respuesta).
+    await page.goto(ruta);
+    await expect(page.getByText("This page could not be found."), ruta).toBeVisible();
     await expect(page.getByText(/Secreto de A/)).toHaveCount(0);
   }
 });

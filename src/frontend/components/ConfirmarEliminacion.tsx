@@ -24,14 +24,25 @@ export default function ConfirmarEliminacion({ id, nombre, aviso, avisoDe, accio
   const idTitulo = useId();
   const [estado, enviar, enviando] = useActionState(accion, {});
   const [avisoCargado, setAvisoCargado] = useState<string | null>(null);
+  // Aviso pedido al pasar por el botón (cambio velocidad-respuesta): suele estar listo al abrir.
+  // Se descarta al salir del botón para no mostrar uno antiguo si los vínculos cambian.
+  const avisoPedido = useRef<Promise<string> | null>(null);
+
+  function pedirAviso() {
+    if (!avisoDe || avisoPedido.current) return;
+    avisoPedido.current = avisoParaEliminar(avisoDe, id).catch(
+      () => "No se pudo comprobar qué vínculos se perderán.",
+    );
+  }
 
   function abrir() {
     dialogo.current?.showModal();
     if (!avisoDe) return;
+    pedirAviso();
+    const pedido = avisoPedido.current!;
+    avisoPedido.current = null;
     setAvisoCargado(null);
-    avisoParaEliminar(avisoDe, id)
-      .then(setAvisoCargado)
-      .catch(() => setAvisoCargado("No se pudo comprobar qué vínculos se perderán."));
+    pedido.then(setAvisoCargado);
   }
   const textoAviso = avisoDe ? (avisoCargado ?? "Comprobando qué vínculos se perderán…") : aviso;
 
@@ -41,6 +52,10 @@ export default function ConfirmarEliminacion({ id, nombre, aviso, avisoDe, accio
         type="button"
         className={styles.abrir}
         aria-label={etiquetaBoton}
+        onPointerEnter={pedirAviso}
+        onFocus={pedirAviso}
+        onPointerLeave={() => (avisoPedido.current = null)}
+        onBlur={() => (avisoPedido.current = null)}
         onClick={abrir}
       >
         Eliminar
@@ -57,11 +72,17 @@ export default function ConfirmarEliminacion({ id, nombre, aviso, avisoDe, accio
         )}
         <form action={enviar} className={styles.acciones}>
           <input type="hidden" name="id" value={id} />
-          <button type="button" className={styles.cancelar} onClick={() => dialogo.current?.close()}>
+          <button
+            type="button"
+            className={styles.cancelar}
+            disabled={enviando}
+            onClick={() => dialogo.current?.close()}
+          >
             Cancelar
           </button>
-          <button type="submit" className={styles.confirmar} disabled={enviando}>
-            Eliminar definitivamente
+          {/* Respuesta inmediata mientras el servidor elimina y carga la página siguiente. */}
+          <button type="submit" className={styles.confirmar} disabled={enviando} aria-busy={enviando}>
+            {enviando ? "Eliminando…" : "Eliminar definitivamente"}
           </button>
         </form>
       </dialog>

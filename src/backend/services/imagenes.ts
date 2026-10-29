@@ -45,6 +45,16 @@ export async function subirArchivoImagen(cliente: Cliente, carpeta: string, arch
   return subida.error ? { ok: false, error: ERROR_SUBIDA } : { ok: true, ruta };
 }
 
+// Programa una tarea para después de responder (los controllers pasan after() de Next); sin él,
+// la tarea se espera en el momento. Así borrar los archivos de un elemento eliminado no retrasa
+// la respuesta (cambio velocidad-respuesta).
+export type Diferir = (tarea: () => Promise<void>) => void;
+
+export async function enSuMomento(diferir: Diferir | undefined, tarea: () => Promise<void>) {
+  if (diferir) diferir(tarea);
+  else await tarea();
+}
+
 export async function borrarArchivos(cliente: Cliente, rutas: string[]) {
   const { error } = await repo.borrarArchivos(cliente, rutas);
   if (error) console.error("No se pudieron borrar imágenes", error);
@@ -99,15 +109,21 @@ export async function limpiarNoUsadas(
 }
 
 // Elimina la nota y después los archivos de sus imágenes (los registros caen en cascada).
-export async function eliminarNota(cliente: Cliente, id: string): Promise<eliminacion.ResultadoEliminacion> {
+export async function eliminarNota(
+  cliente: Cliente,
+  id: string,
+  diferir?: Diferir,
+): Promise<eliminacion.ResultadoEliminacion> {
   const { data } = await repo.rutasDeNota(cliente, id);
   const resultado = await eliminacion.eliminar(cliente, { tipo: "nota", id });
   if (resultado.ok && data?.length) {
-    const borrado = await repo.borrarArchivos(
-      cliente,
-      data.map((r) => r.ruta),
-    );
-    if (borrado.error) console.error("No se pudieron borrar las imágenes de la nota eliminada", borrado.error);
+    await enSuMomento(diferir, async () => {
+      const borrado = await repo.borrarArchivos(
+        cliente,
+        data.map((r) => r.ruta),
+      );
+      if (borrado.error) console.error("No se pudieron borrar las imágenes de la nota eliminada", borrado.error);
+    });
   }
   return resultado;
 }

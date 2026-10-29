@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { after } from "next/server";
 import { crearClienteServidor } from "@/backend/auth/clienteServidor";
 import * as imagenes from "@/backend/services/imagenes";
 import * as menciones from "@/backend/services/menciones";
@@ -52,8 +53,9 @@ export async function notasParaReferencia(excluirId: string): Promise<menciones.
 }
 
 export async function eliminarNota(_estado: EstadoNota, formulario: FormData): Promise<EstadoNota> {
-  // Con sus imágenes subidas (spec editor-notas: «Limpieza de imágenes subidas»).
-  const resultado = await imagenes.eliminarNota(await crearClienteServidor(), texto(formulario, "id"));
+  // Con sus imágenes subidas (spec editor-notas: «Limpieza de imágenes subidas»), que se borran
+  // después de responder.
+  const resultado = await imagenes.eliminarNota(await crearClienteServidor(), texto(formulario, "id"), after);
   if (!resultado.ok) return { error: resultado.error };
   revalidatePath("/notas");
   redirect("/notas");

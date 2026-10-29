@@ -133,15 +133,15 @@ test("ordena por fecha de modificación o de creación, sin mostrar duraciones (
   await crearNota("Orden: reciente");
   await datos.from("notas").update({ titulo: "Orden: antigua editada" }).eq("id", antigua);
 
-  const titulos = () =>
-    page.getByRole("list", { name: "Lista de notas" }).getByRole("link", { name: /^Orden:/ }).allTextContents();
+  // Con espera: la página puede mostrar «Cargando…» un instante.
+  const titulos = page.getByRole("list", { name: "Lista de notas" }).getByRole("link", { name: /^Orden:/ });
 
   await page.goto("/notas?orden=modificacion");
-  expect(await titulos()).toEqual(["Orden: antigua editada", "Orden: reciente"]);
+  await expect(titulos).toHaveText(["Orden: antigua editada", "Orden: reciente"]);
 
   await page.getByRole("link", { name: "Creadas recientemente" }).click();
   await expect(page).toHaveURL(/orden=creacion/);
-  expect(await titulos()).toEqual(["Orden: reciente", "Orden: antigua editada"]);
+  await expect(titulos).toHaveText(["Orden: reciente", "Orden: antigua editada"]);
 
   await expect(page.locator("main")).not.toContainText(/hace \d|minutos|horas de estudio|racha/i);
 });

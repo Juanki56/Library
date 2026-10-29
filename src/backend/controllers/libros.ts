@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { after } from "next/server";
 import { crearClienteServidor } from "@/backend/auth/clienteServidor";
 import * as libros from "@/backend/services/libros";
 
@@ -41,8 +42,8 @@ export async function guardarLibro(_estado: EstadoLibro, formulario: FormData): 
 }
 
 export async function eliminarLibro(_estado: EstadoLibro, formulario: FormData): Promise<EstadoLibro> {
-  // Con su portada subida (requisito «Portada del libro»).
-  const resultado = await libros.eliminarLibro(await crearClienteServidor(), texto(formulario, "id"));
+  // Con su portada subida (requisito «Portada del libro»), que se borra después de responder.
+  const resultado = await libros.eliminarLibro(await crearClienteServidor(), texto(formulario, "id"), after);
   if (!resultado.ok) return { error: resultado.error };
   revalidatePath("/", "layout");
   redirect("/libros");

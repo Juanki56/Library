@@ -4,6 +4,7 @@ import { borrarEntidad, existeEntidad } from "@/backend/repositories/entidades";
 import { contarVinculos } from "@/backend/repositories/vinculos";
 import { ENTIDADES, relacionesDe, type Entidad } from "./catalogo";
 import { contarCitasDe } from "./citas";
+import { esIdentificador } from "./referencias";
 import type { Referencia } from "./vinculos";
 
 export type ResumenEliminacion = {
@@ -24,29 +25,31 @@ export async function resumenEliminacion(
   cliente: Cliente,
   { tipo, id }: Referencia,
 ): Promise<ResumenEliminacion | null> {
-  const existe = await existeEntidad(cliente, ENTIDADES[tipo].tabla, id);
+  if (!esIdentificador(id)) return null;
+  // Todo a la vez (cambio velocidad-respuesta): si el elemento no existe o es ajeno, la RLS deja
+  // los conteos en cero y se descartan.
+  const [existe, conteos, citas] = await Promise.all([
+    existeEntidad(cliente, ENTIDADES[tipo].tabla, id),
+    Promise.all(
+      relacionesDe(tipo).map(async ({ relacion, otra }) => {
+        const { count, error } = await contarVinculos(
+          cliente,
+          relacion.tabla,
+          ENTIDADES[tipo].columnaVinculo,
+          id,
+        );
+        if (error) throw error;
+        return [otra, count ?? 0] as const;
+      }),
+    ),
+    tipo === "libro" || tipo === "recurso" ? contarCitasDe(cliente, tipo, id) : undefined,
+  ]);
   if (existe.error || !existe.count) return null;
-
-  const conteos = await Promise.all(
-    relacionesDe(tipo).map(async ({ relacion, otra }) => {
-      const { count, error } = await contarVinculos(
-        cliente,
-        relacion.tabla,
-        ENTIDADES[tipo].columnaVinculo,
-        id,
-      );
-      if (error) throw error;
-      return [otra, count ?? 0] as const;
-    }),
-  );
 
   const porTipo: Partial<Record<Entidad, number>> = {};
   for (const [otra, n] of conteos) if (n > 0) porTipo[otra] = n;
   const total = conteos.reduce((suma, [, n]) => suma + n, 0);
-  if (tipo === "libro" || tipo === "recurso") {
-    return { total, porTipo, citas: await contarCitasDe(cliente, tipo, id) };
-  }
-  return { total, porTipo };
+  return citas === undefined ? { total, porTipo } : { total, porTipo, citas };
 }
 
 const NOMBRES: Record<Entidad, [string, string]> = {

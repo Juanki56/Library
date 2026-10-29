@@ -158,9 +158,14 @@ export async function cambiarPortada(cliente: Cliente, id: string, cambio: Cambi
 }
 
 // Elimina el libro y después su portada subida, si la tiene.
-export async function eliminarLibro(cliente: Cliente, id: string): Promise<eliminacion.ResultadoEliminacion> {
+export async function eliminarLibro(
+  cliente: Cliente,
+  id: string,
+  diferir?: imagenes.Diferir,
+): Promise<eliminacion.ResultadoEliminacion> {
   const { data } = esIdentificador(id) ? await repo.portadaDe(cliente, id) : { data: null };
   const resultado = await eliminacion.eliminar(cliente, { tipo: "libro", id });
-  if (resultado.ok && data?.portada_ruta) await imagenes.borrarArchivos(cliente, [data.portada_ruta]);
+  const ruta = data?.portada_ruta;
+  if (resultado.ok && ruta) await imagenes.enSuMomento(diferir, () => imagenes.borrarArchivos(cliente, [ruta]));
   return resultado;
 }
